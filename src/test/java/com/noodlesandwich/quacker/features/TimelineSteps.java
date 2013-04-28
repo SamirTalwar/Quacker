@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
+import javax.inject.Inject;
 import com.noodlesandwich.quacker.application.Quacker;
 import com.noodlesandwich.quacker.client.Client;
 import com.noodlesandwich.quacker.server.Server;
@@ -17,10 +18,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class TimelineSteps {
-    private final Server server = Quacker.server();
+    private final Server server;
 
     private PrintStream originalOut = null;
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+    @Inject
+    public TimelineSteps(Server server) {
+        this.server = server;
+    }
 
     @Before
     public void capture_command_line() {
