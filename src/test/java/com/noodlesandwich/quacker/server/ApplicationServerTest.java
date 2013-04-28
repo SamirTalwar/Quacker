@@ -20,6 +20,18 @@ public class ApplicationServerTest {
         context.checking(new Expectations() {{
             oneOf(users).userNamed("Devaraj"); will(returnValue(devaraj));
         }});
+
         assertThat(server.authenticatedUserNamed("Devaraj"), is(devaraj));
+        context.assertIsSatisfied();
+    }
+
+    @Test public void
+    registers_a_new_user() {
+        context.checking(new Expectations() {{
+            oneOf(users).register("Irrfan");
+        }});
+
+        server.registerUserNamed("Irrfan");
+        context.assertIsSatisfied();
     }
 }

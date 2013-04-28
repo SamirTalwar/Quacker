@@ -15,6 +15,11 @@ public class ApplicationServer implements Server {
     }
 
     @Override
+    public void registerUserNamed(String username) {
+        users.register(username);
+    }
+
+    @Override
     public User authenticatedUserNamed(String username) {
         return users.userNamed(username);
     }
