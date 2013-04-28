@@ -1,8 +1,10 @@
 package com.noodlesandwich.quacker.server;
 
+import com.noodlesandwich.quacker.user.User;
+
 public class ApplicationServer implements Server {
     @Override
-    public CommunicationChannel authenticatedClientFor(String username) {
+    public User authenticatedUserNamed(String username) {
         throw new UnsupportedOperationException();
     }
 }

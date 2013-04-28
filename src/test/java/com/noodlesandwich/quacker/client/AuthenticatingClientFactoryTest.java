@@ -1,7 +1,7 @@
 package com.noodlesandwich.quacker.client;
 
-import com.noodlesandwich.quacker.server.CommunicationChannel;
 import com.noodlesandwich.quacker.server.Server;
+import com.noodlesandwich.quacker.user.User;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
@@ -18,9 +18,9 @@ public class AuthenticatingClientFactoryTest {
     authenticates_with_the_server() {
         Server server = context.mock(Server.class);
 
-        CommunicationChannel communicationChannel = context.mock(CommunicationChannel.class);
+        User user = context.mock(User.class);
         context.checking(new Expectations() {{
-            oneOf(server).authenticatedClientFor("Bharat"); will(returnValue(communicationChannel));
+            oneOf(server).authenticatedUserNamed("Bharat"); will(returnValue(user));
         }});
 
         assertThat(clientFactory.newClient(server, "Bharat"), is(notNullValue()));

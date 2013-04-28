@@ -1,9 +1,9 @@
 package com.noodlesandwich.quacker.client;
 
-import com.noodlesandwich.quacker.server.CommunicationChannel;
+import com.noodlesandwich.quacker.user.User;
 
 public class AuthenticatedClient implements Client {
-    public AuthenticatedClient(CommunicationChannel communicationChannel) {
+    public AuthenticatedClient(User communicationChannel) {
     }
 
     @Override
