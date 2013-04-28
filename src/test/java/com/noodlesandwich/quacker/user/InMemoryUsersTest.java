@@ -13,4 +13,9 @@ public class InMemoryUsersTest {
         users.register("Govinda");
         assertThat(users.userNamed("Govinda"), is(notNullValue()));
     }
+
+    @Test(expected=NonExistentUserException.class) public void
+    explodes_if_an_unknown_user_is_requested() {
+        users.userNamed("Hrithik");
+    }
 }

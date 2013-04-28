@@ -13,6 +13,9 @@ public class InMemoryUsers implements Users {
 
     @Override
     public User userNamed(String username) {
+        if (!users.containsKey(username)) {
+            throw new NonExistentUserException(username);
+        }
         return users.get(username);
     }
 }
