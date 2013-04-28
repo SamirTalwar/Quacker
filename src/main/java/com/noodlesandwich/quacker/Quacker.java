@@ -1,18 +1,14 @@
 package com.noodlesandwich.quacker;
 
-import com.noodlesandwich.quacker.ui.Client;
-import com.noodlesandwich.quacker.ui.ClientFactory;
-import com.noodlesandwich.quacker.ui.CommandLineClientFactory;
+import com.noodlesandwich.quacker.client.Login;
+import com.noodlesandwich.quacker.server.Server;
 
 public class Quacker {
-    public static Quacker quacker() {
-        return new Quacker(new CommandLineClientFactory());
+    public static Server server() {
+        return new Server();
     }
 
-    public Quacker(ClientFactory clientFactory) {
-    }
-
-    public Client clientFor(String username) {
+    public static Login clientFor(Server server) {
         throw new UnsupportedOperationException();
     }
 }

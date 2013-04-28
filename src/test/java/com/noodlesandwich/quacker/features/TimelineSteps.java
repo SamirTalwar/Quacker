@@ -5,6 +5,8 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 import com.noodlesandwich.quacker.Quacker;
+import com.noodlesandwich.quacker.client.Client;
+import com.noodlesandwich.quacker.server.Server;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -15,7 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class TimelineSteps {
-    private final Quacker quacker = Quacker.quacker();
+    private final Server server = Quacker.server();
 
     private PrintStream originalOut = null;
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -35,12 +37,14 @@ public class TimelineSteps {
 
     @Given("([^ ]+) quacks \"([^\"]*)\"$")
     public void publishes(String user, String message) throws Throwable {
-        quacker.clientFor(user).publish(message);
+        Client client = Quacker.clientFor(server).loginAs(user);
+        client.publish(message);
     }
 
     @When("^[^ ]+ opens up ([^']+)'s timeline$")
-    public void opens_up_a_timeline(String timelineOwner) throws Throwable {
-        quacker.clientFor(timelineOwner).openTimeline();
+    public void opens_up_a_timeline(String viewer, String timelineOwner) throws Throwable {
+        Client client = Quacker.clientFor(server).loginAs(viewer);
+        client.openTimelineOf(timelineOwner);
     }
 
     @Then("^s?he should see:$")

@@ -1,11 +1,11 @@
-package com.noodlesandwich.quacker.ui;
+package com.noodlesandwich.quacker.client;
 
 public class Client {
     public void publish(String message) {
         throw new UnsupportedOperationException();
     }
 
-    public void openTimeline() {
+    public void openTimelineOf(String otherUser) {
         throw new UnsupportedOperationException();
     }
 }
