@@ -47,7 +47,7 @@ public class TimelineSteps {
         client.publish(message);
     }
 
-    @When("^[^ ]+ opens up ([^']+)'s timeline$")
+    @When("^([^ ]+) opens up ([^']+)'s timeline$")
     public void opens_up_a_timeline(String viewer, String timelineOwner) throws Throwable {
         Client client = Quacker.clientFor(server).loginAs(viewer);
         client.openTimelineOf(timelineOwner);
