@@ -1,8 +1,8 @@
 package com.noodlesandwich.quacker.client;
 
 import com.noodlesandwich.quacker.message.Message;
-import com.noodlesandwich.quacker.message.Timeline;
-import com.noodlesandwich.quacker.message.Timelines;
+import com.noodlesandwich.quacker.user.Profile;
+import com.noodlesandwich.quacker.user.Profiles;
 import com.noodlesandwich.quacker.testing.Captured;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
 import com.noodlesandwich.quacker.ui.UserInterface;
@@ -17,8 +17,8 @@ public class AuthenticatedClientTest {
     private final Mockery context = new Mockery();
     private final UserInterface userInterface = context.mock(UserInterface.class);
     private final User user = context.mock(User.class);
-    private final Timelines timelines = context.mock(Timelines.class);
-    private final Client client = new AuthenticatedClient(userInterface, user, timelines);
+    private final Profiles profiles = context.mock(Profiles.class);
+    private final Client client = new AuthenticatedClient(userInterface, user, profiles);
 
     private final MessageRenderer renderer = context.mock(MessageRenderer.class);
 
@@ -39,10 +39,10 @@ public class AuthenticatedClientTest {
 
     @Test public void
     renders_a_timeline() {
-        Timeline timeline = context.mock(Timeline.class);
+        Profile profile = context.mock(Profile.class);
         context.checking(new Expectations() {{
-            oneOf(timelines).forUser("John"); will(returnValue(timeline));
-            oneOf(timeline).renderTo(userInterface);
+            oneOf(profiles).forUser("John"); will(returnValue(profile));
+            oneOf(profile).renderTimelineTo(userInterface);
         }});
 
         client.openTimelineOf("John");
