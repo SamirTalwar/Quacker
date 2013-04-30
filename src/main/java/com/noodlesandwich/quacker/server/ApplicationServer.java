@@ -2,6 +2,7 @@ package com.noodlesandwich.quacker.server;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import com.noodlesandwich.quacker.user.Profile;
 import com.noodlesandwich.quacker.user.User;
 import com.noodlesandwich.quacker.user.Users;
 
@@ -22,5 +23,10 @@ public class ApplicationServer implements Server {
     @Override
     public User authenticatedUserNamed(String username) {
         return users.userNamed(username);
+    }
+
+    @Override
+    public Profile profileFor(String username) {
+        throw new UnsupportedOperationException();
     }
 }
