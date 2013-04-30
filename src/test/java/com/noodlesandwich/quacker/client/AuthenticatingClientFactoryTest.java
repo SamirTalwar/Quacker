@@ -1,6 +1,7 @@
 package com.noodlesandwich.quacker.client;
 
 import com.noodlesandwich.quacker.server.Server;
+import com.noodlesandwich.quacker.ui.UserInterface;
 import com.noodlesandwich.quacker.user.User;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -12,7 +13,8 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class AuthenticatingClientFactoryTest {
     private final Mockery context = new Mockery();
-    private final ClientFactory clientFactory = new AuthenticatingClientFactory();
+    private final UserInterface userInterface = context.mock(UserInterface.class);
+    private final ClientFactory clientFactory = new AuthenticatingClientFactory(userInterface);
 
     @Test public void
     authenticates_with_the_server() {
