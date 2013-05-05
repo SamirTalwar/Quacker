@@ -25,4 +25,9 @@ public class InMemoryUsersTest {
     explodes_if_an_unknown_user_is_requested() {
         users.userNamed("Hrithik");
     }
+
+    @Test(expected=NonExistentUserException.class) public void
+    explodes_if_an_unknown_profile_is_requested() {
+        users.profileFor("Om");
+    }
 }

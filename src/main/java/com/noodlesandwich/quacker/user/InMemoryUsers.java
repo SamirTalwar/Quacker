@@ -26,6 +26,9 @@ public class InMemoryUsers implements Users, Profiles {
 
     @Override
     public Profile profileFor(String username) {
+        if (!profiles.containsKey(username)) {
+            throw new NonExistentUserException(username);
+        }
         return profiles.get(username);
     }
 }
