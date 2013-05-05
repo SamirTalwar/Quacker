@@ -15,7 +15,7 @@ public class InMemoryUsers implements Users, Profiles {
     public void register(String username) {
         UpdatableTimeline timeline = new InMemoryTimeline();
         users.put(username, new InMemoryUser(timeline));
-        profiles.put(username, new InMemoryProfile());
+        profiles.put(username, new InMemoryProfile(timeline));
     }
 
     @Override

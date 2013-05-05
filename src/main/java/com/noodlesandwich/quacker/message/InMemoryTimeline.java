@@ -3,7 +3,7 @@ package com.noodlesandwich.quacker.message;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import com.noodlesandwich.quacker.ui.MessageRenderer;
+import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
 public class InMemoryTimeline implements UpdatableTimeline {
     private final List<Message> messages = new ArrayList<>();
@@ -14,10 +14,10 @@ public class InMemoryTimeline implements UpdatableTimeline {
     }
 
     @Override
-    public void renderTo(MessageRenderer renderer) {
+    public void renderTo(TimelineRenderer renderer) {
         ListIterator<Message> messageIterator = messages.listIterator(messages.size());
         while (messageIterator.hasPrevious()) {
-            messageIterator.previous().renderTo(renderer);
+            renderer.render(messageIterator.previous());
         }
     }
 }

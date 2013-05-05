@@ -1,10 +1,10 @@
 package com.noodlesandwich.quacker.user;
 
 import com.noodlesandwich.quacker.message.Message;
-import com.noodlesandwich.quacker.ui.MessageRenderer;
+import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
 public interface User {
     void publish(Message message);
 
-    void renderTimelineTo(MessageRenderer renderer);
+    void renderTimelineTo(TimelineRenderer renderer);
 }

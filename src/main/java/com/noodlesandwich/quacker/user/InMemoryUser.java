@@ -2,7 +2,7 @@ package com.noodlesandwich.quacker.user;
 
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.message.UpdatableTimeline;
-import com.noodlesandwich.quacker.ui.MessageRenderer;
+import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
 public class InMemoryUser implements User {
     private final UpdatableTimeline timeline;
@@ -17,7 +17,7 @@ public class InMemoryUser implements User {
     }
 
     @Override
-    public void renderTimelineTo(MessageRenderer renderer) {
+    public void renderTimelineTo(TimelineRenderer renderer) {
         timeline.renderTo(renderer);
     }
 }

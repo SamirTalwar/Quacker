@@ -1,7 +1,7 @@
 package com.noodlesandwich.quacker.message;
 
-import com.noodlesandwich.quacker.ui.MessageRenderer;
+import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
 public interface Timeline {
-    void renderTo(MessageRenderer renderer);
+    void renderTo(TimelineRenderer renderer);
 }

@@ -2,7 +2,7 @@ package com.noodlesandwich.quacker.user;
 
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.message.UpdatableTimeline;
-import com.noodlesandwich.quacker.ui.MessageRenderer;
+import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
@@ -12,7 +12,7 @@ public class InMemoryUserTest {
     private final UpdatableTimeline timeline = context.mock(UpdatableTimeline.class);
     private final User user = new InMemoryUser(timeline);
 
-    private final MessageRenderer renderer = context.mock(MessageRenderer.class);
+    private final TimelineRenderer renderer = context.mock(TimelineRenderer.class);
 
     @Test public void
     publishes_messages_to_an_in_memory_timeline() {
