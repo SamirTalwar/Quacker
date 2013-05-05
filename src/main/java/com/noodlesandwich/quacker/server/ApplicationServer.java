@@ -30,6 +30,6 @@ public class ApplicationServer implements Server {
 
     @Override
     public Profile profileFor(String username) {
-        return profiles.forUser(username);
+        return profiles.profileFor(username);
     }
 }

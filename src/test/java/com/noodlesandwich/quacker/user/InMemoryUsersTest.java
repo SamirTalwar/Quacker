@@ -7,7 +7,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class InMemoryUsersTest {
-    private final Users users = new InMemoryUsers();
+    private final InMemoryUsers users = new InMemoryUsers();
 
     @Test public void
     hands_over_a_previously_created_user() {

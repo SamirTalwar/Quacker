@@ -41,7 +41,7 @@ public class AuthenticatedClientTest {
     renders_a_timeline() {
         Profile profile = context.mock(Profile.class);
         context.checking(new Expectations() {{
-            oneOf(profiles).forUser("John"); will(returnValue(profile));
+            oneOf(profiles).profileFor("John"); will(returnValue(profile));
             oneOf(profile).renderTimelineTo(userInterface);
         }});
 

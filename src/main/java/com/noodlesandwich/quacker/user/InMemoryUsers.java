@@ -5,7 +5,7 @@ import java.util.Map;
 import com.noodlesandwich.quacker.message.InMemoryTimeline;
 import com.noodlesandwich.quacker.message.UpdatableTimeline;
 
-public class InMemoryUsers implements Users {
+public class InMemoryUsers implements Users, Profiles {
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Profile> profiles = new HashMap<>();
 

@@ -12,7 +12,7 @@ public class ProfileDownloader implements Profiles {
     }
 
     @Override
-    public Profile forUser(String username) {
+    public Profile profileFor(String username) {
         return server.profileFor(username);
     }
 }

@@ -23,6 +23,6 @@ public class AuthenticatedClient implements Client {
 
     @Override
     public void openTimelineOf(String username) {
-        profiles.forUser(username).renderTimelineTo(userInterface);
+        profiles.profileFor(username).renderTimelineTo(userInterface);
     }
 }

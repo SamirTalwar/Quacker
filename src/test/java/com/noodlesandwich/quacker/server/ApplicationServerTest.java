@@ -42,7 +42,7 @@ public class ApplicationServerTest {
     provides_a_read_only_profile() {
         Profile lakshmi = context.mock(Profile.class);
         context.checking(new Expectations() {{
-            oneOf(profiles).forUser("Lakshmi"); will(returnValue(lakshmi));
+            oneOf(profiles).profileFor("Lakshmi"); will(returnValue(lakshmi));
         }});
 
         assertThat(server.profileFor("Lakshmi"), is(lakshmi));

@@ -23,7 +23,7 @@ public class ProfileDownloaderTest {
             oneOf(server).profileFor("Karishma"); will(returnValue(profile));
         }});
 
-        assertThat(profiles.forUser("Karishma"), is(profile));
+        assertThat(profiles.profileFor("Karishma"), is(profile));
         context.assertIsSatisfied();
     }
 }
