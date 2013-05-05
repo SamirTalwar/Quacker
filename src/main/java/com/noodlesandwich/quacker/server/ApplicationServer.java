@@ -4,16 +4,19 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import com.noodlesandwich.quacker.application.InMemory;
 import com.noodlesandwich.quacker.user.Profile;
+import com.noodlesandwich.quacker.user.Profiles;
 import com.noodlesandwich.quacker.user.User;
 import com.noodlesandwich.quacker.user.Users;
 
 @Singleton
 public class ApplicationServer implements Server {
     private final Users users;
+    private final Profiles profiles;
 
     @Inject
-    public ApplicationServer(@InMemory Users users) {
+    public ApplicationServer(@InMemory Users users, Profiles profiles) {
         this.users = users;
+        this.profiles = profiles;
     }
 
     @Override
@@ -28,6 +31,6 @@ public class ApplicationServer implements Server {
 
     @Override
     public Profile profileFor(String username) {
-        throw new UnsupportedOperationException();
+        return profiles.forUser(username);
     }
 }
