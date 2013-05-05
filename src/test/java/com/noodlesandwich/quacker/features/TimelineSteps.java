@@ -31,33 +31,33 @@ public class TimelineSteps {
         this.server = server;
     }
 
-    @Before
-    public void capture_command_line() {
+    @Before public void
+    capture_command_line() {
         originalOut = System.out;
         System.setOut(new PrintStream(output));
     }
 
-    @After
-    public void restore_command_line() {
+    @After public void
+    restore_command_line() {
         if (originalOut != null) {
             System.setOut(originalOut);
         }
     }
 
-    @Given("([^ ]+) quacks \"([^\"]*)\"$")
-    public void publishes(String user, String message) throws Throwable {
+    @Given("([^ ]+) quacks \"([^\"]*)\"$") public void
+    publishes(String user, String message) throws Throwable {
         Client client = Quacker.clientFor(server, cli).loginAs(user);
         client.publish(message);
     }
 
-    @When("^([^ ]+) opens up ([^']+)'s timeline$")
-    public void opens_up_a_timeline(String viewer, String timelineOwner) throws Throwable {
+    @When("^([^ ]+) opens up ([^']+)'s timeline$") public void
+    opens_up_a_timeline(String viewer, String timelineOwner) throws Throwable {
         Client client = Quacker.clientFor(server, cli).loginAs(viewer);
         client.openTimelineOf(timelineOwner);
     }
 
-    @Then("^s?he should see:$")
-    public void he_should_see(List<String> messages) throws Throwable {
+    @Then("^s?he should see:$") public void
+    he_should_see(List<String> messages) throws Throwable {
         assertThat(output(), is(messages));
     }
 
