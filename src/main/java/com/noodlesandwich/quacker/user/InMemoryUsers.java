@@ -2,21 +2,16 @@ package com.noodlesandwich.quacker.user;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.google.inject.Inject;
-import com.noodlesandwich.quacker.application.InMemory;
+import com.noodlesandwich.quacker.message.InMemoryTimeline;
+import com.noodlesandwich.quacker.message.UpdatableTimeline;
 
 public class InMemoryUsers implements Users {
     private final Map<String, User> users = new HashMap<>();
-    private final UserFactory userFactory;
-
-    @Inject
-    public InMemoryUsers(@InMemory UserFactory userFactory) {
-        this.userFactory = userFactory;
-    }
 
     @Override
     public void register(String username) {
-        users.put(username, userFactory.createUser());
+        UpdatableTimeline timeline = new InMemoryTimeline();
+        users.put(username, new InMemoryUser(timeline));
     }
 
     @Override
