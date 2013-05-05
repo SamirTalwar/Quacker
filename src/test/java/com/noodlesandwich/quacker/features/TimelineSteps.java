@@ -10,8 +10,6 @@ import com.noodlesandwich.quacker.client.Client;
 import com.noodlesandwich.quacker.server.Server;
 import com.noodlesandwich.quacker.ui.CommandLineUserInterface;
 import com.noodlesandwich.quacker.ui.UserInterface;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -21,27 +19,13 @@ import static org.hamcrest.Matchers.is;
 
 public class TimelineSteps {
     private final Server server;
-    private final UserInterface cli = new CommandLineUserInterface();
 
-    private PrintStream originalOut = null;
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+    private final UserInterface cli = new CommandLineUserInterface(new PrintStream(output));
 
     @Inject
     public TimelineSteps(Server server) {
         this.server = server;
-    }
-
-    @Before public void
-    capture_command_line() {
-        originalOut = System.out;
-        System.setOut(new PrintStream(output));
-    }
-
-    @After public void
-    restore_command_line() {
-        if (originalOut != null) {
-            System.setOut(originalOut);
-        }
     }
 
     @Given("([^ ]+) quacks \"([^\"]*)\"$") public void
