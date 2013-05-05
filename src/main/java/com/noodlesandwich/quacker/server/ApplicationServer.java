@@ -2,6 +2,7 @@ package com.noodlesandwich.quacker.server;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import com.noodlesandwich.quacker.application.InMemory;
 import com.noodlesandwich.quacker.user.Profile;
 import com.noodlesandwich.quacker.user.User;
 import com.noodlesandwich.quacker.user.Users;
@@ -11,7 +12,7 @@ public class ApplicationServer implements Server {
     private final Users users;
 
     @Inject
-    public ApplicationServer(Users users) {
+    public ApplicationServer(@InMemory Users users) {
         this.users = users;
     }
 

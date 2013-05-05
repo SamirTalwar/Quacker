@@ -1,11 +1,11 @@
 package com.noodlesandwich.quacker.client;
 
 import com.noodlesandwich.quacker.message.Message;
-import com.noodlesandwich.quacker.user.Profile;
-import com.noodlesandwich.quacker.user.Profiles;
 import com.noodlesandwich.quacker.testing.Captured;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
 import com.noodlesandwich.quacker.ui.UserInterface;
+import com.noodlesandwich.quacker.user.Profile;
+import com.noodlesandwich.quacker.user.Profiles;
 import com.noodlesandwich.quacker.user.User;
 import org.jmock.Expectations;
 import org.jmock.Mockery;

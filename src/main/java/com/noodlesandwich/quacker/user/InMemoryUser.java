@@ -1,6 +1,7 @@
 package com.noodlesandwich.quacker.user;
 
-import java.util.ListIterator;
+import com.google.inject.Inject;
+import com.noodlesandwich.quacker.application.InMemory;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.message.UpdatableTimeline;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
@@ -8,7 +9,8 @@ import com.noodlesandwich.quacker.ui.MessageRenderer;
 public class InMemoryUser implements User {
     private final UpdatableTimeline timeline;
 
-    public InMemoryUser(UpdatableTimeline timeline) {
+    @Inject
+    public InMemoryUser(@InMemory UpdatableTimeline timeline) {
         this.timeline = timeline;
     }
 

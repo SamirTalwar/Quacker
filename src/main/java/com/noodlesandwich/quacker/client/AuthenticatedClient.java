@@ -1,8 +1,8 @@
 package com.noodlesandwich.quacker.client;
 
 import com.noodlesandwich.quacker.message.Message;
-import com.noodlesandwich.quacker.user.Profiles;
 import com.noodlesandwich.quacker.ui.UserInterface;
+import com.noodlesandwich.quacker.user.Profiles;
 import com.noodlesandwich.quacker.user.User;
 
 public class AuthenticatedClient implements Client {
