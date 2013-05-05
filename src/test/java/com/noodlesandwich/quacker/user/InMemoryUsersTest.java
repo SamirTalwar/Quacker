@@ -15,6 +15,12 @@ public class InMemoryUsersTest {
         assertThat(users.userNamed("Govinda"), is(notNullValue()));
     }
 
+    @Test public void
+    hands_over_a_read_only_profile() {
+        users.register("Madhuri");
+        assertThat(users.profileFor("Madhuri"), is(notNullValue()));
+    }
+
     @Test(expected=NonExistentUserException.class) public void
     explodes_if_an_unknown_user_is_requested() {
         users.userNamed("Hrithik");
