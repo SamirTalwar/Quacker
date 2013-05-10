@@ -40,6 +40,12 @@ public class TimelineSteps {
         client.openTimelineOf(timelineOwner);
     }
 
+    @When("^([^ ]+) opens up (?:his|her) feed$") public void
+    opens_feed(String viewer) throws Throwable {
+        Client client = Quacker.clientFor(server, cli).loginAs(viewer);
+        client.openFeed();
+    }
+
     @Then("^s?he should see:$") public void
     he_should_see(List<String> messages) throws Throwable {
         assertThat(output(), is(messages));

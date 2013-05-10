@@ -22,7 +22,17 @@ public class AuthenticatedClient implements Client {
     }
 
     @Override
+    public void follow(String followee) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void openTimelineOf(String username) {
         profiles.profileFor(username).renderTimelineTo(userInterface);
+    }
+
+    @Override
+    public void openFeed() {
+        throw new UnsupportedOperationException();
     }
 }
