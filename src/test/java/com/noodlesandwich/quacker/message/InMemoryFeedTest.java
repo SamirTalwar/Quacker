@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
@@ -15,6 +16,8 @@ import org.jmock.Sequence;
 import org.jmock.api.Action;
 import org.jmock.api.Invocation;
 import org.junit.Test;
+
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class InMemoryFeedTest {
     private static final Instant NOW = Instant.from(ZonedDateTime.of(2013, 4, 27, 12, 0, 0, 0, ZoneId.of("UTC")));
@@ -44,10 +47,7 @@ public class InMemoryFeedTest {
         Message two = new Message("Two.", NOW.plusSeconds(2));
         Message three = new Message("Three.", NOW.plusSeconds(3));
 
-        List<Message> messages = new ArrayList<>();
-        messages.add(three);
-        messages.add(two);
-        messages.add(one);
+        Iterable<Message> messages = listOf(three, two, one);
 
         context.checking(new Expectations() {{
             allowing(profile).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(messages));
@@ -62,10 +62,41 @@ public class InMemoryFeedTest {
         context.assertIsSatisfied();
     }
 
-    private static class RenderMessages implements Action {
-        private final List<Message> messages;
+    @Test public void
+    following_multiple_users_results_in_a_feed_in_the_correct_order() {
+        Profile bugs = context.mock(Profile.class, "Bugs");
+        Profile daffy = context.mock(Profile.class, "Daffy");
 
-        public RenderMessages(List<Message> messages) {
+        feed.follow(bugs);
+        feed.follow(daffy);
+
+        Message bugs1 = new Message("Ya got me dead to rights, doc. Do you want to shoot me now or wait 'till you get home?", NOW.plus(1, MINUTES));
+        Message daffy1 = new Message("Shoot him now! Shoot him now!", NOW.plus(2, MINUTES));
+        Message bugs2 = new Message("You keep out of this--he doesn't have to shoot you now!", NOW.plus(3, MINUTES));
+        Message daffy2 = new Message("Well, I say that he does have to shoot me now! So shoot me now!", NOW.plus(4, MINUTES));
+
+        Iterable<Message> bugsMessages = listOf(bugs2, bugs1);
+        Iterable<Message> daffyMessages = listOf(daffy2, daffy1);
+
+        context.checking(new Expectations() {{
+            allowing(bugs).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(bugsMessages));
+            allowing(daffy).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(daffyMessages));
+
+            Sequence messages = context.sequence("messages");
+            oneOf(renderer).render(daffy2); inSequence(messages);
+            oneOf(renderer).render(bugs2); inSequence(messages);
+            oneOf(renderer).render(daffy1); inSequence(messages);
+            oneOf(renderer).render(bugs1); inSequence(messages);
+        }});
+        feed.renderTo(renderer);
+
+        context.assertIsSatisfied();
+    }
+
+    private static class RenderMessages implements Action {
+        private final Iterable<Message> messages;
+
+        public RenderMessages(Iterable<Message> messages) {
             this.messages = messages;
         }
 
@@ -83,5 +114,12 @@ public class InMemoryFeedTest {
             description.appendText("render the messages")
                        .appendValueList("", ", ", "", messages);
         }
+    }
+
+    @SafeVarargs
+    private final <T> Iterable<T> listOf(T... items) {
+        List<T> list = new ArrayList<>(items.length);
+        Collections.addAll(list, items);
+        return list;
     }
 }
