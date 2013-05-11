@@ -13,6 +13,10 @@ Feature: the Timeline
       | Hey, everybody! I got Quacker! |
 
   Scenario: Sanjay follows his friends, and can read their posts on his feed.
+    Given a bunch of quacks from Abhishek
+    And a bunch of quacks from Bobby
+    And a bunch of quacks from Sanjay
+
     Given Abhishek quacks "Knock knock."
     And Bobby quacks "@Abhishek Who's there?"
     And Abhishek quacks "@Bobby Doris."
@@ -27,3 +31,4 @@ Feature: the Timeline
       | @Bobby Doris.                                 |
       | @Abhishek Who's there?                        |
       | Knock knock.                                  |
+      | ...                                           |

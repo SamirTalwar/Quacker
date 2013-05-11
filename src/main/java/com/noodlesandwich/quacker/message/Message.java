@@ -48,4 +48,9 @@ public class Message implements Comparable<Message> {
         result = text.compareTo(other.text);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return text;
+    }
 }

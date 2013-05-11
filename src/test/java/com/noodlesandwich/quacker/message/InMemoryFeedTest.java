@@ -56,6 +56,7 @@ public class InMemoryFeedTest {
             oneOf(renderer).render(two); inSequence(messages);
             oneOf(renderer).render(one); inSequence(messages);
         }});
+
         feed.renderTo(renderer);
 
         context.assertIsSatisfied();
@@ -81,6 +82,7 @@ public class InMemoryFeedTest {
             oneOf(renderer).render(two); inSequence(messages);
             oneOf(renderer).render(one); inSequence(messages);
         }});
+
         feed.renderTo(renderer);
 
         context.assertIsSatisfied();
@@ -113,6 +115,7 @@ public class InMemoryFeedTest {
             oneOf(renderer).render(daffy1); inSequence(messages);
             oneOf(renderer).render(bugs1); inSequence(messages);
         }});
+
         feed.renderTo(renderer);
 
         context.assertIsSatisfied();
@@ -150,6 +153,62 @@ public class InMemoryFeedTest {
             oneOf(renderer).render(scooby2); inSequence(messages);
             oneOf(renderer).render(scooby1); inSequence(messages);
         }});
+
+        feed.renderTo(renderer);
+
+        context.assertIsSatisfied();
+    }
+
+    @Test public void
+    there_are_a_maximum_of_20_messages_in_the_feed() {
+        Profile profileA = context.mock(Profile.class, "Profile A");
+        Profile profileB = context.mock(Profile.class, "Profile B");
+        Profile profileC = context.mock(Profile.class, "Profile C");
+
+        feed.follow(profileA);
+        feed.follow(profileB);
+        feed.follow(profileC);
+
+        List<Message> profileAMessages = new ArrayList<>();
+        List<Message> profileBMessages = new ArrayList<>();
+        List<Message> profileCMessages = new ArrayList<>();
+
+        final int messageCount = 10;
+        for (int messageIndex = messageCount; messageIndex > 0; --messageIndex) {
+            profileAMessages.add(new Message("Message " + messageIndex + " from profile A", NOW.plus(messageIndex * 3 + 1, MINUTES)));
+            profileBMessages.add(new Message("Message " + messageIndex + " from profile B", NOW.plus(messageIndex * 3 + 2, MINUTES)));
+            profileCMessages.add(new Message("Message " + messageIndex + " from profile C", NOW.plus(messageIndex * 3 + 3, MINUTES)));
+        }
+
+        context.checking(new Expectations() {{
+            allowing(myProfile).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(new ArrayList<>()));
+            allowing(profileA).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(profileAMessages));
+            allowing(profileB).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(profileBMessages));
+            allowing(profileC).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(profileCMessages));
+
+            Sequence messages = context.sequence("messages");
+            oneOf(renderer).render(profileCMessages.get(0)); inSequence(messages);
+            oneOf(renderer).render(profileBMessages.get(0)); inSequence(messages);
+            oneOf(renderer).render(profileAMessages.get(0)); inSequence(messages);
+            oneOf(renderer).render(profileCMessages.get(1)); inSequence(messages);
+            oneOf(renderer).render(profileBMessages.get(1)); inSequence(messages);
+            oneOf(renderer).render(profileAMessages.get(1)); inSequence(messages);
+            oneOf(renderer).render(profileCMessages.get(2)); inSequence(messages);
+            oneOf(renderer).render(profileBMessages.get(2)); inSequence(messages);
+            oneOf(renderer).render(profileAMessages.get(2)); inSequence(messages);
+            oneOf(renderer).render(profileCMessages.get(3)); inSequence(messages);
+            oneOf(renderer).render(profileBMessages.get(3)); inSequence(messages);
+            oneOf(renderer).render(profileAMessages.get(3)); inSequence(messages);
+            oneOf(renderer).render(profileCMessages.get(4)); inSequence(messages);
+            oneOf(renderer).render(profileBMessages.get(4)); inSequence(messages);
+            oneOf(renderer).render(profileAMessages.get(4)); inSequence(messages);
+            oneOf(renderer).render(profileCMessages.get(5)); inSequence(messages);
+            oneOf(renderer).render(profileBMessages.get(5)); inSequence(messages);
+            oneOf(renderer).render(profileAMessages.get(5)); inSequence(messages);
+            oneOf(renderer).render(profileCMessages.get(6)); inSequence(messages);
+            oneOf(renderer).render(profileBMessages.get(6)); inSequence(messages);
+        }});
+
         feed.renderTo(renderer);
 
         context.assertIsSatisfied();

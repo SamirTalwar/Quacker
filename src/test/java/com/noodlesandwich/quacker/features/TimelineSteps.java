@@ -3,8 +3,10 @@ package com.noodlesandwich.quacker.features;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import javax.inject.Inject;
 import com.noodlesandwich.quacker.application.Quacker;
 import com.noodlesandwich.quacker.client.Client;
@@ -16,9 +18,12 @@ import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.hamcrest.Matcher;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.any;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 
 public class TimelineSteps {
     private final Server server;
@@ -38,9 +43,17 @@ public class TimelineSteps {
     }
 
     @Given("^([^ ]+) quacks \"([^\"]*)\"$") public void
-    publishes(String user, String message) throws Throwable {
-        Client client = Quacker.clientFor(server).loginAs(user);
+    publishes(String quacker, String message) throws Throwable {
+        Client client = Quacker.clientFor(server).loginAs(quacker);
         client.publish(message);
+    }
+
+    @Given("^a bunch of quacks from ([^ ]+)$") public void
+    lots_of_quacks(String quacker) {
+        Client client = Quacker.clientFor(server).loginAs(quacker);
+        for (int i = 0; i < 20; ++i) {
+            client.publish(aRandomMessage());
+        }
     }
 
     @When("^([^ ]+) opens up ([^']+)'s timeline$") public void
@@ -57,7 +70,8 @@ public class TimelineSteps {
     opens_feed(String viewer) throws Throwable {
         Client client = Quacker.clientFor(server).loginAs(viewer);
         client.openFeed(new FeedRenderer() {
-            @Override public void render(Message message) {
+            @Override
+            public void render(Message message) {
                 message.renderTo(messageRenderer);
             }
         });
@@ -65,10 +79,35 @@ public class TimelineSteps {
 
     @Then("^s?he should see:$") public void
     he_should_see(List<String> messages) throws Throwable {
-        assertThat(output(), is(messages));
+        List<Matcher<? super String>> matchers = new ArrayList<>();
+        int lastMessageIndex = messages.size() - 1;
+        if (messages.get(lastMessageIndex).equals("...")) {
+            for (String message : messages.subList(0, lastMessageIndex)) {
+                matchers.add(equalTo(message));
+            }
+            for (int i = lastMessageIndex; i < 20; ++i) {
+                matchers.add(any(String.class));
+            }
+        } else {
+            for (String message : messages) {
+                matchers.add(equalTo(message));
+            }
+        }
+        assertThat(output(), contains(matchers));
     }
 
     private List<String> output() {
         return Arrays.asList(output.toString().split("\n"));
+    }
+
+    private static final int RANDOM_MESSAGE_LENGTH = 20;
+    private static final char[] ALLOWED_RANDOM_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890 .,;:'!?".toCharArray();
+    private static String aRandomMessage() {
+        Random random = new Random();
+        char[] characters = new char[RANDOM_MESSAGE_LENGTH];
+        for (int i = 0; i < RANDOM_MESSAGE_LENGTH; i++) {
+            characters[i] = ALLOWED_RANDOM_CHARACTERS[random.nextInt(ALLOWED_RANDOM_CHARACTERS.length)];
+        }
+        return String.valueOf(characters);
     }
 }
