@@ -3,6 +3,9 @@ package com.noodlesandwich.quacker.message;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -46,6 +49,28 @@ public class InMemoryTimelineTest {
             oneOf(renderer).render(three); inSequence(messages);
             oneOf(renderer).render(two); inSequence(messages);
             oneOf(renderer).render(one); inSequence(messages);
+        }});
+
+        timeline.renderTo(renderer);
+
+        context.assertIsSatisfied();
+    }
+
+    @Test public void
+    caps_the_number_of_messages_at_20() {
+        List<Message> timelineMessages = new ArrayList<>();
+        for (int i = 0; i < 50; ++i) {
+            Message message = new Message("Message " + i, NOW.plusSeconds(i));
+            timelineMessages.add(message);
+            timeline.publish(message);
+        }
+        Collections.reverse(timelineMessages);
+
+        context.checking(new Expectations() {{
+            Sequence messages = context.sequence("messages");
+            for (Message message : timelineMessages.subList(0, 20)) {
+                oneOf(renderer).render(message); inSequence(messages);
+            }
         }});
 
         timeline.renderTo(renderer);

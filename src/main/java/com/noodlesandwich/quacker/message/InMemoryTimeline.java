@@ -15,9 +15,14 @@ public class InMemoryTimeline implements UpdatableTimeline {
 
     @Override
     public void renderTo(TimelineRenderer renderer) {
+        int count = 0;
         ListIterator<Message> messageIterator = messages.listIterator(messages.size());
         while (messageIterator.hasPrevious()) {
+            if (count == Feed.MAXIMUM_FEED_LENGTH) {
+                break;
+            }
             renderer.render(messageIterator.previous());
+            count++;
         }
     }
 }

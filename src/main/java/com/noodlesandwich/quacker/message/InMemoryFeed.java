@@ -10,7 +10,6 @@ import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import com.noodlesandwich.quacker.user.Profile;
 
 public class InMemoryFeed implements Feed {
-    private static final int MAXIMUM_FEED_LENGTH = 20;
 
     private final List<Profile> followees = new ArrayList<>();
 
