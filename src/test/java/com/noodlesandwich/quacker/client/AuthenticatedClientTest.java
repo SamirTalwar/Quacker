@@ -6,8 +6,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.testing.Captured;
+import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
-import com.noodlesandwich.quacker.ui.UserInterface;
+import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import com.noodlesandwich.quacker.user.Profile;
 import com.noodlesandwich.quacker.user.Profiles;
 import com.noodlesandwich.quacker.user.User;
@@ -22,24 +23,25 @@ public class AuthenticatedClientTest {
 
     private final Mockery context = new Mockery();
     private final Clock clock = Clock.fixed(NOW, ZoneId.of("UTC"));
-    private final UserInterface userInterface = context.mock(UserInterface.class);
     private final User user = context.mock(User.class);
     private final Profiles profiles = context.mock(Profiles.class);
-    private final Client client = new AuthenticatedClient(clock, userInterface, user, profiles);
+    private final Client client = new AuthenticatedClient(clock, user, profiles);
 
-    private final MessageRenderer renderer = context.mock(MessageRenderer.class);
+    private final FeedRenderer feedRenderer = context.mock(FeedRenderer.class);
+    private final MessageRenderer messageRenderer = context.mock(MessageRenderer.class);
+    private final TimelineRenderer timelineRenderer = context.mock(TimelineRenderer.class);
 
     @Test public void
     publishes_messages_to_the_server() {
         Captured<Message> message = new Captured<>();
         context.checking(new Expectations() {{
             oneOf(user).publish(with(any(Message.class))); will(captureParameter(0).as(message));
-            oneOf(renderer).render("What's up, doc?", NOW);
+            oneOf(messageRenderer).render("What's up, doc?", NOW);
         }});
 
         client.publish("What's up, doc?");
 
-        message.get().renderTo(renderer);
+        message.get().renderTo(messageRenderer);
 
         context.assertIsSatisfied();
     }
@@ -62,10 +64,10 @@ public class AuthenticatedClientTest {
         Profile profile = context.mock(Profile.class);
         context.checking(new Expectations() {{
             oneOf(profiles).profileFor("John"); will(returnValue(profile));
-            oneOf(profile).renderTimelineTo(userInterface);
+            oneOf(profile).renderTimelineTo(timelineRenderer);
         }});
 
-        client.openTimelineOf("John");
+        client.openTimelineOf("John", timelineRenderer);
 
         context.assertIsSatisfied();
     }
@@ -73,9 +75,9 @@ public class AuthenticatedClientTest {
     @Test public void
     renders_a_feed() {
         context.checking(new Expectations() {{
-            oneOf(user).renderFeedTo(userInterface);
+            oneOf(user).renderFeedTo(feedRenderer);
         }});
-        client.openFeed();
+        client.openFeed(feedRenderer);
 
         context.assertIsSatisfied();
     }
