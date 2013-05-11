@@ -33,6 +33,6 @@ public class AuthenticatedClient implements Client {
 
     @Override
     public void openFeed() {
-        throw new UnsupportedOperationException();
+        user.renderFeedTo(userInterface);
     }
 }

@@ -62,4 +62,14 @@ public class AuthenticatedClientTest {
 
         context.assertIsSatisfied();
     }
+
+    @Test public void
+    renders_a_feed() {
+        context.checking(new Expectations() {{
+            oneOf(user).renderFeedTo(userInterface);
+        }});
+        client.openFeed();
+
+        context.assertIsSatisfied();
+    }
 }

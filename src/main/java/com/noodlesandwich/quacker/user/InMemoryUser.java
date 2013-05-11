@@ -3,6 +3,7 @@ package com.noodlesandwich.quacker.user;
 import com.noodlesandwich.quacker.message.Feed;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.message.UpdatableTimeline;
+import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
 public class InMemoryUser implements User {
@@ -27,5 +28,10 @@ public class InMemoryUser implements User {
     @Override
     public void renderTimelineTo(TimelineRenderer renderer) {
         timeline.renderTo(renderer);
+    }
+
+    @Override
+    public void renderFeedTo(FeedRenderer renderer) {
+        throw new UnsupportedOperationException();
     }
 }
