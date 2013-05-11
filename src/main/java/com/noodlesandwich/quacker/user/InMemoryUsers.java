@@ -15,6 +15,10 @@ public class InMemoryUsers implements Users, Profiles {
 
     @Override
     public void register(String username) {
+        if (users.containsKey(username)) {
+            throw new UserAlreadyExistsException(username);
+        }
+
         UpdatableTimeline timeline = new InMemoryTimeline();
         Feed feed = new InMemoryFeed();
         users.put(username, new InMemoryUser(timeline, feed));

@@ -30,4 +30,10 @@ public class InMemoryUsersTest {
     explodes_if_an_unknown_profile_is_requested() {
         users.profileFor("Om");
     }
+
+    @Test(expected=UserAlreadyExistsException.class) public void
+    goes_boom_if_someone_tries_to_register_with_a_name_that_is_already_taken() {
+        users.register("Yash");
+        users.register("Yash");
+    }
 }
