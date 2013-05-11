@@ -28,7 +28,7 @@ public class TimelineSteps {
         this.server = server;
     }
 
-    @Given("([^ ]+) quacks \"([^\"]*)\"$") public void
+    @Given("^([^ ]+) quacks \"([^\"]*)\"$") public void
     publishes(String user, String message) throws Throwable {
         Client client = Quacker.clientFor(server, cli).loginAs(user);
         client.publish(message);

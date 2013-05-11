@@ -21,12 +21,12 @@ public class UserSteps {
         this.server = server;
     }
 
-    @Given("there is a user named ([^ ]+)") public void
+    @Given("^there is a user named ([^ ]+)$") public void
     there_is_a_user_named(String username) {
         server.registerUserNamed(username);
     }
 
-    @Given("([^ ]+) follows ([^ ]+)") public void
+    @Given("^([^ ]+) follows ([^ ]+)$") public void
     follows(String follower, String followee) {
         Client client = Quacker.clientFor(server, cli).loginAs(follower);
         client.follow(followee);
