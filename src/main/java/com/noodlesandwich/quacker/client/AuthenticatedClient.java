@@ -23,7 +23,7 @@ public class AuthenticatedClient implements Client {
 
     @Override
     public void follow(String followee) {
-        throw new UnsupportedOperationException();
+        user.follow(profiles.profileFor(followee));
     }
 
     @Override

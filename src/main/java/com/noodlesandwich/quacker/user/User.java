@@ -6,5 +6,7 @@ import com.noodlesandwich.quacker.ui.TimelineRenderer;
 public interface User {
     void publish(Message message);
 
+    void follow(Profile profile);
+
     void renderTimelineTo(TimelineRenderer renderer);
 }

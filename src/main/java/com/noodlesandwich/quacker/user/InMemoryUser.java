@@ -17,6 +17,11 @@ public class InMemoryUser implements User {
     }
 
     @Override
+    public void follow(Profile profile) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void renderTimelineTo(TimelineRenderer renderer) {
         timeline.renderTo(renderer);
     }

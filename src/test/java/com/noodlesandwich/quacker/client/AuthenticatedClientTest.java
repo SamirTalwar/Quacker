@@ -38,6 +38,19 @@ public class AuthenticatedClientTest {
     }
 
     @Test public void
+    follows_other_users() {
+        Profile uday = context.mock(Profile.class);
+        context.checking(new Expectations() {{
+            oneOf(profiles).profileFor("Uday"); will(returnValue(uday));
+            oneOf(user).follow(uday);
+        }});
+
+        client.follow("Uday");
+
+        context.assertIsSatisfied();
+    }
+
+    @Test public void
     renders_a_timeline() {
         Profile profile = context.mock(Profile.class);
         context.checking(new Expectations() {{
