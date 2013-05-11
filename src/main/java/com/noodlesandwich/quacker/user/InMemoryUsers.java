@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Singleton;
 import com.noodlesandwich.quacker.message.Feed;
+import com.noodlesandwich.quacker.message.InMemoryFeed;
 import com.noodlesandwich.quacker.message.InMemoryTimeline;
 import com.noodlesandwich.quacker.message.UpdatableTimeline;
 
@@ -15,11 +16,8 @@ public class InMemoryUsers implements Users, Profiles {
     @Override
     public void register(String username) {
         UpdatableTimeline timeline = new InMemoryTimeline();
-        users.put(username, new InMemoryUser(timeline, new Feed() {
-            @Override public void follow(Profile profile) {
-                throw new UnsupportedOperationException();
-            }
-        }));
+        Feed feed = new InMemoryFeed();
+        users.put(username, new InMemoryUser(timeline, feed));
         profiles.put(username, new InMemoryProfile(timeline));
     }
 
