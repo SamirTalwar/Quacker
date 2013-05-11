@@ -1,14 +1,17 @@
 package com.noodlesandwich.quacker.user;
 
+import com.noodlesandwich.quacker.message.Feed;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.message.UpdatableTimeline;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
 public class InMemoryUser implements User {
     private final UpdatableTimeline timeline;
+    private final Feed feed;
 
-    public InMemoryUser(UpdatableTimeline timeline) {
+    public InMemoryUser(UpdatableTimeline timeline, Feed feed) {
         this.timeline = timeline;
+        this.feed = feed;
     }
 
     @Override
@@ -18,7 +21,7 @@ public class InMemoryUser implements User {
 
     @Override
     public void follow(Profile profile) {
-        throw new UnsupportedOperationException();
+        feed.follow(profile);
     }
 
     @Override

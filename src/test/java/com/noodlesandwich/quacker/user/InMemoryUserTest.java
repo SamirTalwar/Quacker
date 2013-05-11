@@ -1,5 +1,6 @@
 package com.noodlesandwich.quacker.user;
 
+import com.noodlesandwich.quacker.message.Feed;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.message.UpdatableTimeline;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
@@ -10,7 +11,8 @@ import org.junit.Test;
 public class InMemoryUserTest {
     private final Mockery context = new Mockery();
     private final UpdatableTimeline timeline = context.mock(UpdatableTimeline.class);
-    private final User user = new InMemoryUser(timeline);
+    private final Feed feed = context.mock(Feed.class);
+    private final User user = new InMemoryUser(timeline, feed);
 
     private final TimelineRenderer renderer = context.mock(TimelineRenderer.class);
 
@@ -23,6 +25,18 @@ public class InMemoryUserTest {
         }});
 
         user.publish(message);
+
+        context.assertIsSatisfied();
+    }
+
+    @Test public void
+    registers_that_a_user_is_following_another_user() {
+        Profile profile = context.mock(Profile.class);
+        context.checking(new Expectations() {{
+            oneOf(feed).follow(profile);
+        }});
+
+        user.follow(profile);
 
         context.assertIsSatisfied();
     }
