@@ -12,6 +12,10 @@ import com.noodlesandwich.quacker.user.Profile;
 public class InMemoryFeed implements Feed {
     private final List<Profile> followees = new ArrayList<>();
 
+    public InMemoryFeed(Profile userProfile) {
+        followees.add(userProfile);
+    }
+
     @Override
     public void follow(Profile profile) {
         this.followees.add(profile);

@@ -3,8 +3,8 @@ Feature: the Timeline
     Given there is a user named Abhishek
     And there is a user named Bobby
     And there is a user named Sanjay
-    # And Sanjay follows Abhishek
-    # And Sanjay follows Bobby
+    And Sanjay follows Abhishek
+    And Sanjay follows Bobby
 
   Scenario: Abhishek posts to his timeline, and others can read it.
     Given Abhishek quacks "Hey, everybody! I got Quacker!"
@@ -12,7 +12,6 @@ Feature: the Timeline
     Then he should see:
       | Hey, everybody! I got Quacker! |
 
-  @wip
   Scenario: Sanjay follows his friends, and can read their posts on his feed.
     Given Abhishek quacks "Knock knock."
     And Bobby quacks "@Abhishek Who's there?"

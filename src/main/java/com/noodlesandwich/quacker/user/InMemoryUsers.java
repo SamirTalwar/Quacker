@@ -20,9 +20,12 @@ public class InMemoryUsers implements Users, Profiles {
         }
 
         UpdatableTimeline timeline = new InMemoryTimeline();
-        Feed feed = new InMemoryFeed();
-        users.put(username, new InMemoryUser(timeline, feed));
-        profiles.put(username, new InMemoryProfile(timeline));
+        InMemoryProfile profile = new InMemoryProfile(timeline);
+        Feed feed = new InMemoryFeed(profile);
+        InMemoryUser user = new InMemoryUser(timeline, feed);
+
+        users.put(username, user);
+        profiles.put(username, profile);
     }
 
     @Override
