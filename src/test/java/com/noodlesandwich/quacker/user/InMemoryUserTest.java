@@ -14,7 +14,19 @@ public class InMemoryUserTest {
     private final Feed feed = context.mock(Feed.class);
     private final User user = new InMemoryUser(timeline, feed);
 
-    private final TimelineRenderer renderer = context.mock(TimelineRenderer.class);
+    private final TimelineRenderer timelineRenderer = context.mock(TimelineRenderer.class);
+
+    @Test public void
+    registers_that_a_user_is_following_another_user() {
+        Profile profile = context.mock(Profile.class);
+        context.checking(new Expectations() {{
+            oneOf(feed).follow(profile);
+        }});
+
+        user.follow(profile);
+
+        context.assertIsSatisfied();
+    }
 
     @Test public void
     publishes_messages_to_an_in_memory_timeline() {
@@ -30,24 +42,12 @@ public class InMemoryUserTest {
     }
 
     @Test public void
-    registers_that_a_user_is_following_another_user() {
-        Profile profile = context.mock(Profile.class);
+    timeline_messages_are_rendered_in_reverse_chronological_order() {
         context.checking(new Expectations() {{
-            oneOf(feed).follow(profile);
+            oneOf(timeline).renderTo(timelineRenderer);
         }});
 
-        user.follow(profile);
-
-        context.assertIsSatisfied();
-    }
-
-    @Test public void
-    messages_are_rendered_in_reverse_chronological_order() {
-        context.checking(new Expectations() {{
-            oneOf(timeline).renderTo(renderer);
-        }});
-
-        user.renderTimelineTo(renderer);
+        user.renderTimelineTo(timelineRenderer);
 
         context.assertIsSatisfied();
     }
