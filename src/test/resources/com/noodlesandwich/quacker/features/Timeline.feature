@@ -18,7 +18,7 @@ Feature: the Timeline
     And Bobby quacks "@Abhishek Who's there?"
     And Abhishek quacks "@Bobby Doris."
     And Bobby quacks "@Abhishek Doris who?"
-    And Abishek quacks "@Bobby Doris locked. That's why I'm knocking!"
+    And Abhishek quacks "@Bobby Doris locked. That's why I'm knocking!"
     And Sanjay quacks "@Abhishek @Bobby You guys suck."
     When Sanjay opens up his feed
     Then he should see:
