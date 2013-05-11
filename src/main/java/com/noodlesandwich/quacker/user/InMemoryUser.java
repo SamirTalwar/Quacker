@@ -32,6 +32,6 @@ public class InMemoryUser implements User {
 
     @Override
     public void renderFeedTo(FeedRenderer renderer) {
-        throw new UnsupportedOperationException();
+        feed.renderTo(renderer);
     }
 }
