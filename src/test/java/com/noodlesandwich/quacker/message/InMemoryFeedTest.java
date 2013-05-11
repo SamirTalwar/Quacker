@@ -1,5 +1,8 @@
 package com.noodlesandwich.quacker.message;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
@@ -14,6 +17,8 @@ import org.jmock.api.Invocation;
 import org.junit.Test;
 
 public class InMemoryFeedTest {
+    private static final Instant NOW = Instant.from(ZonedDateTime.of(2013, 4, 27, 12, 0, 0, 0, ZoneId.of("UTC")));
+
     private final Mockery context = new Mockery();
     private final Feed feed = new InMemoryFeed();
 
@@ -35,9 +40,9 @@ public class InMemoryFeedTest {
         Profile profile = context.mock(Profile.class);
         feed.follow(profile);
 
-        Message one = new Message("One.");
-        Message two = new Message("Two.");
-        Message three = new Message("Three.");
+        Message one = new Message("One.", NOW.plusSeconds(1));
+        Message two = new Message("Two.", NOW.plusSeconds(2));
+        Message three = new Message("Three.", NOW.plusSeconds(3));
 
         List<Message> messages = new ArrayList<>();
         messages.add(three);

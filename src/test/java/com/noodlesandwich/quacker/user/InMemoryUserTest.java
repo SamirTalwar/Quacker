@@ -1,5 +1,8 @@
 package com.noodlesandwich.quacker.user;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import com.noodlesandwich.quacker.message.Feed;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.message.UpdatableTimeline;
@@ -10,6 +13,8 @@ import org.jmock.Mockery;
 import org.junit.Test;
 
 public class InMemoryUserTest {
+    private static final Instant NOW = Instant.from(ZonedDateTime.of(2012, 1, 1, 9, 0, 0, 0, ZoneId.of("UTC")));
+
     private final Mockery context = new Mockery();
     private final UpdatableTimeline timeline = context.mock(UpdatableTimeline.class);
     private final Feed feed = context.mock(Feed.class);
@@ -32,7 +37,7 @@ public class InMemoryUserTest {
 
     @Test public void
     publishes_messages_to_an_in_memory_timeline() {
-        Message message = new Message("Beep beep.");
+        Message message = new Message("Beep beep.", NOW);
 
         context.checking(new Expectations() {{
             oneOf(timeline).publish(message);

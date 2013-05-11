@@ -1,6 +1,7 @@
 package com.noodlesandwich.quacker.ui;
 
 import java.io.PrintStream;
+import java.time.Instant;
 import com.noodlesandwich.quacker.message.Message;
 
 public class CommandLineUserInterface implements UserInterface {
@@ -13,7 +14,7 @@ public class CommandLineUserInterface implements UserInterface {
     @Override
     public void render(Message message) {
         message.renderTo(new MessageRenderer() {
-            @Override public void render(String text) {
+            @Override public void render(String text, Instant timestamp) {
                 printStream.println(text);
             }
         });

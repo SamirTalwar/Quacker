@@ -1,5 +1,9 @@
 package com.noodlesandwich.quacker.client;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.testing.Captured;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
@@ -14,11 +18,14 @@ import org.junit.Test;
 import static com.noodlesandwich.quacker.testing.CaptureParameter.captureParameter;
 
 public class AuthenticatedClientTest {
+    private static final Instant NOW = Instant.from(ZonedDateTime.of(2013, 11, 14, 7, 30, 0, 0, ZoneId.of("UTC")));
+
     private final Mockery context = new Mockery();
+    private final Clock clock = Clock.fixed(NOW, ZoneId.of("UTC"));
     private final UserInterface userInterface = context.mock(UserInterface.class);
     private final User user = context.mock(User.class);
     private final Profiles profiles = context.mock(Profiles.class);
-    private final Client client = new AuthenticatedClient(userInterface, user, profiles);
+    private final Client client = new AuthenticatedClient(clock, userInterface, user, profiles);
 
     private final MessageRenderer renderer = context.mock(MessageRenderer.class);
 
@@ -27,7 +34,7 @@ public class AuthenticatedClientTest {
         Captured<Message> message = new Captured<>();
         context.checking(new Expectations() {{
             oneOf(user).publish(with(any(Message.class))); will(captureParameter(0).as(message));
-            oneOf(renderer).render("What's up, doc?");
+            oneOf(renderer).render("What's up, doc?", NOW);
         }});
 
         client.publish("What's up, doc?");
