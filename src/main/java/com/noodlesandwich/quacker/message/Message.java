@@ -8,6 +8,9 @@ public class Message implements Comparable<Message> {
     private final Instant timestamp;
 
     public Message(String text, Instant timestamp) {
+        if (text.length() > 140) {
+            throw new MessageTooLongException(text, timestamp);
+        }
         this.text = text;
         this.timestamp = timestamp;
     }

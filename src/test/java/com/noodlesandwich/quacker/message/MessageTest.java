@@ -3,6 +3,7 @@ package com.noodlesandwich.quacker.message;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Random;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -32,6 +33,11 @@ public class MessageTest {
         message.renderTo(renderer);
 
         context.assertIsSatisfied();
+    }
+
+    @Test(expected=MessageTooLongException.class) public void
+    cannot_be_more_than_140_characters() {
+        new Message(stringOfLength(141), NOW);
     }
 
     @Test public void
@@ -86,5 +92,18 @@ public class MessageTest {
 
         assertThat(lesserMessage, comparesEqualTo(greaterMessage));
         assertThat(greaterMessage, comparesEqualTo(lesserMessage));
+    }
+
+    private static String stringOfLength(int length) {
+        Random random = new Random();
+        char[] characters = new char[length];
+        for (int i = 0; i < length; ++i) {
+            char character;
+            do {
+                character = (char) random.nextInt();
+            } while (!Character.isLetterOrDigit(character));
+            characters[i] = character;
+        }
+        return String.valueOf(characters);
     }
 }
