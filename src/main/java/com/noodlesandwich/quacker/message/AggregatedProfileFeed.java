@@ -9,11 +9,10 @@ import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import com.noodlesandwich.quacker.user.Profile;
 
-public class InMemoryFeed implements Feed {
-
+public class AggregatedProfileFeed implements Feed {
     private final List<Profile> followees = new ArrayList<>();
 
-    public InMemoryFeed(Profile userProfile) {
+    public AggregatedProfileFeed(Profile userProfile) {
         followees.add(userProfile);
     }
 

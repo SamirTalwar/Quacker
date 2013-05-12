@@ -3,8 +3,8 @@ package com.noodlesandwich.quacker.user;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Singleton;
+import com.noodlesandwich.quacker.message.AggregatedProfileFeed;
 import com.noodlesandwich.quacker.message.Feed;
-import com.noodlesandwich.quacker.message.InMemoryFeed;
 import com.noodlesandwich.quacker.message.InMemoryTimeline;
 import com.noodlesandwich.quacker.message.UpdatableTimeline;
 
@@ -21,7 +21,7 @@ public class InMemoryUsers implements Users, Profiles {
 
         UpdatableTimeline timeline = new InMemoryTimeline();
         InMemoryProfile profile = new InMemoryProfile(timeline);
-        Feed feed = new InMemoryFeed(profile);
+        Feed feed = new AggregatedProfileFeed(profile);
         InMemoryUser user = new InMemoryUser(timeline, feed);
 
         users.put(username, user);

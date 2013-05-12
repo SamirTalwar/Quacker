@@ -19,12 +19,12 @@ import org.junit.Test;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 
-public class InMemoryFeedTest {
+public class AggregatedProfileFeedTest {
     private static final Instant NOW = Instant.from(ZonedDateTime.of(2013, 4, 27, 12, 0, 0, 0, ZoneId.of("UTC")));
 
     private final Mockery context = new Mockery();
     private final Profile myProfile = context.mock(Profile.class, "Me");
-    private final Feed feed = new InMemoryFeed(myProfile);
+    private final Feed feed = new AggregatedProfileFeed(myProfile);
 
     private final FeedRenderer renderer = context.mock(FeedRenderer.class);
 
