@@ -35,6 +35,11 @@ public class MessageTest {
         context.assertIsSatisfied();
     }
 
+    @Test(expected=EmptyMessageException.class) public void
+    cannot_be_empty() {
+        new Message("", NOW);
+    }
+
     @Test(expected=MessageTooLongException.class) public void
     cannot_be_more_than_140_characters() {
         new Message(stringOfLength(141), NOW);
