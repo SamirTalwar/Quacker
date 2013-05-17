@@ -3,6 +3,7 @@ package com.noodlesandwich.quacker.user;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.message.Timeline;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
@@ -34,9 +35,9 @@ public class InMemoryProfileTest {
 
     @Test public void
     is_iterable() {
-        Message one = new Message(1, "one", NOW);
-        Message two = new Message(2, "two", NOW);
-        Message three = new Message(3, "three", NOW);
+        Message one = new Message(new Id(1), "one", NOW);
+        Message two = new Message(new Id(2), "two", NOW);
+        Message three = new Message(new Id(3), "three", NOW);
 
         final List<Message> messages = new ArrayList<>();
         messages.add(one);

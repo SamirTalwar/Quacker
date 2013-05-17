@@ -3,6 +3,7 @@ package com.noodlesandwich.quacker.user;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.message.Feed;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.message.UpdatableTimeline;
@@ -37,7 +38,7 @@ public class InMemoryUserTest {
 
     @Test public void
     publishes_messages_to_an_in_memory_timeline() {
-        final Message message = new Message(42, "Beep beep.", NOW);
+        final Message message = new Message(new Id(42), "Beep beep.", NOW);
 
         context.checking(new Expectations() {{
             oneOf(timeline).publish(message);

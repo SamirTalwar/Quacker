@@ -1,14 +1,15 @@
 package com.noodlesandwich.quacker.message;
 
 import java.time.Instant;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
 
 public class Message implements Comparable<Message> {
+    private final Id id;
     private final String text;
     private final Instant timestamp;
-    private final int id;
 
-    public Message(int id, String text, Instant timestamp) {
+    public Message(Id id, String text, Instant timestamp) {
         if (text.isEmpty()) {
             throw new EmptyMessageException(timestamp);
         }
@@ -22,7 +23,7 @@ public class Message implements Comparable<Message> {
     }
 
     public void renderTo(MessageRenderer renderer) {
-        renderer.render(id, text, timestamp);
+        renderer.render(id.getValue(), text, timestamp);
     }
 
     @Override
@@ -36,14 +37,14 @@ public class Message implements Comparable<Message> {
         }
 
         Message other = (Message) o;
-        return id == other.id
+        return id.equals(other.id)
             && text.equals(other.text)
             && timestamp.equals(other.timestamp);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id.hashCode();
         result = 31 * result + text.hashCode();
         result = 31 * result + timestamp.hashCode();
         return result;
@@ -59,11 +60,6 @@ public class Message implements Comparable<Message> {
         }
 
         result = text.compareTo(other.text);
-        if(result != 0) {
-            return result;
-        }
-
-        result = Integer.compare(id, other.id);
         return result;
     }
 

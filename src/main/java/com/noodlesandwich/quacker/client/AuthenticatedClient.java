@@ -23,7 +23,7 @@ public class AuthenticatedClient implements Client {
 
     @Override
     public void publish(String message) {
-        user.publish(new Message(idSource.nextId().getValue(), message, clock.instant()));
+        user.publish(new Message(idSource.nextId(), message, clock.instant()));
     }
 
     @Override
