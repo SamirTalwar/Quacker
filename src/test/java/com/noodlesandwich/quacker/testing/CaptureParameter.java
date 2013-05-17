@@ -8,7 +8,7 @@ public class CaptureParameter<T> implements Action {
     private final int parameterIndex;
     private final Captured<T> captured;
 
-    public CaptureParameter(int parameterIndex, Captured<T> captured) {
+    private CaptureParameter(int parameterIndex, Captured<T> captured) {
         this.parameterIndex = parameterIndex;
         this.captured = captured;
     }
