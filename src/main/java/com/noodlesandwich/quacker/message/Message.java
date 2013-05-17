@@ -23,7 +23,7 @@ public class Message implements Comparable<Message> {
     }
 
     public void renderTo(MessageRenderer renderer) {
-        renderer.render(id.getValue(), text, timestamp);
+        renderer.render(id, text, timestamp);
     }
 
     @Override

@@ -27,7 +27,7 @@ public class MessageTest {
     @Test public void
     renders() {
         context.checking(new Expectations() {{
-            oneOf(renderer).render(7, "Boop.", NOW);
+            oneOf(renderer).render(new Id(7), "Boop.", NOW);
         }});
 
         Message message = new Message(new Id(7), "Boop.", NOW);

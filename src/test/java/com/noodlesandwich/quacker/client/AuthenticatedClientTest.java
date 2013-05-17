@@ -40,7 +40,7 @@ public class AuthenticatedClientTest {
         context.checking(new Expectations() {{
             oneOf(idSource).nextId(); will(returnValue(new Id(3)));
             oneOf(user).publish(with(any(Message.class))); will(captureParameter(0).as(message));
-            oneOf(messageRenderer).render(3, "What's up, doc?", NOW);
+            oneOf(messageRenderer).render(new Id(3), "What's up, doc?", NOW);
         }});
 
         client.publish("What's up, doc?");

@@ -10,6 +10,7 @@ import java.util.Random;
 import javax.inject.Inject;
 import com.noodlesandwich.quacker.application.Quacker;
 import com.noodlesandwich.quacker.client.Client;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.server.Server;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
@@ -32,7 +33,7 @@ public class TimelineSteps {
     private final PrintStream outputStream = new PrintStream(output);
 
     private final MessageRenderer messageRenderer = new MessageRenderer() {
-        @Override public void render(int id, String text, Instant timestamp) {
+        @Override public void render(Id id, String text, Instant timestamp) {
             outputStream.append(text).append('\n');
         }
     };
