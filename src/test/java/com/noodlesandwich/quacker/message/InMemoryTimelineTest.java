@@ -12,6 +12,9 @@ import org.jmock.Mockery;
 import org.jmock.Sequence;
 import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
+
 public class InMemoryTimelineTest {
     private static final Instant NOW = Instant.from(ZonedDateTime.of(2011, 12, 25, 15, 42, 23, 0, ZoneId.of("UTC")));
 
@@ -76,5 +79,19 @@ public class InMemoryTimelineTest {
         timeline.renderTo(renderer);
 
         context.assertIsSatisfied();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test public void
+    is_iterable() {
+        Message one = new Message("One", NOW.plusSeconds(1));
+        Message two = new Message("Two", NOW.plusSeconds(2));
+        Message three = new Message("Three", NOW.plusSeconds(3));
+
+        timeline.publish(one);
+        timeline.publish(two);
+        timeline.publish(three);
+
+        assertThat(timeline, contains(three, two, one));
     }
 }

@@ -1,5 +1,7 @@
 package com.noodlesandwich.quacker.user;
 
+import java.util.Iterator;
+import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.message.Timeline;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
@@ -13,5 +15,10 @@ public class InMemoryProfile implements Profile {
     @Override
     public void renderTimelineTo(TimelineRenderer renderer) {
         timeline.renderTo(renderer);
+    }
+
+    @Override
+    public Iterator<Message> iterator() {
+        return timeline.iterator();
     }
 }

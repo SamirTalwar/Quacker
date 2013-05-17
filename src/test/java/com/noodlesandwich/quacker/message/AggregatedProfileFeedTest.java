@@ -5,9 +5,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
-import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import com.noodlesandwich.quacker.user.Profile;
 import org.hamcrest.Description;
 import org.jmock.Expectations;
@@ -31,7 +31,7 @@ public class AggregatedProfileFeedTest {
     @Test public void
     an_empty_feed_has_no_output() {
         context.checking(new Expectations() {{
-            allowing(myProfile).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(new ArrayList<>()));
+            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<>()));
             never(renderer);
         }});
 
@@ -49,7 +49,7 @@ public class AggregatedProfileFeedTest {
         Iterable<Message> messages = listOf(three, two, one);
 
         context.checking(new Expectations() {{
-            allowing(myProfile).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(messages));
+            allowing(myProfile).iterator(); will(new RenderMessages(messages));
 
             Sequence messages = context.sequence("messages");
             oneOf(renderer).render(three); inSequence(messages);
@@ -74,8 +74,8 @@ public class AggregatedProfileFeedTest {
         Iterable<Message> messages = listOf(three, two, one);
 
         context.checking(new Expectations() {{
-            allowing(myProfile).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(new ArrayList<>()));
-            allowing(profile).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(messages));
+            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<>()));
+            allowing(profile).iterator(); will(new RenderMessages(messages));
 
             Sequence messages = context.sequence("messages");
             oneOf(renderer).render(three); inSequence(messages);
@@ -105,9 +105,9 @@ public class AggregatedProfileFeedTest {
         Iterable<Message> daffyMessages = listOf(daffy2, daffy1);
 
         context.checking(new Expectations() {{
-            allowing(myProfile).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(new ArrayList<>()));
-            allowing(bugs).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(bugsMessages));
-            allowing(daffy).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(daffyMessages));
+            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<>()));
+            allowing(bugs).iterator(); will(new RenderMessages(bugsMessages));
+            allowing(daffy).iterator(); will(new RenderMessages(daffyMessages));
 
             Sequence messages = context.sequence("messages");
             oneOf(renderer).render(daffy2); inSequence(messages);
@@ -141,9 +141,9 @@ public class AggregatedProfileFeedTest {
         Iterable<Message> yourMessages = listOf(you1);
 
         context.checking(new Expectations() {{
-            allowing(myProfile).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(yourMessages));
-            allowing(scooby).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(scoobyMessages));
-            allowing(shaggy).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(shaggyMessages));
+            allowing(myProfile).iterator(); will(new RenderMessages(yourMessages));
+            allowing(scooby).iterator(); will(new RenderMessages(scoobyMessages));
+            allowing(shaggy).iterator(); will(new RenderMessages(shaggyMessages));
 
             Sequence messages = context.sequence("messages");
             oneOf(renderer).render(shaggy2); inSequence(messages);
@@ -181,10 +181,10 @@ public class AggregatedProfileFeedTest {
         }
 
         context.checking(new Expectations() {{
-            allowing(myProfile).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(new ArrayList<>()));
-            allowing(profileA).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(profileAMessages));
-            allowing(profileB).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(profileBMessages));
-            allowing(profileC).renderTimelineTo(with(any(TimelineRenderer.class))); will(new RenderMessages(profileCMessages));
+            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<>()));
+            allowing(profileA).iterator(); will(new RenderMessages(profileAMessages).stoppingAfter(7));
+            allowing(profileB).iterator(); will(new RenderMessages(profileBMessages).stoppingAfter(8));
+            allowing(profileC).iterator(); will(new RenderMessages(profileCMessages).stoppingAfter(8));
 
             Sequence messages = context.sequence("messages");
             oneOf(renderer).render(profileCMessages.get(0)); inSequence(messages);
@@ -216,18 +216,42 @@ public class AggregatedProfileFeedTest {
 
     private static class RenderMessages implements Action {
         private final Iterable<Message> messages;
+        private int expectToStopAfter = Integer.MAX_VALUE;
 
         public RenderMessages(Iterable<Message> messages) {
             this.messages = messages;
         }
 
+        public RenderMessages stoppingAfter(int expectation) {
+            this.expectToStopAfter = expectation;
+            return this;
+        }
+
         @Override
         public Object invoke(Invocation invocation) throws Throwable {
-            TimelineRenderer timelineRenderer = (TimelineRenderer) invocation.getParameter(0);
-            for (Message message : messages) {
-                timelineRenderer.render(message);
-            }
-            return null;
+            Iterator<Message> iterator = messages.iterator();
+            return new Iterator<Message>() {
+                private int messagesRendered = 0;
+
+                @Override
+                public boolean hasNext() {
+                    return iterator.hasNext();
+                }
+
+                @Override
+                public Message next() {
+                    if (messagesRendered == expectToStopAfter) {
+                        throw new IllegalStateException("Expected to stop after iterating through " + expectToStopAfter + " messages.");
+                    }
+                    messagesRendered++;
+                    return iterator.next();
+                }
+
+                @Override
+                public void remove() {
+                    iterator.remove();
+                }
+            };
         }
 
         @Override
