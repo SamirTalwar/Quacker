@@ -31,7 +31,7 @@ public class AggregatedProfileFeedTest {
     @Test public void
     an_empty_feed_has_no_output() {
         context.checking(new Expectations() {{
-            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<>()));
+            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<Message>()));
             never(renderer);
         }});
 
@@ -42,11 +42,11 @@ public class AggregatedProfileFeedTest {
 
     @Test public void
     your_own_tweets_are_part_of_your_feed() {
-        Message one = new Message("A B C!", NOW.plusSeconds(1));
-        Message two = new Message("It's as easy as 1 2 3!", NOW.plusSeconds(2));
-        Message three = new Message("As simple as Do Ray Me!", NOW.plusSeconds(3));
+        final Message one = new Message("A B C!", NOW.plusSeconds(1));
+        final Message two = new Message("It's as easy as 1 2 3!", NOW.plusSeconds(2));
+        final Message three = new Message("As simple as Do Ray Me!", NOW.plusSeconds(3));
 
-        Iterable<Message> messages = listOf(three, two, one);
+        final Iterable<Message> messages = listOf(three, two, one);
 
         context.checking(new Expectations() {{
             allowing(myProfile).iterator(); will(new RenderMessages(messages));
@@ -64,17 +64,17 @@ public class AggregatedProfileFeedTest {
 
     @Test public void
     following_a_user_results_in_a_feed_containing_quacks_from_that_user() {
-        Profile profile = context.mock(Profile.class, "Other Guy");
+        final Profile profile = context.mock(Profile.class, "Other Guy");
         feed.follow(profile);
 
-        Message one = new Message("One.", NOW.plusSeconds(1));
-        Message two = new Message("Two.", NOW.plusSeconds(2));
-        Message three = new Message("Three.", NOW.plusSeconds(3));
+        final Message one = new Message("One.", NOW.plusSeconds(1));
+        final Message two = new Message("Two.", NOW.plusSeconds(2));
+        final Message three = new Message("Three.", NOW.plusSeconds(3));
 
-        Iterable<Message> messages = listOf(three, two, one);
+        final Iterable<Message> messages = listOf(three, two, one);
 
         context.checking(new Expectations() {{
-            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<>()));
+            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<Message>()));
             allowing(profile).iterator(); will(new RenderMessages(messages));
 
             Sequence messages = context.sequence("messages");
@@ -90,22 +90,22 @@ public class AggregatedProfileFeedTest {
 
     @Test public void
     following_multiple_users_results_in_a_feed_in_the_correct_order() {
-        Profile bugs = context.mock(Profile.class, "Bugs");
-        Profile daffy = context.mock(Profile.class, "Daffy");
+        final Profile bugs = context.mock(Profile.class, "Bugs");
+        final Profile daffy = context.mock(Profile.class, "Daffy");
 
         feed.follow(bugs);
         feed.follow(daffy);
 
-        Message bugs1 = new Message("Ya got me dead to rights, doc. Do you want to shoot me now or wait 'till you get home?", NOW.plus(1, MINUTES));
-        Message daffy1 = new Message("Shoot him now! Shoot him now!", NOW.plus(2, MINUTES));
-        Message bugs2 = new Message("You keep out of this--he doesn't have to shoot you now!", NOW.plus(3, MINUTES));
-        Message daffy2 = new Message("Well, I say that he does have to shoot me now! So shoot me now!", NOW.plus(4, MINUTES));
+        final Message bugs1 = new Message("Ya got me dead to rights, doc. Do you want to shoot me now or wait 'till you get home?", NOW.plus(1, MINUTES));
+        final Message daffy1 = new Message("Shoot him now! Shoot him now!", NOW.plus(2, MINUTES));
+        final Message bugs2 = new Message("You keep out of this--he doesn't have to shoot you now!", NOW.plus(3, MINUTES));
+        final Message daffy2 = new Message("Well, I say that he does have to shoot me now! So shoot me now!", NOW.plus(4, MINUTES));
 
-        Iterable<Message> bugsMessages = listOf(bugs2, bugs1);
-        Iterable<Message> daffyMessages = listOf(daffy2, daffy1);
+        final Iterable<Message> bugsMessages = listOf(bugs2, bugs1);
+        final Iterable<Message> daffyMessages = listOf(daffy2, daffy1);
 
         context.checking(new Expectations() {{
-            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<>()));
+            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<Message>()));
             allowing(bugs).iterator(); will(new RenderMessages(bugsMessages));
             allowing(daffy).iterator(); will(new RenderMessages(daffyMessages));
 
@@ -123,22 +123,22 @@ public class AggregatedProfileFeedTest {
 
     @Test public void
     you_are_part_of_the_conversation() {
-        Profile scooby = context.mock(Profile.class, "Scooby");
-        Profile shaggy = context.mock(Profile.class, "Shaggy");
+        final Profile scooby = context.mock(Profile.class, "Scooby");
+        final Profile shaggy = context.mock(Profile.class, "Shaggy");
 
         feed.follow(scooby);
         feed.follow(shaggy);
 
-        Message scooby1 = new Message("I'm hungry Shaggy.", NOW.plus(1, MINUTES));
-        Message scooby2 = new Message("Got a Scooby Snack?", NOW.plus(2, MINUTES));
-        Message shaggy1 = new Message("I'll give you half of my Scooby Snack.", NOW.plus(4, MINUTES));
-        Message scooby3 = new Message("Yay!", NOW.plus(8, MINUTES));
-        Message you1 = new Message("Put down the Scooby Snacks and no one gets hurt.", NOW.plus(16, MINUTES));
-        Message shaggy2 = new Message("I already ate the Scooby Snack. Sorry, Fred.", NOW.plus(32, MINUTES));
+        final Message scooby1 = new Message("I'm hungry Shaggy.", NOW.plus(1, MINUTES));
+        final Message scooby2 = new Message("Got a Scooby Snack?", NOW.plus(2, MINUTES));
+        final Message shaggy1 = new Message("I'll give you half of my Scooby Snack.", NOW.plus(4, MINUTES));
+        final Message scooby3 = new Message("Yay!", NOW.plus(8, MINUTES));
+        final Message you1 = new Message("Put down the Scooby Snacks and no one gets hurt.", NOW.plus(16, MINUTES));
+        final Message shaggy2 = new Message("I already ate the Scooby Snack. Sorry, Fred.", NOW.plus(32, MINUTES));
 
-        Iterable<Message> scoobyMessages = listOf(scooby3, scooby2, scooby1);
-        Iterable<Message> shaggyMessages = listOf(shaggy2, shaggy1);
-        Iterable<Message> yourMessages = listOf(you1);
+        final Iterable<Message> scoobyMessages = listOf(scooby3, scooby2, scooby1);
+        final Iterable<Message> shaggyMessages = listOf(shaggy2, shaggy1);
+        final Iterable<Message> yourMessages = listOf(you1);
 
         context.checking(new Expectations() {{
             allowing(myProfile).iterator(); will(new RenderMessages(yourMessages));
@@ -161,17 +161,17 @@ public class AggregatedProfileFeedTest {
 
     @Test public void
     there_are_a_maximum_of_20_messages_in_the_feed() {
-        Profile profileA = context.mock(Profile.class, "Profile A");
-        Profile profileB = context.mock(Profile.class, "Profile B");
-        Profile profileC = context.mock(Profile.class, "Profile C");
+        final Profile profileA = context.mock(Profile.class, "Profile A");
+        final Profile profileB = context.mock(Profile.class, "Profile B");
+        final Profile profileC = context.mock(Profile.class, "Profile C");
 
         feed.follow(profileA);
         feed.follow(profileB);
         feed.follow(profileC);
 
-        List<Message> profileAMessages = new ArrayList<>();
-        List<Message> profileBMessages = new ArrayList<>();
-        List<Message> profileCMessages = new ArrayList<>();
+        final List<Message> profileAMessages = new ArrayList<>();
+        final List<Message> profileBMessages = new ArrayList<>();
+        final List<Message> profileCMessages = new ArrayList<>();
 
         final int messageCount = 10;
         for (int messageIndex = messageCount; messageIndex > 0; --messageIndex) {
@@ -181,7 +181,7 @@ public class AggregatedProfileFeedTest {
         }
 
         context.checking(new Expectations() {{
-            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<>()));
+            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<Message>()));
             allowing(profileA).iterator(); will(new RenderMessages(profileAMessages).stoppingAfter(7));
             allowing(profileB).iterator(); will(new RenderMessages(profileBMessages).stoppingAfter(8));
             allowing(profileC).iterator(); will(new RenderMessages(profileCMessages).stoppingAfter(8));
@@ -229,7 +229,7 @@ public class AggregatedProfileFeedTest {
 
         @Override
         public Object invoke(Invocation invocation) throws Throwable {
-            Iterator<Message> iterator = messages.iterator();
+            final Iterator<Message> iterator = messages.iterator();
             return new Iterator<Message>() {
                 private int messagesRendered = 0;
 

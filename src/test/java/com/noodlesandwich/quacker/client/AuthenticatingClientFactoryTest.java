@@ -20,9 +20,9 @@ public class AuthenticatingClientFactoryTest {
 
     @Test public void
     authenticates_with_the_server() {
-        Server server = context.mock(Server.class);
+        final Server server = context.mock(Server.class);
+        final User user = context.mock(User.class);
 
-        User user = context.mock(User.class);
         context.checking(new Expectations() {{
             oneOf(server).authenticatedUserNamed("Bharat"); will(returnValue(user));
         }});

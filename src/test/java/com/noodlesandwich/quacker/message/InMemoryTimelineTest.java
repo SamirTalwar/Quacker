@@ -25,7 +25,7 @@ public class InMemoryTimelineTest {
 
     @Test public void
     publishes_messages_to_an_in_memory_timeline() {
-        Message message = new Message("Beep beep.", NOW);
+        final Message message = new Message("Beep beep.", NOW);
         timeline.publish(message);
 
         context.checking(new Expectations() {{
@@ -39,9 +39,9 @@ public class InMemoryTimelineTest {
 
     @Test public void
     messages_are_rendered_in_reverse_chronological_order() {
-        Message one = new Message("One", NOW.plusSeconds(1));
-        Message two = new Message("Two", NOW.plusSeconds(2));
-        Message three = new Message("Three", NOW.plusSeconds(3));
+        final Message one = new Message("One", NOW.plusSeconds(1));
+        final Message two = new Message("Two", NOW.plusSeconds(2));
+        final Message three = new Message("Three", NOW.plusSeconds(3));
 
         timeline.publish(one);
         timeline.publish(two);
@@ -61,7 +61,7 @@ public class InMemoryTimelineTest {
 
     @Test public void
     caps_the_number_of_messages_at_20() {
-        List<Message> timelineMessages = new ArrayList<>();
+        final List<Message> timelineMessages = new ArrayList<>();
         for (int i = 0; i < 50; ++i) {
             Message message = new Message("Message " + i, NOW.plusSeconds(i));
             timelineMessages.add(message);

@@ -19,7 +19,7 @@ public class ApplicationServerTest {
 
     @Test public void
     returns_an_authenticated_user() {
-        User devaraj = context.mock(User.class);
+        final User devaraj = context.mock(User.class);
         context.checking(new Expectations() {{
             oneOf(users).userNamed("Devaraj"); will(returnValue(devaraj));
         }});
@@ -40,7 +40,7 @@ public class ApplicationServerTest {
 
     @Test public void
     provides_a_read_only_profile() {
-        Profile lakshmi = context.mock(Profile.class);
+        final Profile lakshmi = context.mock(Profile.class);
         context.checking(new Expectations() {{
             oneOf(profiles).profileFor("Lakshmi"); will(returnValue(lakshmi));
         }});

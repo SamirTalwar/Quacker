@@ -25,7 +25,7 @@ public class InMemoryUserTest {
 
     @Test public void
     registers_that_a_user_is_following_another_user() {
-        Profile profile = context.mock(Profile.class);
+        final Profile profile = context.mock(Profile.class);
         context.checking(new Expectations() {{
             oneOf(feed).follow(profile);
         }});
@@ -37,7 +37,7 @@ public class InMemoryUserTest {
 
     @Test public void
     publishes_messages_to_an_in_memory_timeline() {
-        Message message = new Message("Beep beep.", NOW);
+        final Message message = new Message("Beep beep.", NOW);
 
         context.checking(new Expectations() {{
             oneOf(timeline).publish(message);

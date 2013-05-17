@@ -33,7 +33,7 @@ public class AuthenticatedClientTest {
 
     @Test public void
     publishes_messages_to_the_server() {
-        Captured<Message> message = new Captured<>();
+        final Captured<Message> message = new Captured<>();
         context.checking(new Expectations() {{
             oneOf(user).publish(with(any(Message.class))); will(captureParameter(0).as(message));
             oneOf(messageRenderer).render("What's up, doc?", NOW);
@@ -48,7 +48,7 @@ public class AuthenticatedClientTest {
 
     @Test public void
     follows_other_users() {
-        Profile uday = context.mock(Profile.class);
+        final Profile uday = context.mock(Profile.class);
         context.checking(new Expectations() {{
             oneOf(profiles).profileFor("Uday"); will(returnValue(uday));
             oneOf(user).follow(uday);
@@ -61,7 +61,7 @@ public class AuthenticatedClientTest {
 
     @Test public void
     renders_a_timeline() {
-        Profile profile = context.mock(Profile.class);
+        final Profile profile = context.mock(Profile.class);
         context.checking(new Expectations() {{
             oneOf(profiles).profileFor("John"); will(returnValue(profile));
             oneOf(profile).renderTimelineTo(timelineRenderer);

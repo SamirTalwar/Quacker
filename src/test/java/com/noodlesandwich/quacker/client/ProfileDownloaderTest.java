@@ -17,7 +17,7 @@ public class ProfileDownloaderTest {
 
     @Test public void
     downloads_timelines_from_the_server() {
-        Profile profile = context.mock(Profile.class);
+        final Profile profile = context.mock(Profile.class);
 
         context.checking(new Expectations() {{
             oneOf(server).profileFor("Karishma"); will(returnValue(profile));

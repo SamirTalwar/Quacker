@@ -44,7 +44,7 @@ public class AggregatedProfileFeed implements Feed {
                 }
             }
 
-            NavigableMap<Message, Profile> potentialNextMessages = new TreeMap<>(new ReverseComparator<>());
+            NavigableMap<Message, Profile> potentialNextMessages = new TreeMap<>(new ReverseComparator<Message>());
             for (Map.Entry<Profile, Message> nextMessage : nextMessages.entrySet()) {
                 Profile profile = nextMessage.getKey();
                 Message message = nextMessage.getValue();

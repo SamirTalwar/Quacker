@@ -22,7 +22,7 @@ public class InMemoryProfileTest {
 
     @Test public void
     renders_the_messages() {
-        TimelineRenderer renderer = context.mock(TimelineRenderer.class);
+        final TimelineRenderer renderer = context.mock(TimelineRenderer.class);
         context.checking(new Expectations() {{
             oneOf(timeline).renderTo(renderer);
         }});
@@ -38,7 +38,7 @@ public class InMemoryProfileTest {
         Message two = new Message("two", NOW);
         Message three = new Message("three", NOW);
 
-        List<Message> messages = new ArrayList<>();
+        final List<Message> messages = new ArrayList<>();
         messages.add(one);
         messages.add(two);
         messages.add(three);
