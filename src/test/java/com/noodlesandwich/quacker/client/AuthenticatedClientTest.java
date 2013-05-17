@@ -4,6 +4,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import com.noodlesandwich.quacker.id.IdentifierSource;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.testing.Captured;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
@@ -23,9 +24,10 @@ public class AuthenticatedClientTest {
 
     private final Mockery context = new Mockery();
     private final Clock clock = Clock.fixed(NOW, ZoneId.of("UTC"));
+    private final IdentifierSource idSource = context.mock(IdentifierSource.class);
     private final User user = context.mock(User.class);
     private final Profiles profiles = context.mock(Profiles.class);
-    private final Client client = new AuthenticatedClient(clock, user, profiles);
+    private final Client client = new AuthenticatedClient(clock, idSource, user, profiles);
 
     private final FeedRenderer feedRenderer = context.mock(FeedRenderer.class);
     private final MessageRenderer messageRenderer = context.mock(MessageRenderer.class);
@@ -35,8 +37,9 @@ public class AuthenticatedClientTest {
     publishes_messages_to_the_server() {
         final Captured<Message> message = new Captured<>();
         context.checking(new Expectations() {{
+            oneOf(idSource).nextId(); will(returnValue(3));
             oneOf(user).publish(with(any(Message.class))); will(captureParameter(0).as(message));
-            oneOf(messageRenderer).render("What's up, doc?", NOW);
+            oneOf(messageRenderer).render(3, "What's up, doc?", NOW);
         }});
 
         client.publish("What's up, doc?");

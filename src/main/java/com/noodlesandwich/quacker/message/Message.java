@@ -6,20 +6,23 @@ import com.noodlesandwich.quacker.ui.MessageRenderer;
 public class Message implements Comparable<Message> {
     private final String text;
     private final Instant timestamp;
+    private final int id;
 
-    public Message(String text, Instant timestamp) {
+    public Message(int id, String text, Instant timestamp) {
         if (text.isEmpty()) {
             throw new EmptyMessageException(timestamp);
         }
         if (text.length() > 140) {
             throw new MessageTooLongException(text, timestamp);
         }
+
+        this.id = id;
         this.text = text;
         this.timestamp = timestamp;
     }
 
     public void renderTo(MessageRenderer renderer) {
-        renderer.render(text, timestamp);
+        renderer.render(id, text, timestamp);
     }
 
     @Override
@@ -33,25 +36,34 @@ public class Message implements Comparable<Message> {
         }
 
         Message other = (Message) o;
-        return text.equals(other.text)
+        return id == other.id
+            && text.equals(other.text)
             && timestamp.equals(other.timestamp);
     }
 
     @Override
     public int hashCode() {
-        int result = text.hashCode();
+        int result = id;
+        result = 31 * result + text.hashCode();
         result = 31 * result + timestamp.hashCode();
         return result;
     }
 
     @Override
     public int compareTo(Message other) {
-        int result = timestamp.compareTo(other.timestamp);
+        int result;
+
+        result = timestamp.compareTo(other.timestamp);
         if (result != 0) {
             return result;
         }
 
         result = text.compareTo(other.text);
+        if(result != 0) {
+            return result;
+        }
+
+        result = Integer.compare(id, other.id);
         return result;
     }
 

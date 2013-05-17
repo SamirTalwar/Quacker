@@ -25,7 +25,7 @@ public class InMemoryTimelineTest {
 
     @Test public void
     publishes_messages_to_an_in_memory_timeline() {
-        final Message message = new Message("Beep beep.", NOW);
+        final Message message = new Message(72, "Beep beep.", NOW);
         timeline.publish(message);
 
         context.checking(new Expectations() {{
@@ -39,9 +39,9 @@ public class InMemoryTimelineTest {
 
     @Test public void
     messages_are_rendered_in_reverse_chronological_order() {
-        final Message one = new Message("One", NOW.plusSeconds(1));
-        final Message two = new Message("Two", NOW.plusSeconds(2));
-        final Message three = new Message("Three", NOW.plusSeconds(3));
+        final Message one = new Message(95, "One", NOW.plusSeconds(1));
+        final Message two = new Message(97, "Two", NOW.plusSeconds(2));
+        final Message three = new Message(99, "Three", NOW.plusSeconds(3));
 
         timeline.publish(one);
         timeline.publish(two);
@@ -63,7 +63,7 @@ public class InMemoryTimelineTest {
     caps_the_number_of_messages_at_20() {
         final List<Message> timelineMessages = new ArrayList<>();
         for (int i = 0; i < 50; ++i) {
-            Message message = new Message("Message " + i, NOW.plusSeconds(i));
+            Message message = new Message(i, "Message " + i, NOW.plusSeconds(i));
             timelineMessages.add(message);
             timeline.publish(message);
         }
@@ -84,9 +84,9 @@ public class InMemoryTimelineTest {
     @SuppressWarnings("unchecked")
     @Test public void
     is_iterable() {
-        Message one = new Message("One", NOW.plusSeconds(1));
-        Message two = new Message("Two", NOW.plusSeconds(2));
-        Message three = new Message("Three", NOW.plusSeconds(3));
+        Message one = new Message(1, "One", NOW.plusSeconds(1));
+        Message two = new Message(2, "Two", NOW.plusSeconds(2));
+        Message three = new Message(3, "Three", NOW.plusSeconds(3));
 
         timeline.publish(one);
         timeline.publish(two);

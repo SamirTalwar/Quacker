@@ -34,9 +34,9 @@ public class InMemoryProfileTest {
 
     @Test public void
     is_iterable() {
-        Message one = new Message("one", NOW);
-        Message two = new Message("two", NOW);
-        Message three = new Message("three", NOW);
+        Message one = new Message(1, "one", NOW);
+        Message two = new Message(2, "two", NOW);
+        Message three = new Message(3, "three", NOW);
 
         final List<Message> messages = new ArrayList<>();
         messages.add(one);

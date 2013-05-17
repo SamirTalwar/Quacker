@@ -37,7 +37,7 @@ public class InMemoryUserTest {
 
     @Test public void
     publishes_messages_to_an_in_memory_timeline() {
-        final Message message = new Message("Beep beep.", NOW);
+        final Message message = new Message(42, "Beep beep.", NOW);
 
         context.checking(new Expectations() {{
             oneOf(timeline).publish(message);

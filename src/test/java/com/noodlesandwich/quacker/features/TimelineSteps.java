@@ -32,7 +32,7 @@ public class TimelineSteps {
     private final PrintStream outputStream = new PrintStream(output);
 
     private final MessageRenderer messageRenderer = new MessageRenderer() {
-        @Override public void render(String text, Instant timestamp) {
+        @Override public void render(int id, String text, Instant timestamp) {
             outputStream.append(text).append('\n');
         }
     };
