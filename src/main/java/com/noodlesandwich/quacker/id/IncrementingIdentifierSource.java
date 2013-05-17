@@ -4,7 +4,7 @@ public class IncrementingIdentifierSource implements IdentifierSource {
     private int nextInteger = 0;
 
     @Override
-    public int nextId() {
-        return ++nextInteger;
+    public Id nextId() {
+        return new Id(++nextInteger);
     }
 }

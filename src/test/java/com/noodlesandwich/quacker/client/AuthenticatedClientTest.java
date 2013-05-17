@@ -4,6 +4,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.id.IdentifierSource;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.testing.Captured;
@@ -37,7 +38,7 @@ public class AuthenticatedClientTest {
     publishes_messages_to_the_server() {
         final Captured<Message> message = new Captured<>();
         context.checking(new Expectations() {{
-            oneOf(idSource).nextId(); will(returnValue(3));
+            oneOf(idSource).nextId(); will(returnValue(new Id(3)));
             oneOf(user).publish(with(any(Message.class))); will(captureParameter(0).as(message));
             oneOf(messageRenderer).render(3, "What's up, doc?", NOW);
         }});
