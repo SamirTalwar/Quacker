@@ -4,11 +4,11 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import com.noodlesandwich.quacker.id.Id;
-import com.noodlesandwich.quacker.id.IdentifierSource;
 import com.noodlesandwich.quacker.communication.conversations.Conversation;
 import com.noodlesandwich.quacker.communication.conversations.Conversations;
 import com.noodlesandwich.quacker.communication.messages.Message;
+import com.noodlesandwich.quacker.id.Id;
+import com.noodlesandwich.quacker.id.IdentifierSource;
 import com.noodlesandwich.quacker.testing.Captured;
 import com.noodlesandwich.quacker.ui.ConversationRenderer;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
@@ -42,10 +42,11 @@ public class AuthenticatedClientTest {
     @Test public void
     publishes_messages_to_the_server() {
         final Captured<Message> message = new Captured<>();
+        final Id messageId = new Id(3);
         context.checking(new Expectations() {{
-            oneOf(idSource).nextId(); will(returnValue(new Id(3)));
-            oneOf(user).publish(with(any(Message.class))); will(captureParameter(0).as(message));
-            oneOf(messageRenderer).render(new Id(3), user, "What's up, doc?", NOW);
+            oneOf(idSource).nextId(); will(returnValue(messageId));
+            oneOf(user).publish(with(messageId), with(any(Message.class))); will(captureParameter(1).as(message));
+            oneOf(messageRenderer).render(messageId, user, "What's up, doc?", NOW);
         }});
 
         client.publish("What's up, doc?");

@@ -3,6 +3,7 @@ package com.noodlesandwich.quacker.users;
 import com.noodlesandwich.quacker.communication.feed.Feed;
 import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.communication.timeline.UpdatableTimeline;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
@@ -23,7 +24,7 @@ public class InMemoryUser implements User {
     }
 
     @Override
-    public void publish(Message message) {
+    public void publish(Id messageId, Message message) {
         timeline.publish(message);
     }
 

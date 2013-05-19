@@ -17,6 +17,11 @@ public class AuthenticatingClientFactory implements ClientFactory {
 
     @Override
     public Client newClient(Server server, String username) {
-        return new AuthenticatedClient(clock, idSource, server.authenticatedUserNamed(username), new ProfileDownloader(server), new ConversationDownloader(server));
+        return new AuthenticatedClient(
+                clock,
+                idSource,
+                server.authenticatedUserNamed(username),
+                new ProfileDownloader(server),
+                new ConversationDownloader(server));
     }
 }

@@ -1,10 +1,10 @@
 package com.noodlesandwich.quacker.client;
 
 import java.time.Clock;
-import com.noodlesandwich.quacker.id.Id;
-import com.noodlesandwich.quacker.id.IdentifierSource;
 import com.noodlesandwich.quacker.communication.conversations.Conversations;
 import com.noodlesandwich.quacker.communication.messages.Message;
+import com.noodlesandwich.quacker.id.Id;
+import com.noodlesandwich.quacker.id.IdentifierSource;
 import com.noodlesandwich.quacker.ui.ConversationRenderer;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
@@ -28,7 +28,8 @@ public class AuthenticatedClient implements Client {
 
     @Override
     public void publish(String message) {
-        user.publish(new Message(idSource.nextId(), user, message, clock.instant()));
+        Id messageId = idSource.nextId();
+        user.publish(messageId, new Message(messageId, user, message, clock.instant()));
     }
 
     @Override
