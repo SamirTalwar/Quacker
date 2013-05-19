@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.contains;
 
 public class TimelineSteps {
     private final Server server;
+    private Client client;
 
     private final List<InspectibleMessage> messages = new ArrayList<>();
     private final MessageRenderer messageRenderer = new MessageRenderer() {
@@ -40,22 +41,32 @@ public class TimelineSteps {
     }
 
     @Given("^([^ ]+) quacks \"([^\"]*)\"$") public void
-    publishes(String quacker, String message) throws Throwable {
-        Client client = Quacker.clientFor(server).loginAs(quacker);
+    publishes(String author, String message) throws Throwable {
+        client = Quacker.clientFor(server).loginAs(author);
         client.publish(message);
     }
 
     @Given("^a bunch of quacks from ([^ ]+)$") public void
-    lots_of_quacks(String quacker) {
-        Client client = Quacker.clientFor(server).loginAs(quacker);
+    lots_of_quacks_from(String author) {
+        client = Quacker.clientFor(server).loginAs(author);
         for (int i = 0; i < 20; ++i) {
             client.publish(aRandomMessage());
         }
     }
 
+    @Given("the timeline:") public void
+    the_timeline(List<List<String>> quacks) {
+        for (List<String> quack : quacks) {
+            String quacker = quack.get(0);
+            String message = quack.get(1);
+            Client currentClient = Quacker.clientFor(server).loginAs(quacker);
+            currentClient.publish(message);
+        }
+    }
+
     @When("^([^ ]+) opens up ([^']+)'s timeline$") public void
     opens_up_a_timeline(String viewer, String timelineOwner) throws Throwable {
-        Client client = Quacker.clientFor(server).loginAs(viewer);
+        client = Quacker.clientFor(server).loginAs(viewer);
         client.openTimelineOf(timelineOwner, new TimelineRenderer() {
             @Override
             public void render(Message message) {
@@ -66,12 +77,23 @@ public class TimelineSteps {
 
     @When("^([^ ]+) opens up (?:his|her) feed$") public void
     opens_feed(String viewer) throws Throwable {
-        Client client = Quacker.clientFor(server).loginAs(viewer);
+        client = Quacker.clientFor(server).loginAs(viewer);
         client.openFeed(new FeedRenderer() {
             @Override public void render(Message message) {
                 message.renderTo(messageRenderer);
             }
         });
+    }
+
+    @When("^clicks on the quack from ([^ ]+) that says \"([^\"]*)\"$") public void
+    clicks_on_the_quack(String author, String text) {
+        for (InspectibleMessage message : messages) {
+            if (author.equals(message.author.getUsername()) && text.equals(message.text)) {
+                client.viewConversationAround(message.id);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("No such message.");
     }
 
     @Then("^s?he should see:$") public void

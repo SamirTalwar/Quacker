@@ -1,6 +1,7 @@
 package com.noodlesandwich.quacker.client;
 
 import java.time.Clock;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.id.IdentifierSource;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
@@ -39,5 +40,10 @@ public class AuthenticatedClient implements Client {
     @Override
     public void openFeed(FeedRenderer renderer) {
         user.renderFeedTo(renderer);
+    }
+
+    @Override
+    public void viewConversationAround(Id messageId) {
+        throw new UnsupportedOperationException();
     }
 }
