@@ -22,7 +22,7 @@ public class InMemoryUsers implements Users, Profiles {
         UpdatableTimeline timeline = new InMemoryTimeline();
         InMemoryProfile profile = new InMemoryProfile(timeline);
         Feed feed = new AggregatedProfileFeed(profile);
-        InMemoryUser user = new InMemoryUser(username, timeline, feed);
+        DelegatingUser user = new DelegatingUser(username, timeline, feed);
 
         users.put(username, user);
         profiles.put(username, profile);

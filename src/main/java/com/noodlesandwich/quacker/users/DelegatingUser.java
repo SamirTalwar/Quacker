@@ -7,12 +7,12 @@ import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
-public class InMemoryUser implements User {
+public class DelegatingUser implements User {
     private final String username;
     private final UpdatableTimeline timeline;
     private final Feed feed;
 
-    public InMemoryUser(String username, UpdatableTimeline timeline, Feed feed) {
+    public DelegatingUser(String username, UpdatableTimeline timeline, Feed feed) {
         this.username = username;
         this.timeline = timeline;
         this.feed = feed;

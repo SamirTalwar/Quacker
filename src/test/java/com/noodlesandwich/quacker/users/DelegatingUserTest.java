@@ -13,13 +13,13 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
 
-public class InMemoryUserTest {
+public class DelegatingUserTest {
     private static final Instant NOW = Instant.from(ZonedDateTime.of(2012, 1, 1, 9, 0, 0, 0, ZoneId.of("UTC")));
 
     private final Mockery context = new Mockery();
     private final UpdatableTimeline timeline = context.mock(UpdatableTimeline.class);
     private final Feed feed = context.mock(Feed.class);
-    private final User user = new InMemoryUser("Isha", timeline, feed);
+    private final User user = new DelegatingUser("Isha", timeline, feed);
 
     private final TimelineRenderer timelineRenderer = context.mock(TimelineRenderer.class);
     private final FeedRenderer feedRenderer = context.mock(FeedRenderer.class);
