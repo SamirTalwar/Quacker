@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import com.noodlesandwich.quacker.id.IdentifierSource;
 import com.noodlesandwich.quacker.server.Server;
-import com.noodlesandwich.quacker.user.User;
+import com.noodlesandwich.quacker.users.User;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;

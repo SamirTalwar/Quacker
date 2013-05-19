@@ -1,7 +1,7 @@
 package com.noodlesandwich.quacker.server;
 
-import com.noodlesandwich.quacker.user.Profile;
-import com.noodlesandwich.quacker.user.User;
+import com.noodlesandwich.quacker.users.Profile;
+import com.noodlesandwich.quacker.users.User;
 
 public interface Server {
     void registerUserNamed(String username);

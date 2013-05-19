@@ -1,8 +1,10 @@
-package com.noodlesandwich.quacker.message;
+package com.noodlesandwich.quacker.communication.timeline;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import com.noodlesandwich.quacker.communication.messages.Message;
+import com.noodlesandwich.quacker.communication.feed.Feed;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
 public class InMemoryTimeline implements UpdatableTimeline {

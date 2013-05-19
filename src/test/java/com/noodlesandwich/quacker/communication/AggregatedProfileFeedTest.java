@@ -1,4 +1,4 @@
-package com.noodlesandwich.quacker.message;
+package com.noodlesandwich.quacker.communication;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -8,9 +8,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import com.noodlesandwich.quacker.id.Id;
+import com.noodlesandwich.quacker.communication.feed.AggregatedProfileFeed;
+import com.noodlesandwich.quacker.communication.feed.Feed;
+import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
-import com.noodlesandwich.quacker.user.Profile;
-import com.noodlesandwich.quacker.user.User;
+import com.noodlesandwich.quacker.users.Profile;
+import com.noodlesandwich.quacker.users.User;
 import org.hamcrest.Description;
 import org.jmock.Expectations;
 import org.jmock.Mockery;

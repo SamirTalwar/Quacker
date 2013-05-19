@@ -1,4 +1,4 @@
-package com.noodlesandwich.quacker.user;
+package com.noodlesandwich.quacker.users;
 
 public class UserAlreadyExistsException extends RuntimeException {
     public UserAlreadyExistsException(String username) {

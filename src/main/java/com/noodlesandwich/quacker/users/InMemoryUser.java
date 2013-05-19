@@ -1,8 +1,8 @@
-package com.noodlesandwich.quacker.user;
+package com.noodlesandwich.quacker.users;
 
-import com.noodlesandwich.quacker.message.Feed;
-import com.noodlesandwich.quacker.message.Message;
-import com.noodlesandwich.quacker.message.UpdatableTimeline;
+import com.noodlesandwich.quacker.communication.feed.Feed;
+import com.noodlesandwich.quacker.communication.messages.Message;
+import com.noodlesandwich.quacker.communication.timeline.UpdatableTimeline;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 

@@ -4,9 +4,9 @@ import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.noodlesandwich.quacker.server.ApplicationServer;
 import com.noodlesandwich.quacker.server.Server;
-import com.noodlesandwich.quacker.user.InMemoryUsers;
-import com.noodlesandwich.quacker.user.Profiles;
-import com.noodlesandwich.quacker.user.Users;
+import com.noodlesandwich.quacker.users.InMemoryUsers;
+import com.noodlesandwich.quacker.users.Profiles;
+import com.noodlesandwich.quacker.users.Users;
 
 public class ServerModule implements Module {
     @Override

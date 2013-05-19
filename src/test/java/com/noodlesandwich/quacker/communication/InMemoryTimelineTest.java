@@ -1,4 +1,4 @@
-package com.noodlesandwich.quacker.message;
+package com.noodlesandwich.quacker.communication;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import com.noodlesandwich.quacker.id.Id;
+import com.noodlesandwich.quacker.communication.messages.Message;
+import com.noodlesandwich.quacker.communication.timeline.InMemoryTimeline;
+import com.noodlesandwich.quacker.communication.timeline.UpdatableTimeline;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
-import com.noodlesandwich.quacker.user.User;
+import com.noodlesandwich.quacker.users.User;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.Sequence;

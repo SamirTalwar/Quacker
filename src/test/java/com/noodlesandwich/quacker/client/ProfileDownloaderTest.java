@@ -1,8 +1,8 @@
 package com.noodlesandwich.quacker.client;
 
 import com.noodlesandwich.quacker.server.Server;
-import com.noodlesandwich.quacker.user.Profile;
-import com.noodlesandwich.quacker.user.Profiles;
+import com.noodlesandwich.quacker.users.Profile;
+import com.noodlesandwich.quacker.users.Profiles;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;

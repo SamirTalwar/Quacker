@@ -1,8 +1,8 @@
 package com.noodlesandwich.quacker.client;
 
 import com.noodlesandwich.quacker.server.Server;
-import com.noodlesandwich.quacker.user.Profile;
-import com.noodlesandwich.quacker.user.Profiles;
+import com.noodlesandwich.quacker.users.Profile;
+import com.noodlesandwich.quacker.users.Profiles;
 
 public class ProfileDownloader implements Profiles {
     private final Server server;

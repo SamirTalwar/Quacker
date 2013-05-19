@@ -1,11 +1,11 @@
-package com.noodlesandwich.quacker.user;
+package com.noodlesandwich.quacker.users;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import com.noodlesandwich.quacker.id.Id;
-import com.noodlesandwich.quacker.message.Message;
-import com.noodlesandwich.quacker.message.Timeline;
+import com.noodlesandwich.quacker.communication.messages.Message;
+import com.noodlesandwich.quacker.communication.timeline.Timeline;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import org.jmock.Expectations;
 import org.jmock.Mockery;

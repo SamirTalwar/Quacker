@@ -3,13 +3,13 @@ package com.noodlesandwich.quacker.client;
 import java.time.Clock;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.id.IdentifierSource;
-import com.noodlesandwich.quacker.message.Conversations;
-import com.noodlesandwich.quacker.message.Message;
+import com.noodlesandwich.quacker.communication.conversations.Conversations;
+import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.ui.ConversationRenderer;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
-import com.noodlesandwich.quacker.user.Profiles;
-import com.noodlesandwich.quacker.user.User;
+import com.noodlesandwich.quacker.users.Profiles;
+import com.noodlesandwich.quacker.users.User;
 
 public class AuthenticatedClient implements Client {
     private final Clock clock;

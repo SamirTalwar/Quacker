@@ -2,7 +2,7 @@ package com.noodlesandwich.quacker.features;
 
 import java.time.Instant;
 import com.noodlesandwich.quacker.id.Id;
-import com.noodlesandwich.quacker.user.User;
+import com.noodlesandwich.quacker.users.User;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;

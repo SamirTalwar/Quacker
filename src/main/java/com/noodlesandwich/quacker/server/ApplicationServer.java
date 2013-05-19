@@ -2,10 +2,10 @@ package com.noodlesandwich.quacker.server;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import com.noodlesandwich.quacker.user.Profile;
-import com.noodlesandwich.quacker.user.Profiles;
-import com.noodlesandwich.quacker.user.User;
-import com.noodlesandwich.quacker.user.Users;
+import com.noodlesandwich.quacker.users.Profile;
+import com.noodlesandwich.quacker.users.Profiles;
+import com.noodlesandwich.quacker.users.User;
+import com.noodlesandwich.quacker.users.Users;
 
 @Singleton
 public class ApplicationServer implements Server {

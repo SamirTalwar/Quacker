@@ -1,9 +1,9 @@
-package com.noodlesandwich.quacker.message;
+package com.noodlesandwich.quacker.communication.messages;
 
 import java.time.Instant;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
-import com.noodlesandwich.quacker.user.User;
+import com.noodlesandwich.quacker.users.User;
 
 public class Message implements Comparable<Message> {
     private final Id id;

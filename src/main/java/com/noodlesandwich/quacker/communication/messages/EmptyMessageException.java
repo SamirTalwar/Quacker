@@ -1,4 +1,4 @@
-package com.noodlesandwich.quacker.message;
+package com.noodlesandwich.quacker.communication.messages;
 
 import java.time.Instant;
 

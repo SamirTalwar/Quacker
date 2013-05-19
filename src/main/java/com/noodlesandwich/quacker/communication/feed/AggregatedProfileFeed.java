@@ -1,4 +1,4 @@
-package com.noodlesandwich.quacker.message;
+package com.noodlesandwich.quacker.communication.feed;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
+import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
-import com.noodlesandwich.quacker.user.Profile;
+import com.noodlesandwich.quacker.users.Profile;
 
 public class AggregatedProfileFeed implements Feed {
     private final List<Profile> followees = new ArrayList<>();

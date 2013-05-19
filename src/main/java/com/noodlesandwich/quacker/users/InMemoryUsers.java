@@ -1,12 +1,12 @@
-package com.noodlesandwich.quacker.user;
+package com.noodlesandwich.quacker.users;
 
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Singleton;
-import com.noodlesandwich.quacker.message.AggregatedProfileFeed;
-import com.noodlesandwich.quacker.message.Feed;
-import com.noodlesandwich.quacker.message.InMemoryTimeline;
-import com.noodlesandwich.quacker.message.UpdatableTimeline;
+import com.noodlesandwich.quacker.communication.feed.AggregatedProfileFeed;
+import com.noodlesandwich.quacker.communication.feed.Feed;
+import com.noodlesandwich.quacker.communication.timeline.InMemoryTimeline;
+import com.noodlesandwich.quacker.communication.timeline.UpdatableTimeline;
 
 @Singleton
 public class InMemoryUsers implements Users, Profiles {
