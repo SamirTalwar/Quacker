@@ -30,9 +30,9 @@ public class AuthenticatedClientTest {
     private final Profiles profiles = context.mock(Profiles.class);
     private final Client client = new AuthenticatedClient(clock, idSource, user, profiles);
 
-    private final FeedRenderer feedRenderer = context.mock(FeedRenderer.class);
     private final MessageRenderer messageRenderer = context.mock(MessageRenderer.class);
     private final TimelineRenderer timelineRenderer = context.mock(TimelineRenderer.class);
+    private final FeedRenderer feedRenderer = context.mock(FeedRenderer.class);
 
     @Test public void
     publishes_messages_to_the_server() {
