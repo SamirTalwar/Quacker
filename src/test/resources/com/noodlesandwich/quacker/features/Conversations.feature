@@ -1,8 +1,12 @@
-Feature: the Timeline
+Feature: Conversations
   Background:
     Given there is a user named Abhishek
     And there is a user named Bobby
     And there is a user named Sanjay
+    And Abhishek follows Bobby
+    And Abhishek follows Sanjay
+    And Bobby follows Abhishek
+    And Bobby follows Sanjay
     And Sanjay follows Abhishek
     And Sanjay follows Bobby
 
