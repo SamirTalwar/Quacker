@@ -4,6 +4,7 @@ import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.noodlesandwich.quacker.communication.conversations.ConversationGraph;
 import com.noodlesandwich.quacker.communication.conversations.Conversations;
+import com.noodlesandwich.quacker.communication.messages.MessageListener;
 import com.noodlesandwich.quacker.server.ApplicationServer;
 import com.noodlesandwich.quacker.server.Server;
 import com.noodlesandwich.quacker.users.InMemoryUsers;
@@ -17,5 +18,6 @@ public class ServerModule implements Module {
         binder.bind(Users.class).to(InMemoryUsers.class);
         binder.bind(Profiles.class).to(InMemoryUsers.class);
         binder.bind(Conversations.class).to(ConversationGraph.class);
+        binder.bind(MessageListener.class).to(ConversationGraph.class);
     }
 }

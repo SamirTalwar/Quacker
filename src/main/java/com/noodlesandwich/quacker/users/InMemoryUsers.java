@@ -3,6 +3,7 @@ package com.noodlesandwich.quacker.users;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Singleton;
+import com.google.inject.Inject;
 import com.noodlesandwich.quacker.communication.feed.AggregatedProfileFeed;
 import com.noodlesandwich.quacker.communication.feed.Feed;
 import com.noodlesandwich.quacker.communication.messages.CompositeMessageListener;
@@ -11,8 +12,15 @@ import com.noodlesandwich.quacker.communication.timeline.InMemoryTimeline;
 
 @Singleton
 public class InMemoryUsers implements Users, Profiles {
+    private final MessageListener messageListener;
+
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Profile> profiles = new HashMap<>();
+
+    @Inject
+    public InMemoryUsers(MessageListener messageListener) {
+        this.messageListener = messageListener;
+    }
 
     @Override
     public void register(String username) {
@@ -23,8 +31,8 @@ public class InMemoryUsers implements Users, Profiles {
         InMemoryTimeline timeline = new InMemoryTimeline();
         InMemoryProfile profile = new InMemoryProfile(timeline);
         Feed feed = new AggregatedProfileFeed(profile);
-        MessageListener messageListener = new CompositeMessageListener(timeline);
-        DelegatingUser user = new DelegatingUser(username, timeline, feed, messageListener);
+        MessageListener messageListenerWithTimeline = new CompositeMessageListener(timeline, messageListener);
+        DelegatingUser user = new DelegatingUser(username, timeline, feed, messageListenerWithTimeline);
 
         users.put(username, user);
         profiles.put(username, profile);
