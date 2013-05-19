@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.communication.timeline.InMemoryTimeline;
@@ -102,5 +103,16 @@ public class InMemoryTimelineTest {
         timeline.publish(new Id(3), three);
 
         assertThat(timeline, contains(three, two, one));
+    }
+
+    @Test(expected=UnsupportedOperationException.class) public void
+    is_not_modifiable_through_the_iterator() {
+        User user = context.mock(User.class);
+        Message message = new Message(new Id(55), user, "Fifty-five is a big number", NOW);
+        timeline.publish(new Id(55), message);
+
+        Iterator<Message> iterator = timeline.iterator();
+        iterator.next();
+        iterator.remove();
     }
 }

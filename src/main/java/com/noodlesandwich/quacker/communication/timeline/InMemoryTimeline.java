@@ -1,5 +1,6 @@
 package com.noodlesandwich.quacker.communication.timeline;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +32,6 @@ public class InMemoryTimeline implements Timeline, MessageListener {
 
     @Override
     public Iterator<Message> iterator() {
-        return messages.iterator();
+        return Collections.unmodifiableList(messages).iterator();
     }
 }
