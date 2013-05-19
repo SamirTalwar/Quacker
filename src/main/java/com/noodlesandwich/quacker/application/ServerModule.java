@@ -2,9 +2,8 @@ package com.noodlesandwich.quacker.application;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
-import com.noodlesandwich.quacker.communication.conversations.Conversation;
+import com.noodlesandwich.quacker.communication.conversations.ConversationGraph;
 import com.noodlesandwich.quacker.communication.conversations.Conversations;
-import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.server.ApplicationServer;
 import com.noodlesandwich.quacker.server.Server;
 import com.noodlesandwich.quacker.users.InMemoryUsers;
@@ -17,11 +16,6 @@ public class ServerModule implements Module {
         binder.bind(Server.class).to(ApplicationServer.class);
         binder.bind(Users.class).to(InMemoryUsers.class);
         binder.bind(Profiles.class).to(InMemoryUsers.class);
-        binder.bind(Conversations.class).toInstance(new Conversations() {
-            @Override
-            public Conversation conversationAround(Id messageId) {
-                throw new UnsupportedOperationException();
-            }
-        });
+        binder.bind(Conversations.class).to(ConversationGraph.class);
     }
 }
