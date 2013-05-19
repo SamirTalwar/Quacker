@@ -2,6 +2,8 @@ package com.noodlesandwich.quacker.server;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import com.noodlesandwich.quacker.communication.conversations.Conversation;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.users.Profile;
 import com.noodlesandwich.quacker.users.Profiles;
 import com.noodlesandwich.quacker.users.User;
@@ -31,5 +33,10 @@ public class ApplicationServer implements Server {
     @Override
     public Profile profileFor(String username) {
         return profiles.profileFor(username);
+    }
+
+    @Override
+    public Conversation conversationAround(Id messageId) {
+        throw new UnsupportedOperationException();
     }
 }

@@ -2,10 +2,7 @@ package com.noodlesandwich.quacker.client;
 
 import java.time.Clock;
 import javax.inject.Inject;
-import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.id.IdentifierSource;
-import com.noodlesandwich.quacker.communication.conversations.Conversation;
-import com.noodlesandwich.quacker.communication.conversations.Conversations;
 import com.noodlesandwich.quacker.server.Server;
 
 public class AuthenticatingClientFactory implements ClientFactory {
@@ -20,10 +17,6 @@ public class AuthenticatingClientFactory implements ClientFactory {
 
     @Override
     public Client newClient(Server server, String username) {
-        return new AuthenticatedClient(clock, idSource, server.authenticatedUserNamed(username), new ProfileDownloader(server), new Conversations() {
-            @Override public Conversation conversationAround(Id messageId) {
-                throw new UnsupportedOperationException();
-            }
-        });
+        return new AuthenticatedClient(clock, idSource, server.authenticatedUserNamed(username), new ProfileDownloader(server), new ConversationDownloader(server));
     }
 }
