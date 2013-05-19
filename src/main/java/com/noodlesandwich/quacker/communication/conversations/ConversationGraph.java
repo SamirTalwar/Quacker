@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.communication.messages.MessageListener;
+import com.noodlesandwich.quacker.communication.messages.NonExistentMessageException;
 import com.noodlesandwich.quacker.id.Id;
 
 public class ConversationGraph implements Conversations, MessageListener {
@@ -16,6 +17,9 @@ public class ConversationGraph implements Conversations, MessageListener {
 
     @Override
     public Conversation conversationAround(Id messageId) {
+        if (!messages.containsKey(messageId)) {
+            throw new NonExistentMessageException(messageId);
+        }
         return new SortedConversation(messages.get(messageId));
     }
 }

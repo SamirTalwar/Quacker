@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.noodlesandwich.quacker.communication.messages.Message;
+import com.noodlesandwich.quacker.communication.messages.NonExistentMessageException;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.ConversationRenderer;
 import com.noodlesandwich.quacker.users.User;
@@ -40,5 +41,10 @@ public class ConversationGraphTest {
         conversation.renderConversationTo(renderer);
 
         assertThat(conversationMessages, contains(message));
+    }
+
+    @Test(expected=NonExistentMessageException.class) public void
+    a_non_existent_message_results_in_an_exception() {
+        conversations.conversationAround(new Id(88));
     }
 }
