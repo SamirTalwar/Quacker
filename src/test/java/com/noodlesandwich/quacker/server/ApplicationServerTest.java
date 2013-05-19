@@ -1,5 +1,8 @@
 package com.noodlesandwich.quacker.server;
 
+import com.noodlesandwich.quacker.communication.conversations.Conversation;
+import com.noodlesandwich.quacker.communication.conversations.Conversations;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.users.Profile;
 import com.noodlesandwich.quacker.users.Profiles;
 import com.noodlesandwich.quacker.users.User;
@@ -15,7 +18,8 @@ public class ApplicationServerTest {
     private final Mockery context = new Mockery();
     private final Users users = context.mock(Users.class);
     private final Profiles profiles = context.mock(Profiles.class);
-    private final Server server = new ApplicationServer(users, profiles);
+    private final Conversations conversations = context.mock(Conversations.class);
+    private final Server server = new ApplicationServer(users, profiles, conversations);
 
     @Test public void
     returns_an_authenticated_user() {
@@ -47,5 +51,16 @@ public class ApplicationServerTest {
 
         assertThat(server.profileFor("Lakshmi"), is(lakshmi));
         context.assertIsSatisfied();
+    }
+
+    @Test public void
+    finds_a_conversation() {
+        final Id messageId = new Id(12);
+        final Conversation conversation = context.mock(Conversation.class);
+        context.checking(new Expectations() {{
+            oneOf(conversations).conversationAround(messageId); will(returnValue(conversation));
+        }});
+
+        assertThat(server.conversationAround(messageId), is(conversation));
     }
 }
