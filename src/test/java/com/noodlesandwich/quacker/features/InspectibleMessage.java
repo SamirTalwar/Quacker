@@ -35,19 +35,19 @@ public class InspectibleMessage {
 
         @Override
         public void describeTo(Description description) {
-            description.appendText("an inspectible message from ").appendValue(expectedAuthorUsername)
+            description.appendText("a message from ").appendValue(expectedAuthorUsername)
                        .appendText(" stating ").appendValue(expectedText);
         }
 
         @Override
         protected boolean matchesSafely(InspectibleMessage message, Description mismatchDescription) {
-            User actualAuthor = message.author;
+            String actualAuthorUsername = message.author.getUsername();
             String actualText = message.text;
 
-            mismatchDescription.appendText("was a message from ").appendValue(actualAuthor)
+            mismatchDescription.appendText("was a message from ").appendValue(actualAuthorUsername)
                                .appendText(" stating ").appendValue(actualText);
 
-            return expectedAuthorUsername.equals(actualAuthor.getUsername())
+            return expectedAuthorUsername.equals(actualAuthorUsername)
                 && expectedText.equals(actualText);
         }
 
