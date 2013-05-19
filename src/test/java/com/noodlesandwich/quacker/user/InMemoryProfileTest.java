@@ -35,9 +35,10 @@ public class InMemoryProfileTest {
 
     @Test public void
     is_iterable() {
-        Message one = new Message(new Id(1), "one", NOW);
-        Message two = new Message(new Id(2), "two", NOW);
-        Message three = new Message(new Id(3), "three", NOW);
+        User user = context.mock(User.class);
+        Message one = new Message(new Id(1), user, "one", NOW);
+        Message two = new Message(new Id(2), user, "two", NOW);
+        Message three = new Message(new Id(3), user, "three", NOW);
 
         final List<Message> messages = new ArrayList<>();
         messages.add(one);

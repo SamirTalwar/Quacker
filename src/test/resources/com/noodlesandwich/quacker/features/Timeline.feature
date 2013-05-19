@@ -10,7 +10,7 @@ Feature: the Timeline
     Given Abhishek quacks "Hey, everybody! I got Quacker!"
     When Bobby opens up Abhishek's timeline
     Then he should see:
-      | Hey, everybody! I got Quacker! |
+      | Abhishek | Hey, everybody! I got Quacker! |
 
   Scenario: Sanjay follows his friends, and can read their posts on his feed.
     Given a bunch of quacks from Abhishek
@@ -25,10 +25,10 @@ Feature: the Timeline
     And Sanjay quacks "@Abhishek @Bobby You guys suck."
     When Sanjay opens up his feed
     Then he should see:
-      | @Abhishek @Bobby You guys suck.               |
-      | @Bobby Doris locked. That's why I'm knocking! |
-      | @Abhishek Doris who?                          |
-      | @Bobby Doris.                                 |
-      | @Abhishek Who's there?                        |
-      | Knock knock.                                  |
-      | ...                                           |
+      | Sanjay   | @Abhishek @Bobby You guys suck.               |
+      | Abhishek | @Bobby Doris locked. That's why I'm knocking! |
+      | Bobby    | @Abhishek Doris who?                          |
+      | Abhishek | @Bobby Doris.                                 |
+      | Bobby    | @Abhishek Who's there?                        |
+      | Abhishek | Knock knock.                                  |
+      | ...                                                      |

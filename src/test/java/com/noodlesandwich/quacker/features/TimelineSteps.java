@@ -1,10 +1,7 @@
 package com.noodlesandwich.quacker.features;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import javax.inject.Inject;
@@ -16,25 +13,24 @@ import com.noodlesandwich.quacker.server.Server;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
+import com.noodlesandwich.quacker.user.User;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.hamcrest.Matcher;
 
+import static com.noodlesandwich.quacker.features.InspectibleMessage.InspectibleMessageMatcher.anInspectibleMessageFrom;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
 
 public class TimelineSteps {
     private final Server server;
 
-    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
-    private final PrintStream outputStream = new PrintStream(output);
-
+    private final List<InspectibleMessage> messages = new ArrayList<>();
     private final MessageRenderer messageRenderer = new MessageRenderer() {
-        @Override public void render(Id id, String text, Instant timestamp) {
-            outputStream.append(text).append('\n');
+        @Override public void render(Id id, User author, String text, Instant timestamp) {
+            messages.add(new InspectibleMessage(id, author, text, timestamp));
         }
     };
 
@@ -61,7 +57,8 @@ public class TimelineSteps {
     opens_up_a_timeline(String viewer, String timelineOwner) throws Throwable {
         Client client = Quacker.clientFor(server).loginAs(viewer);
         client.openTimelineOf(timelineOwner, new TimelineRenderer() {
-            @Override public void render(Message message) {
+            @Override
+            public void render(Message message) {
                 message.renderTo(messageRenderer);
             }
         });
@@ -71,34 +68,35 @@ public class TimelineSteps {
     opens_feed(String viewer) throws Throwable {
         Client client = Quacker.clientFor(server).loginAs(viewer);
         client.openFeed(new FeedRenderer() {
-            @Override
-            public void render(Message message) {
+            @Override public void render(Message message) {
                 message.renderTo(messageRenderer);
             }
         });
     }
 
     @Then("^s?he should see:$") public void
-    he_should_see(List<String> messages) throws Throwable {
-        List<Matcher<? super String>> matchers = new ArrayList<>();
-        int lastMessageIndex = messages.size() - 1;
-        if (messages.get(lastMessageIndex).equals("...")) {
-            for (String message : messages.subList(0, lastMessageIndex)) {
-                matchers.add(equalTo(message));
-            }
+    he_should_see(List<List<String>> quacks) throws Throwable {
+        List<Matcher<? super InspectibleMessage>> matchers = new ArrayList<>();
+        int lastMessageIndex = quacks.size() - 1;
+        if (quacks.get(lastMessageIndex).get(0).equals("...")) {
+            matchers.addAll(messagesMatching(quacks.subList(0, lastMessageIndex)));
             for (int i = lastMessageIndex; i < 20; ++i) {
-                matchers.add(any(String.class));
+                matchers.add(any(InspectibleMessage.class));
             }
         } else {
-            for (String message : messages) {
-                matchers.add(equalTo(message));
-            }
+            matchers.addAll(messagesMatching(quacks));
         }
-        assertThat(output(), contains(matchers));
+        assertThat(messages, contains(matchers));
     }
 
-    private List<String> output() {
-        return Arrays.asList(output.toString().split("\n"));
+    private static List<Matcher<? super InspectibleMessage>> messagesMatching(List<List<String>> quacks) {
+        List<Matcher<? super InspectibleMessage>> matchers = new ArrayList<>(quacks.size());
+        for (List<String> quack : quacks) {
+            String quacker = quack.get(0);
+            String message = quack.get(1);
+            matchers.add(anInspectibleMessageFrom(quacker).stating(message));
+        }
+        return matchers;
     }
 
     private static final int RANDOM_MESSAGE_LENGTH = 20;

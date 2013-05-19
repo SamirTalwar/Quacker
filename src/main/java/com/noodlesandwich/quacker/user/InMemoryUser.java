@@ -7,12 +7,19 @@ import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
 public class InMemoryUser implements User {
+    private final String username;
     private final UpdatableTimeline timeline;
     private final Feed feed;
 
-    public InMemoryUser(UpdatableTimeline timeline, Feed feed) {
+    public InMemoryUser(String username, UpdatableTimeline timeline, Feed feed) {
+        this.username = username;
         this.timeline = timeline;
         this.feed = feed;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
     }
 
     @Override

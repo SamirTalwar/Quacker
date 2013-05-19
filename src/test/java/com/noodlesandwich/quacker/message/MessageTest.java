@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.Random;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
+import com.noodlesandwich.quacker.user.User;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
@@ -26,11 +27,12 @@ public class MessageTest {
 
     @Test public void
     renders() {
+        final User user = context.mock(User.class);
         context.checking(new Expectations() {{
-            oneOf(renderer).render(new Id(7), "Boop.", NOW);
+            oneOf(renderer).render(new Id(7), user, "Boop.", NOW);
         }});
 
-        Message message = new Message(new Id(7), "Boop.", NOW);
+        Message message = new Message(new Id(7), user, "Boop.", NOW);
         message.renderTo(renderer);
 
         context.assertIsSatisfied();
@@ -38,18 +40,21 @@ public class MessageTest {
 
     @Test(expected=EmptyMessageException.class) public void
     cannot_be_empty() {
-        new Message(new Id(12), "", NOW);
+        User user = context.mock(User.class);
+        new Message(new Id(12), user, "", NOW);
     }
 
     @Test(expected=MessageTooLongException.class) public void
     cannot_be_more_than_140_characters() {
-        new Message(new Id(99), stringOfLength(141), NOW);
+        User user = context.mock(User.class);
+        new Message(new Id(99), user, stringOfLength(141), NOW);
     }
 
     @Test public void
-    two_messages_with_the_same_ID_text_and_timestamp_are_equal() {
-        Message messageA = new Message(new Id(55), "Words are here.", NOW);
-        Message messageB = new Message(new Id(55), "Words are here.", NOW);
+    two_messages_with_the_same_ID_are_equal() {
+        User user = context.mock(User.class);
+        Message messageA = new Message(new Id(55), user, "Words are here.", NOW);
+        Message messageB = new Message(new Id(55), user, "Words are here.", NOW);
 
         assertThat(messageA, is(equalTo(messageB)));
         assertThat(messageA.hashCode(), is(messageB.hashCode()));
@@ -57,26 +62,9 @@ public class MessageTest {
 
     @Test public void
     two_messages_with_different_IDs_are_not_equal() {
-        Message messageA = new Message(new Id(92), "Look!", NOW);
-        Message messageB = new Message(new Id(29), "Look!", NOW);
-
-        assertThat(messageA, is(not(equalTo(messageB))));
-        assertThat(messageA.hashCode(), is(not(messageB.hashCode())));
-    }
-
-    @Test public void
-    two_messages_with_different_text_are_not_equal() {
-        Message messageA = new Message(new Id(56), "Words are here.", NOW);
-        Message messageB = new Message(new Id(56), "Words are not here.", NOW);
-
-        assertThat(messageA, is(not(equalTo(messageB))));
-        assertThat(messageA.hashCode(), is(not(messageB.hashCode())));
-    }
-
-    @Test public void
-    two_messages_with_different_timestamps_are_not_equal() {
-        Message messageA = new Message(new Id(101), "Blah blah blah.", NOW.plusSeconds(15));
-        Message messageB = new Message(new Id(101), "Blah blah blah.", NOW.plusSeconds(30));
+        User user = context.mock(User.class);
+        Message messageA = new Message(new Id(92), user, "Look!", NOW);
+        Message messageB = new Message(new Id(29), user, "Look!", NOW);
 
         assertThat(messageA, is(not(equalTo(messageB))));
         assertThat(messageA.hashCode(), is(not(messageB.hashCode())));
@@ -84,8 +72,9 @@ public class MessageTest {
 
     @Test public void
     two_messages_compare_by_timestamp() {
-        Message lesserMessage = new Message(new Id(94), "Text.", NOW.plusSeconds(15));
-        Message greaterMessage = new Message(new Id(94), "Text.", NOW.plusSeconds(30));
+        User user = context.mock(User.class);
+        Message lesserMessage = new Message(new Id(94), user, "Text.", NOW.plusSeconds(15));
+        Message greaterMessage = new Message(new Id(94), user, "Text.", NOW.plusSeconds(30));
 
         assertThat(lesserMessage, is(lessThan(greaterMessage)));
         assertThat(greaterMessage, is(greaterThan(lesserMessage)));
@@ -93,8 +82,9 @@ public class MessageTest {
 
     @Test public void
     two_messages_compare_by_text_if_the_timestamps_are_identical() {
-        Message lesserMessage = new Message(new Id(49), "Words ending with aardvark.", NOW.plusSeconds(60));
-        Message greaterMessage = new Message(new Id(49), "Words ending with zebra.", NOW.plusSeconds(60));
+        User user = context.mock(User.class);
+        Message lesserMessage = new Message(new Id(49), user, "Words ending with aardvark.", NOW.plusSeconds(60));
+        Message greaterMessage = new Message(new Id(49), user, "Words ending with zebra.", NOW.plusSeconds(60));
 
         assertThat(lesserMessage, is(lessThan(greaterMessage)));
         assertThat(greaterMessage, is(greaterThan(lesserMessage)));
@@ -102,8 +92,9 @@ public class MessageTest {
 
     @Test public void
     equal_messages_compare_as_the_same() {
-        Message lesserMessage = new Message(new Id(72), "Look!", NOW.plusSeconds(60));
-        Message greaterMessage = new Message(new Id(72), "Look!", NOW.plusSeconds(60));
+        User user = context.mock(User.class);
+        Message lesserMessage = new Message(new Id(72), user, "Look!", NOW.plusSeconds(60));
+        Message greaterMessage = new Message(new Id(72), user, "Look!", NOW.plusSeconds(60));
 
         assertThat(lesserMessage, comparesEqualTo(greaterMessage));
         assertThat(greaterMessage, comparesEqualTo(lesserMessage));

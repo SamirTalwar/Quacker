@@ -19,7 +19,7 @@ public class InMemoryUserTest {
     private final Mockery context = new Mockery();
     private final UpdatableTimeline timeline = context.mock(UpdatableTimeline.class);
     private final Feed feed = context.mock(Feed.class);
-    private final User user = new InMemoryUser(timeline, feed);
+    private final User user = new InMemoryUser("Isha", timeline, feed);
 
     private final TimelineRenderer timelineRenderer = context.mock(TimelineRenderer.class);
     private final FeedRenderer feedRenderer = context.mock(FeedRenderer.class);
@@ -38,7 +38,7 @@ public class InMemoryUserTest {
 
     @Test public void
     publishes_messages_to_an_in_memory_timeline() {
-        final Message message = new Message(new Id(42), "Beep beep.", NOW);
+        final Message message = new Message(new Id(42), user, "Beep beep.", NOW);
 
         context.checking(new Expectations() {{
             oneOf(timeline).publish(message);

@@ -10,6 +10,7 @@ import java.util.List;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.user.Profile;
+import com.noodlesandwich.quacker.user.User;
 import org.hamcrest.Description;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -43,9 +44,10 @@ public class AggregatedProfileFeedTest {
 
     @Test public void
     your_own_tweets_are_part_of_your_feed() {
-        final Message one = new Message(new Id(9), "A B C!", NOW.plusSeconds(1));
-        final Message two = new Message(new Id(10), "It's as easy as 1 2 3!", NOW.plusSeconds(2));
-        final Message three = new Message(new Id(12), "As simple as Do Ray Me!", NOW.plusSeconds(3));
+        User user = context.mock(User.class);
+        final Message one = new Message(new Id(9), user, "A B C!", NOW.plusSeconds(1));
+        final Message two = new Message(new Id(10), user, "It's as easy as 1 2 3!", NOW.plusSeconds(2));
+        final Message three = new Message(new Id(12), user, "As simple as Do Ray Me!", NOW.plusSeconds(3));
 
         final Iterable<Message> messages = listOf(three, two, one);
 
@@ -68,9 +70,10 @@ public class AggregatedProfileFeedTest {
         final Profile profile = context.mock(Profile.class, "Other Guy");
         feed.follow(profile);
 
-        final Message one = new Message(new Id(1), "One.", NOW.plusSeconds(1));
-        final Message two = new Message(new Id(2), "Two.", NOW.plusSeconds(2));
-        final Message three = new Message(new Id(3), "Three.", NOW.plusSeconds(3));
+        User user = context.mock(User.class);
+        final Message one = new Message(new Id(1), user, "One.", NOW.plusSeconds(1));
+        final Message two = new Message(new Id(2), user, "Two.", NOW.plusSeconds(2));
+        final Message three = new Message(new Id(3), user, "Three.", NOW.plusSeconds(3));
 
         final Iterable<Message> messages = listOf(three, two, one);
 
@@ -97,10 +100,12 @@ public class AggregatedProfileFeedTest {
         feed.follow(bugs);
         feed.follow(daffy);
 
-        final Message bugs1 = new Message(new Id(50), "Ya got me dead to rights, doc. Do you want to shoot me now or wait 'till you get home?", NOW.plus(1, MINUTES));
-        final Message daffy1 = new Message(new Id(51), "Shoot him now! Shoot him now!", NOW.plus(2, MINUTES));
-        final Message bugs2 = new Message(new Id(52), "You keep out of this--he doesn't have to shoot you now!", NOW.plus(3, MINUTES));
-        final Message daffy2 = new Message(new Id(53), "Well, I say that he does have to shoot me now! So shoot me now!", NOW.plus(4, MINUTES));
+        User bugsUser = context.mock(User.class, "Bugs (User)");
+        User daffyUser = context.mock(User.class, "Daffy (User)");
+        final Message bugs1 = new Message(new Id(50), bugsUser, "Ya got me dead to rights, doc. Do you want to shoot me now or wait 'till you get home?", NOW.plus(1, MINUTES));
+        final Message daffy1 = new Message(new Id(51), daffyUser, "Shoot him now! Shoot him now!", NOW.plus(2, MINUTES));
+        final Message bugs2 = new Message(new Id(52), bugsUser, "You keep out of this--he doesn't have to shoot you now!", NOW.plus(3, MINUTES));
+        final Message daffy2 = new Message(new Id(53), daffyUser, "Well, I say that he does have to shoot me now! So shoot me now!", NOW.plus(4, MINUTES));
 
         final Iterable<Message> bugsMessages = listOf(bugs2, bugs1);
         final Iterable<Message> daffyMessages = listOf(daffy2, daffy1);
@@ -130,25 +135,28 @@ public class AggregatedProfileFeedTest {
         feed.follow(scooby);
         feed.follow(shaggy);
 
-        final Message scooby1 = new Message(new Id(99), "I'm hungry Shaggy.", NOW.plus(1, MINUTES));
-        final Message scooby2 = new Message(new Id(101), "Got a Scooby Snack?", NOW.plus(2, MINUTES));
-        final Message shaggy1 = new Message(new Id(105), "I'll give you half of my Scooby Snack.", NOW.plus(4, MINUTES));
-        final Message scooby3 = new Message(new Id(119), "Yay!", NOW.plus(8, MINUTES));
-        final Message you1 = new Message(new Id(120), "Put down the Scooby Snacks and no one gets hurt.", NOW.plus(16, MINUTES));
-        final Message shaggy2 = new Message(new Id(125), "I already ate the Scooby Snack. Sorry, Fred.", NOW.plus(32, MINUTES));
+        User myUser = context.mock(User.class, "Me (User)");
+        User scoobyUser = context.mock(User.class, "Scooby (User)");
+        User shaggyUser = context.mock(User.class, "Shaggy (User)");
+        final Message scooby1 = new Message(new Id(99), scoobyUser, "I'm hungry Shaggy.", NOW.plus(1, MINUTES));
+        final Message scooby2 = new Message(new Id(101), scoobyUser, "Got a Scooby Snack?", NOW.plus(2, MINUTES));
+        final Message shaggy1 = new Message(new Id(105), shaggyUser, "I'll give you half of my Scooby Snack.", NOW.plus(4, MINUTES));
+        final Message scooby3 = new Message(new Id(119), scoobyUser, "Yay!", NOW.plus(8, MINUTES));
+        final Message me1 = new Message(new Id(120), myUser, "Put down the Scooby Snacks and no one gets hurt.", NOW.plus(16, MINUTES));
+        final Message shaggy2 = new Message(new Id(125), shaggyUser, "I already ate the Scooby Snack. Sorry, Fred.", NOW.plus(32, MINUTES));
 
         final Iterable<Message> scoobyMessages = listOf(scooby3, scooby2, scooby1);
         final Iterable<Message> shaggyMessages = listOf(shaggy2, shaggy1);
-        final Iterable<Message> yourMessages = listOf(you1);
+        final Iterable<Message> myMessages = listOf(me1);
 
         context.checking(new Expectations() {{
-            allowing(myProfile).iterator(); will(new RenderMessages(yourMessages));
+            allowing(myProfile).iterator(); will(new RenderMessages(myMessages));
             allowing(scooby).iterator(); will(new RenderMessages(scoobyMessages));
             allowing(shaggy).iterator(); will(new RenderMessages(shaggyMessages));
 
             Sequence messages = context.sequence("messages");
             oneOf(renderer).render(shaggy2); inSequence(messages);
-            oneOf(renderer).render(you1); inSequence(messages);
+            oneOf(renderer).render(me1); inSequence(messages);
             oneOf(renderer).render(scooby3); inSequence(messages);
             oneOf(renderer).render(shaggy1); inSequence(messages);
             oneOf(renderer).render(scooby2); inSequence(messages);
@@ -174,11 +182,14 @@ public class AggregatedProfileFeedTest {
         final List<Message> profileBMessages = new ArrayList<>();
         final List<Message> profileCMessages = new ArrayList<>();
 
+        User userA = context.mock(User.class, "User A");
+        User userB = context.mock(User.class, "User B");
+        User userC = context.mock(User.class, "User C");
         final int messageCount = 10;
         for (int messageIndex = messageCount; messageIndex > 0; --messageIndex) {
-            profileAMessages.add(new Message(new Id(messageIndex * 3 + 1), "Message " + messageIndex + " from profile A", NOW.plus(messageIndex * 3 + 1, MINUTES)));
-            profileBMessages.add(new Message(new Id(messageIndex * 3 + 2), "Message " + messageIndex + " from profile B", NOW.plus(messageIndex * 3 + 2, MINUTES)));
-            profileCMessages.add(new Message(new Id(messageIndex * 3 + 3), "Message " + messageIndex + " from profile C", NOW.plus(messageIndex * 3 + 3, MINUTES)));
+            profileAMessages.add(new Message(new Id(messageIndex * 3 + 1), userA, "Message " + messageIndex + " from profile A", NOW.plus(messageIndex * 3 + 1, MINUTES)));
+            profileBMessages.add(new Message(new Id(messageIndex * 3 + 2), userB, "Message " + messageIndex + " from profile B", NOW.plus(messageIndex * 3 + 2, MINUTES)));
+            profileCMessages.add(new Message(new Id(messageIndex * 3 + 3), userC, "Message " + messageIndex + " from profile C", NOW.plus(messageIndex * 3 + 3, MINUTES)));
         }
 
         context.checking(new Expectations() {{
