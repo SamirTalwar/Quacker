@@ -6,8 +6,11 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.id.IdentifierSource;
+import com.noodlesandwich.quacker.message.Conversation;
+import com.noodlesandwich.quacker.message.Conversations;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.testing.Captured;
+import com.noodlesandwich.quacker.ui.ConversationRenderer;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
@@ -28,11 +31,13 @@ public class AuthenticatedClientTest {
     private final IdentifierSource idSource = context.mock(IdentifierSource.class);
     private final User user = context.mock(User.class);
     private final Profiles profiles = context.mock(Profiles.class);
-    private final Client client = new AuthenticatedClient(clock, idSource, user, profiles);
+    private final Conversations conversations = context.mock(Conversations.class);
+    private final Client client = new AuthenticatedClient(clock, idSource, user, profiles, conversations);
 
     private final MessageRenderer messageRenderer = context.mock(MessageRenderer.class);
     private final TimelineRenderer timelineRenderer = context.mock(TimelineRenderer.class);
     private final FeedRenderer feedRenderer = context.mock(FeedRenderer.class);
+    private final ConversationRenderer conversationRenderer = context.mock(ConversationRenderer.class);
 
     @Test public void
     publishes_messages_to_the_server() {
@@ -54,7 +59,8 @@ public class AuthenticatedClientTest {
     follows_other_users() {
         final Profile uday = context.mock(Profile.class);
         context.checking(new Expectations() {{
-            oneOf(profiles).profileFor("Uday"); will(returnValue(uday));
+            oneOf(profiles).profileFor("Uday");
+            will(returnValue(uday));
             oneOf(user).follow(uday);
         }});
 
@@ -82,6 +88,21 @@ public class AuthenticatedClientTest {
             oneOf(user).renderFeedTo(feedRenderer);
         }});
         client.openFeed(feedRenderer);
+
+        context.assertIsSatisfied();
+    }
+
+    @Test public void
+    renders_a_conversation() {
+        final Conversation conversation = context.mock(Conversation.class);
+        final Id messageId = new Id(200);
+
+        context.checking(new Expectations() {{
+            oneOf(conversations).conversationAround(messageId); will(returnValue(conversation));
+            oneOf(conversation).renderConversationTo(conversationRenderer);
+        }});
+
+        client.viewConversationAround(messageId, conversationRenderer);
 
         context.assertIsSatisfied();
     }

@@ -3,7 +3,9 @@ package com.noodlesandwich.quacker.client;
 import java.time.Clock;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.id.IdentifierSource;
+import com.noodlesandwich.quacker.message.Conversations;
 import com.noodlesandwich.quacker.message.Message;
+import com.noodlesandwich.quacker.ui.ConversationRenderer;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import com.noodlesandwich.quacker.user.Profiles;
@@ -14,12 +16,14 @@ public class AuthenticatedClient implements Client {
     private final IdentifierSource idSource;
     private final User user;
     private final Profiles profiles;
+    private final Conversations conversations;
 
-    public AuthenticatedClient(Clock clock, IdentifierSource idSource, User user, Profiles profiles) {
+    public AuthenticatedClient(Clock clock, IdentifierSource idSource, User user, Profiles profiles, Conversations conversations) {
         this.clock = clock;
         this.idSource = idSource;
         this.user = user;
         this.profiles = profiles;
+        this.conversations = conversations;
     }
 
     @Override
@@ -43,7 +47,7 @@ public class AuthenticatedClient implements Client {
     }
 
     @Override
-    public void viewConversationAround(Id messageId) {
-        throw new UnsupportedOperationException();
+    public void viewConversationAround(Id messageId, ConversationRenderer renderer) {
+        conversations.conversationAround(messageId).renderConversationTo(renderer);
     }
 }

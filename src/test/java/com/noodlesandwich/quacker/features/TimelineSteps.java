@@ -10,6 +10,7 @@ import com.noodlesandwich.quacker.client.Client;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.message.Message;
 import com.noodlesandwich.quacker.server.Server;
+import com.noodlesandwich.quacker.ui.ConversationRenderer;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
@@ -29,11 +30,11 @@ public class TimelineSteps {
     private Client client;
 
     private final List<InspectibleMessage> messages = new ArrayList<>();
-    private final MessageRenderer messageRenderer = new MessageRenderer() {
+    private final MessageListRenderer messageListRenderer = new MessageListRenderer(new MessageRenderer() {
         @Override public void render(Id id, User author, String text, Instant timestamp) {
             messages.add(new InspectibleMessage(id, author, text, timestamp));
         }
-    };
+    });
 
     @Inject
     public TimelineSteps(Server server) {
@@ -67,29 +68,20 @@ public class TimelineSteps {
     @When("^([^ ]+) opens up ([^']+)'s timeline$") public void
     opens_up_a_timeline(String viewer, String timelineOwner) throws Throwable {
         client = Quacker.clientFor(server).loginAs(viewer);
-        client.openTimelineOf(timelineOwner, new TimelineRenderer() {
-            @Override
-            public void render(Message message) {
-                message.renderTo(messageRenderer);
-            }
-        });
+        client.openTimelineOf(timelineOwner, messageListRenderer);
     }
 
     @When("^([^ ]+) opens up (?:his|her) feed$") public void
     opens_feed(String viewer) throws Throwable {
         client = Quacker.clientFor(server).loginAs(viewer);
-        client.openFeed(new FeedRenderer() {
-            @Override public void render(Message message) {
-                message.renderTo(messageRenderer);
-            }
-        });
+        client.openFeed(messageListRenderer);
     }
 
     @When("^clicks on the quack from ([^ ]+) that says \"([^\"]*)\"$") public void
     clicks_on_the_quack(String author, String text) {
         for (InspectibleMessage message : messages) {
             if (author.equals(message.author.getUsername()) && text.equals(message.text)) {
-                client.viewConversationAround(message.id);
+                client.viewConversationAround(message.id, messageListRenderer);
                 return;
             }
         }
@@ -130,5 +122,18 @@ public class TimelineSteps {
             characters[i] = ALLOWED_RANDOM_CHARACTERS[random.nextInt(ALLOWED_RANDOM_CHARACTERS.length)];
         }
         return String.valueOf(characters);
+    }
+
+    private class MessageListRenderer implements ConversationRenderer, FeedRenderer, TimelineRenderer {
+        private final MessageRenderer messageRenderer;
+
+        public MessageListRenderer(MessageRenderer messageRenderer) {
+            this.messageRenderer = messageRenderer;
+        }
+
+        @Override
+        public void render(Message message) {
+            message.renderTo(messageRenderer);
+        }
     }
 }
