@@ -3,10 +3,11 @@ package com.noodlesandwich.quacker.users;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.communication.feed.Feed;
 import com.noodlesandwich.quacker.communication.messages.Message;
-import com.noodlesandwich.quacker.communication.timeline.UpdatableTimeline;
+import com.noodlesandwich.quacker.communication.messages.MessageListener;
+import com.noodlesandwich.quacker.communication.timeline.Timeline;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import org.jmock.Expectations;
@@ -17,9 +18,10 @@ public class DelegatingUserTest {
     private static final Instant NOW = Instant.from(ZonedDateTime.of(2012, 1, 1, 9, 0, 0, 0, ZoneId.of("UTC")));
 
     private final Mockery context = new Mockery();
-    private final UpdatableTimeline timeline = context.mock(UpdatableTimeline.class);
+    private final Timeline timeline = context.mock(Timeline.class);
     private final Feed feed = context.mock(Feed.class);
-    private final User user = new DelegatingUser("Isha", timeline, feed);
+    private final MessageListener messageListener = context.mock(MessageListener.class);
+    private final User user = new DelegatingUser("Isha", timeline, feed, messageListener);
 
     private final TimelineRenderer timelineRenderer = context.mock(TimelineRenderer.class);
     private final FeedRenderer feedRenderer = context.mock(FeedRenderer.class);
@@ -37,12 +39,12 @@ public class DelegatingUserTest {
     }
 
     @Test public void
-    publishes_messages_to_an_in_memory_timeline() {
+    publishes_messages_to_a_listener() {
         final Id messageId = new Id(42);
         final Message message = new Message(messageId, user, "Beep beep.", NOW);
 
         context.checking(new Expectations() {{
-            oneOf(timeline).publish(messageId, message);
+            oneOf(messageListener).publish(messageId, message);
         }});
 
         user.publish(messageId, message);

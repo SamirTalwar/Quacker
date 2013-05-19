@@ -2,20 +2,23 @@ package com.noodlesandwich.quacker.users;
 
 import com.noodlesandwich.quacker.communication.feed.Feed;
 import com.noodlesandwich.quacker.communication.messages.Message;
-import com.noodlesandwich.quacker.communication.timeline.UpdatableTimeline;
+import com.noodlesandwich.quacker.communication.messages.MessageListener;
+import com.noodlesandwich.quacker.communication.timeline.Timeline;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
 public class DelegatingUser implements User {
     private final String username;
-    private final UpdatableTimeline timeline;
+    private final Timeline timeline;
     private final Feed feed;
+    private final MessageListener messageListener;
 
-    public DelegatingUser(String username, UpdatableTimeline timeline, Feed feed) {
+    public DelegatingUser(String username, Timeline timeline, Feed feed, MessageListener messageListener) {
         this.username = username;
         this.timeline = timeline;
         this.feed = feed;
+        this.messageListener = messageListener;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class DelegatingUser implements User {
 
     @Override
     public void publish(Id messageId, Message message) {
-        timeline.publish(messageId, message);
+        messageListener.publish(messageId, message);
     }
 
     @Override

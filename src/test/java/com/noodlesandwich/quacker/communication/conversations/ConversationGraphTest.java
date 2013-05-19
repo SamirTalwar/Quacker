@@ -35,7 +35,7 @@ public class ConversationGraphTest {
         User author = context.mock(User.class);
         Message message = new Message(messageId, author, "Boom goes the dynamite.", NOW);
 
-        conversations.register(messageId, message);
+        conversations.publish(messageId, message);
 
         Conversation conversation = conversations.conversationAround(messageId);
         conversation.renderConversationTo(renderer);

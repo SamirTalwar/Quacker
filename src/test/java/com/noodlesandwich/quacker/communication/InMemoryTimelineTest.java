@@ -6,10 +6,9 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.communication.timeline.InMemoryTimeline;
-import com.noodlesandwich.quacker.communication.timeline.UpdatableTimeline;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import com.noodlesandwich.quacker.users.User;
 import org.jmock.Expectations;
@@ -26,7 +25,7 @@ public class InMemoryTimelineTest {
     private final Mockery context = new Mockery();
     private final TimelineRenderer renderer = context.mock(TimelineRenderer.class);
 
-    private final UpdatableTimeline timeline = new InMemoryTimeline();
+    private final InMemoryTimeline timeline = new InMemoryTimeline();
 
     @Test public void
     publishes_messages_to_an_in_memory_timeline() {

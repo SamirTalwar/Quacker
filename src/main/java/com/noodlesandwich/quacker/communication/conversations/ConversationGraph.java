@@ -11,7 +11,7 @@ public class ConversationGraph implements Conversations, MessageListener {
     private final Map<Id, Message> messages = new HashMap<>();
 
     @Override
-    public void register(Id id, Message message) {
+    public void publish(Id id, Message message) {
         messages.put(id, message);
     }
 

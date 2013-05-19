@@ -6,7 +6,6 @@ import javax.inject.Singleton;
 import com.noodlesandwich.quacker.communication.feed.AggregatedProfileFeed;
 import com.noodlesandwich.quacker.communication.feed.Feed;
 import com.noodlesandwich.quacker.communication.timeline.InMemoryTimeline;
-import com.noodlesandwich.quacker.communication.timeline.UpdatableTimeline;
 
 @Singleton
 public class InMemoryUsers implements Users, Profiles {
@@ -19,10 +18,10 @@ public class InMemoryUsers implements Users, Profiles {
             throw new UserAlreadyExistsException(username);
         }
 
-        UpdatableTimeline timeline = new InMemoryTimeline();
+        InMemoryTimeline timeline = new InMemoryTimeline();
         InMemoryProfile profile = new InMemoryProfile(timeline);
         Feed feed = new AggregatedProfileFeed(profile);
-        DelegatingUser user = new DelegatingUser(username, timeline, feed);
+        DelegatingUser user = new DelegatingUser(username, timeline, feed, timeline);
 
         users.put(username, user);
         profiles.put(username, profile);
