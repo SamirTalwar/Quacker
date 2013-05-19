@@ -25,7 +25,7 @@ public class InMemoryUser implements User {
 
     @Override
     public void publish(Id messageId, Message message) {
-        timeline.publish(message);
+        timeline.publish(messageId, message);
     }
 
     @Override

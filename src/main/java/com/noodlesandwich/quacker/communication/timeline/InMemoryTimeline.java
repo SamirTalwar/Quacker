@@ -5,13 +5,14 @@ import java.util.LinkedList;
 import java.util.List;
 import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.communication.feed.Feed;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
 public class InMemoryTimeline implements UpdatableTimeline {
     private final List<Message> messages = new LinkedList<>();
 
     @Override
-    public void publish(Message message) {
+    public void publish(Id messageId, Message message) {
         messages.add(0, message);
     }
 

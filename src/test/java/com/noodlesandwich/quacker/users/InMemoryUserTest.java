@@ -38,11 +38,11 @@ public class InMemoryUserTest {
 
     @Test public void
     publishes_messages_to_an_in_memory_timeline() {
-        Id messageId = new Id(42);
+        final Id messageId = new Id(42);
         final Message message = new Message(messageId, user, "Beep beep.", NOW);
 
         context.checking(new Expectations() {{
-            oneOf(timeline).publish(message);
+            oneOf(timeline).publish(messageId, message);
         }});
 
         user.publish(messageId, message);

@@ -32,7 +32,7 @@ public class InMemoryTimelineTest {
     publishes_messages_to_an_in_memory_timeline() {
         User user = context.mock(User.class);
         final Message message = new Message(new Id(72), user, "Beep beep.", NOW);
-        timeline.publish(message);
+        timeline.publish(new Id(72), message);
 
         context.checking(new Expectations() {{
             oneOf(renderer).render(message);
@@ -50,9 +50,9 @@ public class InMemoryTimelineTest {
         final Message two = new Message(new Id(97), user, "Two", NOW.plusSeconds(2));
         final Message three = new Message(new Id(99), user, "Three", NOW.plusSeconds(3));
 
-        timeline.publish(one);
-        timeline.publish(two);
-        timeline.publish(three);
+        timeline.publish(new Id(95), one);
+        timeline.publish(new Id(97), two);
+        timeline.publish(new Id(99), three);
 
         context.checking(new Expectations() {{
             Sequence messages = context.sequence("messages");
@@ -71,9 +71,10 @@ public class InMemoryTimelineTest {
         User user = context.mock(User.class);
         final List<Message> timelineMessages = new ArrayList<>();
         for (int i = 0; i < 50; ++i) {
-            Message message = new Message(new Id(i), user, "Message " + i, NOW.plusSeconds(i));
+            Id messageId = new Id(i);
+            Message message = new Message(messageId, user, "Message " + i, NOW.plusSeconds(i));
             timelineMessages.add(message);
-            timeline.publish(message);
+            timeline.publish(messageId, message);
         }
         Collections.reverse(timelineMessages);
 
@@ -97,9 +98,9 @@ public class InMemoryTimelineTest {
         Message two = new Message(new Id(2), user, "Two", NOW.plusSeconds(2));
         Message three = new Message(new Id(3), user, "Three", NOW.plusSeconds(3));
 
-        timeline.publish(one);
-        timeline.publish(two);
-        timeline.publish(three);
+        timeline.publish(new Id(1), one);
+        timeline.publish(new Id(2), two);
+        timeline.publish(new Id(3), three);
 
         assertThat(timeline, contains(three, two, one));
     }
