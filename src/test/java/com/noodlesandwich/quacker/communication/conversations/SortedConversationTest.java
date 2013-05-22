@@ -13,8 +13,7 @@ import org.jmock.Mockery;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.contains;
 
 public class SortedConversationTest {
     private static final Instant NOW = Instant.from(ZonedDateTime.of(2011, 1, 1, 4, 56, 3, 0, ZoneId.of("UTC")));
@@ -28,12 +27,7 @@ public class SortedConversationTest {
         Message two = new Message(new Id(2), me, "Two", NOW.plusSeconds(2));
         Message three = new Message(new Id(3), me, "Three", NOW.plusSeconds(3));
 
-        List<Message> messages = new ArrayList<>();
-        messages.add(one);
-        messages.add(two);
-        messages.add(three);
-
-        Conversation conversation = new SortedConversation(messages);
+        Conversation conversation = new SortedConversation(one, two, three);
         final List<Message> conversationMessages = new ArrayList<>();
         conversation.renderConversationTo(new ConversationRenderer() {
             @Override public void render(Message message) {
@@ -41,6 +35,6 @@ public class SortedConversationTest {
             }
         });
 
-        assertThat(conversationMessages, is(equalTo(messages)));
+        assertThat(conversationMessages, contains(one, two, three));
     }
 }
