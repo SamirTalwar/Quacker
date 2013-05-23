@@ -68,12 +68,14 @@ public class TimelineSteps {
     @When("^([^ ]+) opens up ([^']+)'s timeline$") public void
     opens_up_a_timeline(String viewer, String timelineOwner) throws Throwable {
         client = Quacker.clientFor(server).loginAs(viewer);
+        messages.clear();
         client.openTimelineOf(timelineOwner, messageListRenderer);
     }
 
     @When("^([^ ]+) opens up (?:his|her) feed$") public void
     opens_feed(String viewer) throws Throwable {
         client = Quacker.clientFor(server).loginAs(viewer);
+        messages.clear();
         client.openFeed(messageListRenderer);
     }
 
@@ -81,6 +83,7 @@ public class TimelineSteps {
     clicks_on_the_quack(String author, String text) {
         for (InspectibleMessage message : messages) {
             if (author.equals(message.author.getUsername()) && text.equals(message.text)) {
+                messages.clear();
                 client.viewConversationAround(message.id, messageListRenderer);
                 return;
             }
