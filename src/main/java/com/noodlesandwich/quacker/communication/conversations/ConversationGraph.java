@@ -1,12 +1,15 @@
 package com.noodlesandwich.quacker.communication.conversations;
 
 import java.time.Instant;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.NavigableSet;
+import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.google.common.collect.HashMultimap;
@@ -21,6 +24,8 @@ import com.noodlesandwich.quacker.users.User;
 
 @Singleton
 public class ConversationGraph implements Conversations, MessageListener {
+    public static final int BeforeLimit = 10;
+    public static final int AfterLimit = 10;
     public static final Pattern StartsWithMention = Pattern.compile("^@([A-Za-z0-9]+)");
 
     private final Map<Id, Message> messages = new HashMap<>();
@@ -53,28 +58,54 @@ public class ConversationGraph implements Conversations, MessageListener {
             throw new NonExistentMessageException(messageId);
         }
 
-        Message rootMessage = rootMessageOf(messageId);
-        Collection<Message> conversation = repliesTo(rootMessage);
-        return new SortedConversation(conversation);
+        Message originalMessage = messages.get(messageId);
+        Message rootMessage = rootMessageOf(originalMessage);
+        NavigableSet<Message> conversation = repliesTo(rootMessage, originalMessage);
+
+        Collection<Message> snippet = new ArrayList<>(BeforeLimit + 1 + AfterLimit);
+        snippet.add(originalMessage);
+
+        Iterator<Message> before = conversation.headSet(originalMessage, false).descendingIterator();
+        for (int i = 0; before.hasNext() && i < BeforeLimit; ++i) {
+            snippet.add(before.next());
+        }
+
+        Iterator<Message> after = conversation.tailSet(originalMessage, false).iterator();
+        for (int i = 0; after.hasNext() && i < AfterLimit; ++i) {
+            snippet.add(after.next());
+        }
+
+        return new SortedConversation(snippet);
     }
 
-    private Message rootMessageOf(Id messageId) {
-        Message rootMessage = messages.get(messageId);
-        while (repliesInverse.containsKey(rootMessage)) {
+    private Message rootMessageOf(Message message) {
+        Message rootMessage = message;
+        int count = 0;
+        while (repliesInverse.containsKey(rootMessage) && count < BeforeLimit) {
             rootMessage = repliesInverse.get(rootMessage);
+            count++;
         }
         return rootMessage;
     }
 
-    private Collection<Message> repliesTo(Message message) {
-        Collection<Message> conversation = new ArrayList<>();
-        Queue<Message> nextMessages = new ArrayDeque<>();
+    private NavigableSet<Message> repliesTo(Message message, Message originalMessage) {
+        NavigableSet<Message> conversation = new TreeSet<>();
+        Queue<Message> nextMessages = new PriorityQueue<>();
         nextMessages.add(message);
 
-        while (!nextMessages.isEmpty()) {
+        boolean counting = false;
+        int count = 0;
+        while (!nextMessages.isEmpty() && count < AfterLimit) {
             Message nextMessage = nextMessages.remove();
             conversation.add(nextMessage);
             nextMessages.addAll(replies.get(nextMessage));
+
+            if (counting) {
+                count++;
+            }
+            if (nextMessage == originalMessage) {
+                counting = true;
+            }
         }
         return conversation;
     }

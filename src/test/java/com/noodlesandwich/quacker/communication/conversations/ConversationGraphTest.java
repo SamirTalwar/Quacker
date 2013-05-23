@@ -125,7 +125,7 @@ public class ConversationGraphTest {
     }
 
     @Test public void
-    conversations_can_be_loaded_from_any_quack_in_the_conversation() {
+    conversations_can_be_loaded_from_any_message_in_the_conversation() {
         final User mallika = context.mock(User.class, "Mallika");
         final User nazir = context.mock(User.class, "Nazir");
 
@@ -150,6 +150,53 @@ public class ConversationGraphTest {
         }});
 
         Conversation conversation = conversations.conversationAround(new Id(104));
+        conversation.renderConversationTo(renderer);
+
+        context.assertIsSatisfied();
+    }
+
+    @Test public void
+    only_go_ten_messages_in_each_direction() {
+        final User farooq = context.mock(User.class, "Farooq");
+        final User geeta = context.mock(User.class, "Geeta");
+
+        context.checking(new Expectations() {{
+            allowing(farooq).getUsername(); will(returnValue("Farooq"));
+            allowing(geeta).getUsername(); will(returnValue("Geeta"));
+        }});
+
+        for (int i = 0; i < 50; ++i) {
+            conversations.publish(new Id(i * 3 + 1), farooq, "@Geeta", NOW.plusSeconds(i * 3 + 1));
+            conversations.publish(new Id(i * 3 + 2), geeta, "@Farooq A", NOW.plusSeconds(i * 3 + 2));
+            conversations.publish(new Id(i * 3 + 3), geeta, "@Farooq B", NOW.plusSeconds(i * 3 + 3));
+        }
+
+        context.checking(new Expectations() {{
+            Sequence messages = context.sequence("messages");
+            oneOf(messageRenderer).render(new Id(90), geeta, "@Farooq B", NOW.plusSeconds(90)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(91), farooq, "@Geeta", NOW.plusSeconds(91)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(92), geeta, "@Farooq A", NOW.plusSeconds(92)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(93), geeta, "@Farooq B", NOW.plusSeconds(93)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(94), farooq, "@Geeta", NOW.plusSeconds(94)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(95), geeta, "@Farooq A", NOW.plusSeconds(95)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(96), geeta, "@Farooq B", NOW.plusSeconds(96)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(97), farooq, "@Geeta", NOW.plusSeconds(97)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(98), geeta, "@Farooq A", NOW.plusSeconds(98)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(99), geeta, "@Farooq B", NOW.plusSeconds(99)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(100), farooq, "@Geeta", NOW.plusSeconds(100)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(101), geeta, "@Farooq A", NOW.plusSeconds(101)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(102), geeta, "@Farooq B", NOW.plusSeconds(102)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(103), farooq, "@Geeta", NOW.plusSeconds(103)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(104), geeta, "@Farooq A", NOW.plusSeconds(104)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(105), geeta, "@Farooq B", NOW.plusSeconds(105)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(106), farooq, "@Geeta", NOW.plusSeconds(106)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(107), geeta, "@Farooq A", NOW.plusSeconds(107)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(108), geeta, "@Farooq B", NOW.plusSeconds(108)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(109), farooq, "@Geeta", NOW.plusSeconds(109)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(110), geeta, "@Farooq A", NOW.plusSeconds(110)); inSequence(messages);
+        }});
+
+        Conversation conversation = conversations.conversationAround(new Id(100));
         conversation.renderConversationTo(renderer);
 
         context.assertIsSatisfied();
