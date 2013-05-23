@@ -124,6 +124,37 @@ public class ConversationGraphTest {
         context.assertIsSatisfied();
     }
 
+    @Test public void
+    conversations_can_be_loaded_from_any_quack_in_the_conversation() {
+        final User mallika = context.mock(User.class, "Mallika");
+        final User nazir = context.mock(User.class, "Nazir");
+
+        context.checking(new Expectations() {{
+            allowing(mallika).getUsername(); will(returnValue("Mallika"));
+            allowing(nazir).getUsername(); will(returnValue("Nazir"));
+        }});
+
+        conversations.publish(new Id(101), mallika, "Hey, @Nazir, wanna dance?", NOW.plus(5, MINUTES));
+        conversations.publish(new Id(102), nazir, "@Mallika You know I don't dance.", NOW.plus(6, MINUTES));
+        conversations.publish(new Id(103), mallika, "@Nazir I've never seen you try.", NOW.plus(8, MINUTES));
+        conversations.publish(new Id(104), mallika, "@Nazir I bet you have some incredible twirls.", NOW.plus(9, MINUTES));
+        conversations.publish(new Id(105), nazir, "@Mallika *blushes*", NOW.plus(10, MINUTES));
+
+        context.checking(new Expectations() {{
+            Sequence messages = context.sequence("messages");
+            oneOf(messageRenderer).render(new Id(101), mallika, "Hey, @Nazir, wanna dance?", NOW.plus(5, MINUTES)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(102), nazir, "@Mallika You know I don't dance.", NOW.plus(6, MINUTES)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(103), mallika, "@Nazir I've never seen you try.", NOW.plus(8, MINUTES)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(104), mallika, "@Nazir I bet you have some incredible twirls.", NOW.plus(9, MINUTES)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(105), nazir, "@Mallika *blushes*", NOW.plus(10, MINUTES)); inSequence(messages);
+        }});
+
+        Conversation conversation = conversations.conversationAround(new Id(104));
+        conversation.renderConversationTo(renderer);
+
+        context.assertIsSatisfied();
+    }
+
     @Test(expected=NonExistentMessageException.class) public void
     a_non_existent_message_results_in_an_exception() {
         conversations.conversationAround(new Id(88));

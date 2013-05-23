@@ -26,6 +26,7 @@ public class ConversationGraph implements Conversations, MessageListener {
     private final Map<Id, Message> messages = new HashMap<>();
     private final TreeMultimap<String, Message> timelines = TreeMultimap.create();
     private final Multimap<Message, Message> replies = HashMultimap.create();
+    private final Map<Message, Message> repliesInverse = new HashMap<>();
 
     @Override
     public void publish(Id id, User author, String text, Instant timestamp) {
@@ -41,6 +42,7 @@ public class ConversationGraph implements Conversations, MessageListener {
             if (timelines.containsKey(replyee)) {
                 Message originalMessage = timelines.get(replyee).lower(message);
                 replies.put(originalMessage, message);
+                repliesInverse.put(message, originalMessage);
             }
         }
     }
@@ -51,15 +53,29 @@ public class ConversationGraph implements Conversations, MessageListener {
             throw new NonExistentMessageException(messageId);
         }
 
+        Message rootMessage = rootMessageOf(messageId);
+        Collection<Message> conversation = repliesTo(rootMessage);
+        return new SortedConversation(conversation);
+    }
+
+    private Message rootMessageOf(Id messageId) {
+        Message rootMessage = messages.get(messageId);
+        while (repliesInverse.containsKey(rootMessage)) {
+            rootMessage = repliesInverse.get(rootMessage);
+        }
+        return rootMessage;
+    }
+
+    private Collection<Message> repliesTo(Message message) {
         Collection<Message> conversation = new ArrayList<>();
         Queue<Message> nextMessages = new ArrayDeque<>();
-        nextMessages.add(messages.get(messageId));
+        nextMessages.add(message);
 
         while (!nextMessages.isEmpty()) {
-            Message message = nextMessages.remove();
-            conversation.add(message);
-            nextMessages.addAll(replies.get(message));
+            Message nextMessage = nextMessages.remove();
+            conversation.add(nextMessage);
+            nextMessages.addAll(replies.get(nextMessage));
         }
-        return new SortedConversation(conversation);
+        return conversation;
     }
 }
