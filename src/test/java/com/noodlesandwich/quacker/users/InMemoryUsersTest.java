@@ -9,7 +9,6 @@ import com.noodlesandwich.quacker.communication.messages.MessageListener;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.id.IdentifierSource;
 import com.noodlesandwich.quacker.testing.Captured;
-import com.noodlesandwich.quacker.ui.MessageRenderer;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
@@ -21,15 +20,13 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class InMemoryUsersTest {
     private static final MessageListener NullMessageListener = new MessageListener() {
-        @Override public void publish(Id id, Message message) { }
+        @Override public void publish(Id id, User author, String text, Instant timestamp) { }
     };
     private static final Instant NOW = Instant.from(ZonedDateTime.of(2009, 12, 14, 7, 30, 9, 0, ZoneId.of("UTC")));
 
     private final Mockery context = new Mockery();
     private final Clock clock = Clock.fixed(NOW, ZoneId.of("UTC"));
     private final IdentifierSource idSource = context.mock(IdentifierSource.class);
-
-    private final MessageRenderer messageRenderer = context.mock(MessageRenderer.class);
 
     @Test public void
     hands_over_a_previously_created_user() {
@@ -76,14 +73,10 @@ public class InMemoryUsersTest {
 
         context.checking(new Expectations() {{
             oneOf(idSource).nextId(); will(returnValue(id));
-            oneOf(listener).publish(with(id), with(any(Message.class))); will(captureParameter(1).as(message));
-
-            oneOf(messageRenderer).render(id, mumtaz, "Hey, you!", NOW);
+            oneOf(listener).publish(id, mumtaz, "Hey, you!", NOW); will(captureParameter(1).as(message));
         }});
 
         mumtaz.publish("Hey, you!");
-
-        message.get().renderTo(messageRenderer);
 
         context.assertIsSatisfied();
     }

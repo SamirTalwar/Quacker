@@ -5,20 +5,15 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import com.noodlesandwich.quacker.communication.feed.Feed;
-import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.communication.messages.MessageListener;
 import com.noodlesandwich.quacker.communication.timeline.Timeline;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.id.IdentifierSource;
-import com.noodlesandwich.quacker.testing.Captured;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
-import com.noodlesandwich.quacker.ui.MessageRenderer;
 import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
-
-import static com.noodlesandwich.quacker.testing.CaptureParameter.captureParameter;
 
 public class DelegatingUserTest {
     private static final Instant NOW = Instant.from(ZonedDateTime.of(2012, 1, 1, 9, 0, 0, 0, ZoneId.of("UTC")));
@@ -31,7 +26,6 @@ public class DelegatingUserTest {
     private final MessageListener messageListener = context.mock(MessageListener.class);
     private final User user = new DelegatingUser(clock, idSource, "Isha", timeline, feed, messageListener);
 
-    private final MessageRenderer messageRenderer = context.mock(MessageRenderer.class);
     private final TimelineRenderer timelineRenderer = context.mock(TimelineRenderer.class);
     private final FeedRenderer feedRenderer = context.mock(FeedRenderer.class);
 
@@ -50,18 +44,14 @@ public class DelegatingUserTest {
     @Test public void
     publishes_messages_to_a_listener() {
         final Id messageId = new Id(42);
-        final Captured<Message> message = new Captured<>();
 
         context.checking(new Expectations() {{
-            oneOf(idSource).nextId(); will(returnValue(messageId));
-            oneOf(messageListener).publish(with(messageId), with(any(Message.class))); will(captureParameter(1).as(message));
-
-            oneOf(messageRenderer).render(messageId, user, "Beep beep.", NOW);
+            oneOf(idSource).nextId();
+            will(returnValue(messageId));
+            oneOf(messageListener).publish(messageId, user, "Beep beep.", NOW);
         }});
 
         user.publish("Beep beep.");
-
-        message.get().renderTo(messageRenderer);
 
         context.assertIsSatisfied();
     }

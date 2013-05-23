@@ -1,6 +1,8 @@
 package com.noodlesandwich.quacker.communication.messages;
 
+import java.time.Instant;
 import com.noodlesandwich.quacker.id.Id;
+import com.noodlesandwich.quacker.users.User;
 
 public class CompositeMessageListener implements MessageListener {
     private final MessageListener[] messageListeners;
@@ -10,9 +12,9 @@ public class CompositeMessageListener implements MessageListener {
     }
 
     @Override
-    public void publish(Id id, Message message) {
+    public void publish(Id id, User author, String text, Instant timestamp) {
         for (MessageListener messageListener : messageListeners) {
-            messageListener.publish(id, message);
+            messageListener.publish(id, author, text, timestamp);
         }
     }
 }

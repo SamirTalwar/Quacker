@@ -20,9 +20,8 @@ public class CompositeMessageListenerTest {
         MessageListener messageListener = new CompositeMessageListener();
 
         Id id = new Id(7);
-        Message message = new Message(id, context.mock(User.class), "Bazinga.", NOW);
 
-        messageListener.publish(id, message);
+        messageListener.publish(id, context.mock(User.class), "Bazinga.", NOW);
 
         context.assertIsSatisfied();
     }
@@ -33,13 +32,13 @@ public class CompositeMessageListenerTest {
         MessageListener messageListener = new CompositeMessageListener(delegate);
 
         final Id id = new Id(91);
-        final Message message = new Message(id, context.mock(User.class), "Froody.", NOW);
+        final User user = context.mock(User.class);
 
         context.checking(new Expectations() {{
-            oneOf(delegate).publish(id, message);
+            oneOf(delegate).publish(id, user, "Froody.", NOW);
         }});
 
-        messageListener.publish(id, message);
+        messageListener.publish(id, user, "Froody.", NOW);
 
         context.assertIsSatisfied();
     }
@@ -51,15 +50,15 @@ public class CompositeMessageListenerTest {
         MessageListener messageListener = new CompositeMessageListener(delegateA, delegateB);
 
         final Id id = new Id(21);
-        final Message message = new Message(id, context.mock(User.class), "Shiny.", NOW);
+        final User user = context.mock(User.class);
 
         context.checking(new Expectations() {{
             Sequence delegation = context.sequence("delegation");
-            oneOf(delegateA).publish(id, message); inSequence(delegation);
-            oneOf(delegateB).publish(id, message); inSequence(delegation);
+            oneOf(delegateA).publish(id, user, "Shiny.", NOW); inSequence(delegation);
+            oneOf(delegateB).publish(id, user, "Shiny.", NOW); inSequence(delegation);
         }});
 
-        messageListener.publish(id, message);
+        messageListener.publish(id, user, "Shiny.", NOW);
 
         context.assertIsSatisfied();
     }

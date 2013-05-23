@@ -2,7 +2,6 @@ package com.noodlesandwich.quacker.users;
 
 import java.time.Clock;
 import com.noodlesandwich.quacker.communication.feed.Feed;
-import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.communication.messages.MessageListener;
 import com.noodlesandwich.quacker.communication.timeline.Timeline;
 import com.noodlesandwich.quacker.id.Id;
@@ -35,7 +34,7 @@ public class DelegatingUser implements User {
     @Override
     public void publish(String message) {
         Id messageId = idSource.nextId();
-        messageListener.publish(messageId, new Message(messageId, this, message, clock.instant()));
+        messageListener.publish(messageId, this, message, clock.instant());
     }
 
     @Override
