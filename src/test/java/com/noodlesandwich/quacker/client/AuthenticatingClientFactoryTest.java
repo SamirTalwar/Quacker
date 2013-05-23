@@ -1,9 +1,5 @@
 package com.noodlesandwich.quacker.client;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneId;
-import com.noodlesandwich.quacker.id.IdentifierSource;
 import com.noodlesandwich.quacker.server.Server;
 import com.noodlesandwich.quacker.users.User;
 import org.jmock.Expectations;
@@ -16,9 +12,8 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class AuthenticatingClientFactoryTest {
     private final Mockery context = new Mockery();
-    private final Clock clock = Clock.fixed(Instant.EPOCH, ZoneId.of("UTC"));
-    private final IdentifierSource idSource = context.mock(IdentifierSource.class);
-    private final ClientFactory clientFactory = new AuthenticatingClientFactory(clock, idSource);
+
+    private final ClientFactory clientFactory = new AuthenticatingClientFactory();
 
     @Test public void
     authenticates_with_the_server() {

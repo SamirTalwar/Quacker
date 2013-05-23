@@ -1,5 +1,6 @@
 package com.noodlesandwich.quacker.users;
 
+import java.time.Clock;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Singleton;
@@ -9,16 +10,21 @@ import com.noodlesandwich.quacker.communication.feed.Feed;
 import com.noodlesandwich.quacker.communication.messages.CompositeMessageListener;
 import com.noodlesandwich.quacker.communication.messages.MessageListener;
 import com.noodlesandwich.quacker.communication.timeline.InMemoryTimeline;
+import com.noodlesandwich.quacker.id.IdentifierSource;
 
 @Singleton
 public class InMemoryUsers implements Users, Profiles {
+    private final Clock clock;
+    private final IdentifierSource idSource;
     private final MessageListener messageListener;
 
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Profile> profiles = new HashMap<>();
 
     @Inject
-    public InMemoryUsers(MessageListener messageListener) {
+    public InMemoryUsers(Clock clock, IdentifierSource idSource, MessageListener messageListener) {
+        this.clock = clock;
+        this.idSource = idSource;
         this.messageListener = messageListener;
     }
 
@@ -32,7 +38,7 @@ public class InMemoryUsers implements Users, Profiles {
         InMemoryProfile profile = new InMemoryProfile(timeline);
         Feed feed = new AggregatedProfileFeed(profile);
         MessageListener messageListenerWithTimeline = new CompositeMessageListener(timeline, messageListener);
-        DelegatingUser user = new DelegatingUser(username, timeline, feed, messageListenerWithTimeline);
+        DelegatingUser user = new DelegatingUser(clock, idSource, username, timeline, feed, messageListenerWithTimeline);
 
         users.put(username, user);
         profiles.put(username, profile);
