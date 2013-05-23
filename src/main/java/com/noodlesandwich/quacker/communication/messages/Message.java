@@ -60,7 +60,7 @@ public class Message implements Comparable<Message> {
             return result;
         }
 
-        result = text.compareTo(other.text);
+        result = id.compareTo(other.id);
         return result;
     }
 

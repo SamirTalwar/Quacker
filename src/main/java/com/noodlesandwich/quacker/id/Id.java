@@ -1,6 +1,6 @@
 package com.noodlesandwich.quacker.id;
 
-public class Id {
+public class Id implements Comparable<Id> {
     private final int value;
 
     public Id(int value) {
@@ -28,6 +28,11 @@ public class Id {
     @Override
     public int hashCode() {
         return value;
+    }
+
+    @Override
+    public int compareTo(Id other) {
+        return Integer.compare(value, other.value);
     }
 
     @Override

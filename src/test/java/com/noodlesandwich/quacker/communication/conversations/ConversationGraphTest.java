@@ -97,7 +97,7 @@ public class ConversationGraphTest {
         conversations.publish(new Id(2), uttan, "@Tarun Me. Sushi?", NOW.plus(20, MINUTES));
         conversations.publish(new Id(3), vikram, "@Uttan @Tarun What about Chinese?", NOW.plus(22, MINUTES));
         conversations.publish(new Id(4), tarun, "@Vikram @Uttan I hate Chinese. Too oily.", NOW.plus(23, MINUTES));
-        conversations.publish(new Id(5), vikram, "SO HUNGRY.", NOW.plus(24, MINUTES));
+        conversations.publish(new Id(5), yogeeta, "SO HUNGRY.", NOW.plus(24, MINUTES));
         conversations.publish(new Id(6), uttan, "@Vikram @Tarun Sure, I'm up for Chinese.", NOW.plus(24, MINUTES));
         conversations.publish(new Id(7), uttan, "@Tarun @Vikram Oh, fair enough. So… sushi?", NOW.plus(28, MINUTES));
         conversations.publish(new Id(8), vikram, "@Tarun OK, let's do sushi like @Uttan says.", NOW.plus(29, MINUTES));

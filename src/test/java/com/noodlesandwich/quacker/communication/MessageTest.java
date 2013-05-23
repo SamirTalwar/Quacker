@@ -84,10 +84,10 @@ public class MessageTest {
     }
 
     @Test public void
-    two_messages_compare_by_text_if_the_timestamps_are_identical() {
+    two_messages_compare_by_ID_if_the_timestamps_are_identical() {
         User user = context.mock(User.class);
-        Message lesserMessage = new Message(new Id(49), user, "Words ending with aardvark.", NOW.plusSeconds(60));
-        Message greaterMessage = new Message(new Id(49), user, "Words ending with zebra.", NOW.plusSeconds(60));
+        Message lesserMessage = new Message(new Id(420), user, "Wibble.", NOW.plusSeconds(60));
+        Message greaterMessage = new Message(new Id(430), user, "Wibble.", NOW.plusSeconds(60));
 
         assertThat(lesserMessage, is(lessThan(greaterMessage)));
         assertThat(greaterMessage, is(greaterThan(lesserMessage)));
