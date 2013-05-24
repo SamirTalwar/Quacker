@@ -15,7 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
 public class InMemoryProfileTest {
-    private static final Instant NOW = Instant.EPOCH;
+    private static final Instant Now = Instant.EPOCH;
 
     private final Mockery context = new Mockery();
     private final Timeline timeline = context.mock(Timeline.class);
@@ -36,9 +36,9 @@ public class InMemoryProfileTest {
     @Test public void
     is_iterable() {
         User user = context.mock(User.class);
-        Message one = new Message(new Id(1), user, "one", NOW);
-        Message two = new Message(new Id(2), user, "two", NOW);
-        Message three = new Message(new Id(3), user, "three", NOW);
+        Message one = new Message(new Id(1), user, "one", Now);
+        Message two = new Message(new Id(2), user, "two", Now);
+        Message three = new Message(new Id(3), user, "three", Now);
 
         final List<Message> messages = new ArrayList<>();
         messages.add(one);

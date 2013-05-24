@@ -25,7 +25,7 @@ import org.junit.Test;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class AggregatedProfileFeedTest {
-    private static final Instant NOW = Instant.from(ZonedDateTime.of(2013, 4, 27, 12, 0, 0, 0, ZoneId.of("UTC")));
+    private static final Instant Now = Instant.from(ZonedDateTime.of(2013, 4, 27, 12, 0, 0, 0, ZoneId.of("UTC")));
 
     private final Mockery context = new Mockery();
     private final Profile myProfile = context.mock(Profile.class, "Me");
@@ -48,9 +48,9 @@ public class AggregatedProfileFeedTest {
     @Test public void
     your_own_tweets_are_part_of_your_feed() {
         User user = context.mock(User.class);
-        final Message one = new Message(new Id(9), user, "A B C!", NOW.plusSeconds(1));
-        final Message two = new Message(new Id(10), user, "It's as easy as 1 2 3!", NOW.plusSeconds(2));
-        final Message three = new Message(new Id(12), user, "As simple as Do Ray Me!", NOW.plusSeconds(3));
+        final Message one = new Message(new Id(9), user, "A B C!", Now.plusSeconds(1));
+        final Message two = new Message(new Id(10), user, "It's as easy as 1 2 3!", Now.plusSeconds(2));
+        final Message three = new Message(new Id(12), user, "As simple as Do Ray Me!", Now.plusSeconds(3));
 
         final Iterable<Message> messages = listOf(three, two, one);
 
@@ -74,9 +74,9 @@ public class AggregatedProfileFeedTest {
         feed.follow(profile);
 
         User user = context.mock(User.class);
-        final Message one = new Message(new Id(1), user, "One.", NOW.plusSeconds(1));
-        final Message two = new Message(new Id(2), user, "Two.", NOW.plusSeconds(2));
-        final Message three = new Message(new Id(3), user, "Three.", NOW.plusSeconds(3));
+        final Message one = new Message(new Id(1), user, "One.", Now.plusSeconds(1));
+        final Message two = new Message(new Id(2), user, "Two.", Now.plusSeconds(2));
+        final Message three = new Message(new Id(3), user, "Three.", Now.plusSeconds(3));
 
         final Iterable<Message> messages = listOf(three, two, one);
 
@@ -105,10 +105,10 @@ public class AggregatedProfileFeedTest {
 
         User bugsUser = context.mock(User.class, "Bugs (User)");
         User daffyUser = context.mock(User.class, "Daffy (User)");
-        final Message bugs1 = new Message(new Id(50), bugsUser, "Ya got me dead to rights, doc. Do you want to shoot me now or wait 'till you get home?", NOW.plus(1, MINUTES));
-        final Message daffy1 = new Message(new Id(51), daffyUser, "Shoot him now! Shoot him now!", NOW.plus(2, MINUTES));
-        final Message bugs2 = new Message(new Id(52), bugsUser, "You keep out of this--he doesn't have to shoot you now!", NOW.plus(3, MINUTES));
-        final Message daffy2 = new Message(new Id(53), daffyUser, "Well, I say that he does have to shoot me now! So shoot me now!", NOW.plus(4, MINUTES));
+        final Message bugs1 = new Message(new Id(50), bugsUser, "Ya got me dead to rights, doc. Do you want to shoot me now or wait 'till you get home?", Now.plus(1, MINUTES));
+        final Message daffy1 = new Message(new Id(51), daffyUser, "Shoot him now! Shoot him now!", Now.plus(2, MINUTES));
+        final Message bugs2 = new Message(new Id(52), bugsUser, "You keep out of this--he doesn't have to shoot you now!", Now.plus(3, MINUTES));
+        final Message daffy2 = new Message(new Id(53), daffyUser, "Well, I say that he does have to shoot me now! So shoot me now!", Now.plus(4, MINUTES));
 
         final Iterable<Message> bugsMessages = listOf(bugs2, bugs1);
         final Iterable<Message> daffyMessages = listOf(daffy2, daffy1);
@@ -141,12 +141,12 @@ public class AggregatedProfileFeedTest {
         User myUser = context.mock(User.class, "Me (User)");
         User scoobyUser = context.mock(User.class, "Scooby (User)");
         User shaggyUser = context.mock(User.class, "Shaggy (User)");
-        final Message scooby1 = new Message(new Id(99), scoobyUser, "I'm hungry Shaggy.", NOW.plus(1, MINUTES));
-        final Message scooby2 = new Message(new Id(101), scoobyUser, "Got a Scooby Snack?", NOW.plus(2, MINUTES));
-        final Message shaggy1 = new Message(new Id(105), shaggyUser, "I'll give you half of my Scooby Snack.", NOW.plus(4, MINUTES));
-        final Message scooby3 = new Message(new Id(119), scoobyUser, "Yay!", NOW.plus(8, MINUTES));
-        final Message me1 = new Message(new Id(120), myUser, "Put down the Scooby Snacks and no one gets hurt.", NOW.plus(16, MINUTES));
-        final Message shaggy2 = new Message(new Id(125), shaggyUser, "I already ate the Scooby Snack. Sorry, Fred.", NOW.plus(32, MINUTES));
+        final Message scooby1 = new Message(new Id(99), scoobyUser, "I'm hungry Shaggy.", Now.plus(1, MINUTES));
+        final Message scooby2 = new Message(new Id(101), scoobyUser, "Got a Scooby Snack?", Now.plus(2, MINUTES));
+        final Message shaggy1 = new Message(new Id(105), shaggyUser, "I'll give you half of my Scooby Snack.", Now.plus(4, MINUTES));
+        final Message scooby3 = new Message(new Id(119), scoobyUser, "Yay!", Now.plus(8, MINUTES));
+        final Message me1 = new Message(new Id(120), myUser, "Put down the Scooby Snacks and no one gets hurt.", Now.plus(16, MINUTES));
+        final Message shaggy2 = new Message(new Id(125), shaggyUser, "I already ate the Scooby Snack. Sorry, Fred.", Now.plus(32, MINUTES));
 
         final Iterable<Message> scoobyMessages = listOf(scooby3, scooby2, scooby1);
         final Iterable<Message> shaggyMessages = listOf(shaggy2, shaggy1);
@@ -190,9 +190,9 @@ public class AggregatedProfileFeedTest {
         User userC = context.mock(User.class, "User C");
         final int messageCount = 10;
         for (int messageIndex = messageCount; messageIndex > 0; --messageIndex) {
-            profileAMessages.add(new Message(new Id(messageIndex * 3 + 1), userA, "Message " + messageIndex + " from profile A", NOW.plus(messageIndex * 3 + 1, MINUTES)));
-            profileBMessages.add(new Message(new Id(messageIndex * 3 + 2), userB, "Message " + messageIndex + " from profile B", NOW.plus(messageIndex * 3 + 2, MINUTES)));
-            profileCMessages.add(new Message(new Id(messageIndex * 3 + 3), userC, "Message " + messageIndex + " from profile C", NOW.plus(messageIndex * 3 + 3, MINUTES)));
+            profileAMessages.add(new Message(new Id(messageIndex * 3 + 1), userA, "Message " + messageIndex + " from profile A", Now.plus(messageIndex * 3 + 1, MINUTES)));
+            profileBMessages.add(new Message(new Id(messageIndex * 3 + 2), userB, "Message " + messageIndex + " from profile B", Now.plus(messageIndex * 3 + 2, MINUTES)));
+            profileCMessages.add(new Message(new Id(messageIndex * 3 + 3), userC, "Message " + messageIndex + " from profile C", Now.plus(messageIndex * 3 + 3, MINUTES)));
         }
 
         context.checking(new Expectations() {{

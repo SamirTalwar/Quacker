@@ -16,7 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
 public class SortedConversationTest {
-    private static final Instant NOW = Instant.from(ZonedDateTime.of(2011, 1, 1, 4, 56, 3, 0, ZoneId.of("UTC")));
+    private static final Instant Now = Instant.from(ZonedDateTime.of(2011, 1, 1, 4, 56, 3, 0, ZoneId.of("UTC")));
 
     private final Mockery context = new Mockery();
     private final User me = context.mock(User.class);
@@ -30,9 +30,9 @@ public class SortedConversationTest {
 
     @Test public void
     renders_the_messages() {
-        Message one = new Message(new Id(1), me, "One", NOW.plusSeconds(1));
-        Message two = new Message(new Id(2), me, "Two", NOW.plusSeconds(2));
-        Message three = new Message(new Id(3), me, "Three", NOW.plusSeconds(3));
+        Message one = new Message(new Id(1), me, "One", Now.plusSeconds(1));
+        Message two = new Message(new Id(2), me, "Two", Now.plusSeconds(2));
+        Message three = new Message(new Id(3), me, "Three", Now.plusSeconds(3));
 
         Conversation conversation = new SortedConversation(one, two, three);
         conversation.renderConversationTo(renderer);
@@ -42,9 +42,9 @@ public class SortedConversationTest {
 
     @Test public void
     sorts_the_messages() {
-        Message one = new Message(new Id(1), me, "One", NOW.plusSeconds(1));
-        Message two = new Message(new Id(2), me, "Two", NOW.plusSeconds(2));
-        Message three = new Message(new Id(3), me, "Three", NOW.plusSeconds(3));
+        Message one = new Message(new Id(1), me, "One", Now.plusSeconds(1));
+        Message two = new Message(new Id(2), me, "Two", Now.plusSeconds(2));
+        Message three = new Message(new Id(3), me, "Three", Now.plusSeconds(3));
 
         Conversation conversation = new SortedConversation(three, one, two);
         conversation.renderConversationTo(renderer);

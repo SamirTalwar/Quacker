@@ -23,7 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 
 public class InMemoryTimelineTest {
-    private static final Instant NOW = Instant.from(ZonedDateTime.of(2011, 12, 25, 15, 42, 23, 0, ZoneId.of("UTC")));
+    private static final Instant Now = Instant.from(ZonedDateTime.of(2011, 12, 25, 15, 42, 23, 0, ZoneId.of("UTC")));
 
     private final Mockery context = new Mockery();
     private final MessageRenderer messageRenderer = context.mock(MessageRenderer.class);
@@ -39,10 +39,10 @@ public class InMemoryTimelineTest {
     publishes_messages_to_an_in_memory_timeline() {
         final User user = context.mock(User.class);
         final Id id = new Id(72);
-        timeline.publish(id, user, "Beep beep.", NOW);
+        timeline.publish(id, user, "Beep beep.", Now);
 
         context.checking(new Expectations() {{
-            oneOf(messageRenderer).render(id, user, "Beep beep.", NOW);
+            oneOf(messageRenderer).render(id, user, "Beep beep.", Now);
         }});
 
         timeline.renderTo(renderer);
@@ -53,15 +53,15 @@ public class InMemoryTimelineTest {
     @Test public void
     messages_are_rendered_in_reverse_chronological_order() {
         final User user = context.mock(User.class);
-        timeline.publish(new Id(95), user, "One", NOW.plusSeconds(1));
-        timeline.publish(new Id(97), user, "Two", NOW.plusSeconds(2));
-        timeline.publish(new Id(99), user, "Three", NOW.plusSeconds(3));
+        timeline.publish(new Id(95), user, "One", Now.plusSeconds(1));
+        timeline.publish(new Id(97), user, "Two", Now.plusSeconds(2));
+        timeline.publish(new Id(99), user, "Three", Now.plusSeconds(3));
 
         context.checking(new Expectations() {{
             Sequence messages = context.sequence("messages");
-            oneOf(messageRenderer).render(new Id(99), user, "Three", NOW.plusSeconds(3)); inSequence(messages);
-            oneOf(messageRenderer).render(new Id(97), user, "Two", NOW.plusSeconds(2)); inSequence(messages);
-            oneOf(messageRenderer).render(new Id(95), user, "One", NOW.plusSeconds(1)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(99), user, "Three", Now.plusSeconds(3)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(97), user, "Two", Now.plusSeconds(2)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(95), user, "One", Now.plusSeconds(1)); inSequence(messages);
         }});
 
         timeline.renderTo(renderer);
@@ -73,13 +73,13 @@ public class InMemoryTimelineTest {
     caps_the_number_of_messages_at_20() {
         final User user = context.mock(User.class);
         for (int i = 0; i < 50; ++i) {
-            timeline.publish(new Id(i), user, "Message " + i, NOW.plusSeconds(i));
+            timeline.publish(new Id(i), user, "Message " + i, Now.plusSeconds(i));
         }
 
         context.checking(new Expectations() {{
             Sequence messages = context.sequence("messages");
             for (int i = 49; i >= 30; --i) {
-                oneOf(messageRenderer).render(new Id(i), user, "Message " + i, NOW.plusSeconds(i)); inSequence(messages);
+                oneOf(messageRenderer).render(new Id(i), user, "Message " + i, Now.plusSeconds(i)); inSequence(messages);
             }
         }});
 
@@ -92,13 +92,13 @@ public class InMemoryTimelineTest {
     @Test public void
     is_iterable() {
         User user = context.mock(User.class);
-        Matcher<Message> one = aMessage(new Id(1), user, "One", NOW.plusSeconds(1));
-        Matcher<Message> two = aMessage(new Id(2), user, "Two", NOW.plusSeconds(2));
-        Matcher<Message> three = aMessage(new Id(3), user, "Three", NOW.plusSeconds(3));
+        Matcher<Message> one = aMessage(new Id(1), user, "One", Now.plusSeconds(1));
+        Matcher<Message> two = aMessage(new Id(2), user, "Two", Now.plusSeconds(2));
+        Matcher<Message> three = aMessage(new Id(3), user, "Three", Now.plusSeconds(3));
 
-        timeline.publish(new Id(1), user, "One", NOW.plusSeconds(1));
-        timeline.publish(new Id(2), user, "Two", NOW.plusSeconds(2));
-        timeline.publish(new Id(3), user, "Three", NOW.plusSeconds(3));
+        timeline.publish(new Id(1), user, "One", Now.plusSeconds(1));
+        timeline.publish(new Id(2), user, "Two", Now.plusSeconds(2));
+        timeline.publish(new Id(3), user, "Three", Now.plusSeconds(3));
 
         assertThat(timeline, contains(three, two, one));
     }
@@ -106,7 +106,7 @@ public class InMemoryTimelineTest {
     @Test(expected=UnsupportedOperationException.class) public void
     is_not_modifiable_through_the_iterator() {
         User user = context.mock(User.class);
-        timeline.publish(new Id(55), user, "Fifty-five is a big number", NOW);
+        timeline.publish(new Id(55), user, "Fifty-five is a big number", Now);
 
         Iterator<Message> iterator = timeline.iterator();
         iterator.next();

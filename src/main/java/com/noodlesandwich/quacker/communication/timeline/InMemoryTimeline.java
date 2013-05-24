@@ -24,7 +24,7 @@ public class InMemoryTimeline implements Timeline, MessageListener {
     public void renderTo(TimelineRenderer renderer) {
         int count = 0;
         for (Message message : messages) {
-            if (count == Feed.MAXIMUM_FEED_LENGTH) {
+            if (count == Feed.MaximumFeedLength) {
                 break;
             }
             renderer.render(message);

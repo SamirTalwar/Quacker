@@ -4,7 +4,7 @@ import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.users.Profile;
 
 public interface Feed {
-    int MAXIMUM_FEED_LENGTH = 20;
+    int MaximumFeedLength = 20;
 
     void follow(Profile profile);
 

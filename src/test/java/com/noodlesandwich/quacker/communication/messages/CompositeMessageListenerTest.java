@@ -11,7 +11,7 @@ import org.jmock.Sequence;
 import org.junit.Test;
 
 public class CompositeMessageListenerTest {
-    private static final Instant NOW = Instant.from(ZonedDateTime.of(2001, 8, 12, 5, 43, 21, 0, ZoneId.of("UTC")));
+    private static final Instant Now = Instant.from(ZonedDateTime.of(2001, 8, 12, 5, 43, 21, 0, ZoneId.of("UTC")));
 
     private final Mockery context = new Mockery();
 
@@ -21,7 +21,7 @@ public class CompositeMessageListenerTest {
 
         Id id = new Id(7);
 
-        messageListener.publish(id, context.mock(User.class), "Bazinga.", NOW);
+        messageListener.publish(id, context.mock(User.class), "Bazinga.", Now);
 
         context.assertIsSatisfied();
     }
@@ -35,10 +35,10 @@ public class CompositeMessageListenerTest {
         final User user = context.mock(User.class);
 
         context.checking(new Expectations() {{
-            oneOf(delegate).publish(id, user, "Froody.", NOW);
+            oneOf(delegate).publish(id, user, "Froody.", Now);
         }});
 
-        messageListener.publish(id, user, "Froody.", NOW);
+        messageListener.publish(id, user, "Froody.", Now);
 
         context.assertIsSatisfied();
     }
@@ -54,11 +54,11 @@ public class CompositeMessageListenerTest {
 
         context.checking(new Expectations() {{
             Sequence delegation = context.sequence("delegation");
-            oneOf(delegateA).publish(id, user, "Shiny.", NOW); inSequence(delegation);
-            oneOf(delegateB).publish(id, user, "Shiny.", NOW); inSequence(delegation);
+            oneOf(delegateA).publish(id, user, "Shiny.", Now); inSequence(delegation);
+            oneOf(delegateB).publish(id, user, "Shiny.", Now); inSequence(delegation);
         }});
 
-        messageListener.publish(id, user, "Shiny.", NOW);
+        messageListener.publish(id, user, "Shiny.", Now);
 
         context.assertIsSatisfied();
     }

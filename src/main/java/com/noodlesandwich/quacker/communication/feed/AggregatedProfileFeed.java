@@ -26,7 +26,7 @@ public class AggregatedProfileFeed implements Feed {
 
     @Override
     public void renderTo(FeedRenderer renderer) {
-        List<Message> feedMessages = new ArrayList<>(MAXIMUM_FEED_LENGTH);
+        List<Message> feedMessages = new ArrayList<>(MaximumFeedLength);
 
         Map<Profile, Message> nextMessages = new HashMap<>(followees.size());
         Map<Profile, Iterator<Message>> timelines = new HashMap<>(followees.size());
@@ -35,7 +35,7 @@ public class AggregatedProfileFeed implements Feed {
             nextMessages.put(profile, null);
         }
 
-        while (feedMessages.size() < MAXIMUM_FEED_LENGTH) {
+        while (feedMessages.size() < MaximumFeedLength) {
             for (Profile profile : followees) {
                 if (nextMessages.get(profile) == null) {
                     Iterator<Message> timeline = timelines.get(profile);
@@ -64,7 +64,7 @@ public class AggregatedProfileFeed implements Feed {
 
         int count = 0;
         for (Message message : feedMessages) {
-            if (count == MAXIMUM_FEED_LENGTH) {
+            if (count == MaximumFeedLength) {
                 break;
             }
             renderer.render(message);

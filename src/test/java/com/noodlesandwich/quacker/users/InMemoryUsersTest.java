@@ -22,10 +22,10 @@ public class InMemoryUsersTest {
     private static final MessageListener NullMessageListener = new MessageListener() {
         @Override public void publish(Id id, User author, String text, Instant timestamp) { }
     };
-    private static final Instant NOW = Instant.from(ZonedDateTime.of(2009, 12, 14, 7, 30, 9, 0, ZoneId.of("UTC")));
+    private static final Instant Now = Instant.from(ZonedDateTime.of(2009, 12, 14, 7, 30, 9, 0, ZoneId.of("UTC")));
 
     private final Mockery context = new Mockery();
-    private final Clock clock = Clock.fixed(NOW, ZoneId.of("UTC"));
+    private final Clock clock = Clock.fixed(Now, ZoneId.of("UTC"));
     private final IdentifierSource idSource = context.mock(IdentifierSource.class);
 
     @Test public void
@@ -73,7 +73,7 @@ public class InMemoryUsersTest {
 
         context.checking(new Expectations() {{
             oneOf(idSource).nextId(); will(returnValue(id));
-            oneOf(listener).publish(id, mumtaz, "Hey, you!", NOW); will(captureParameter(1).as(message));
+            oneOf(listener).publish(id, mumtaz, "Hey, you!", Now); will(captureParameter(1).as(message));
         }});
 
         mumtaz.publish("Hey, you!");

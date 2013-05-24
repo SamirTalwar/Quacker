@@ -116,13 +116,13 @@ public class TimelineSteps {
         return matchers;
     }
 
-    private static final int RANDOM_MESSAGE_LENGTH = 20;
-    private static final char[] ALLOWED_RANDOM_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890 .,;:'!?".toCharArray();
+    private static final int RandomMessageLength = 20;
+    private static final char[] AllowedRandomCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890 .,;:'!?".toCharArray();
     private static String aRandomMessage() {
         Random random = new Random();
-        char[] characters = new char[RANDOM_MESSAGE_LENGTH];
-        for (int i = 0; i < RANDOM_MESSAGE_LENGTH; i++) {
-            characters[i] = ALLOWED_RANDOM_CHARACTERS[random.nextInt(ALLOWED_RANDOM_CHARACTERS.length)];
+        char[] characters = new char[RandomMessageLength];
+        for (int i = 0; i < RandomMessageLength; i++) {
+            characters[i] = AllowedRandomCharacters[random.nextInt(AllowedRandomCharacters.length)];
         }
         return String.valueOf(characters);
     }

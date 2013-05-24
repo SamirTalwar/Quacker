@@ -16,10 +16,10 @@ import org.jmock.Mockery;
 import org.junit.Test;
 
 public class DelegatingUserTest {
-    private static final Instant NOW = Instant.from(ZonedDateTime.of(2012, 1, 1, 9, 0, 0, 0, ZoneId.of("UTC")));
+    private static final Instant Now = Instant.from(ZonedDateTime.of(2012, 1, 1, 9, 0, 0, 0, ZoneId.of("UTC")));
 
     private final Mockery context = new Mockery();
-    private final Clock clock = Clock.fixed(NOW, ZoneId.of("UTC"));
+    private final Clock clock = Clock.fixed(Now, ZoneId.of("UTC"));
     private final IdentifierSource idSource = context.mock(IdentifierSource.class);
     private final Timeline timeline = context.mock(Timeline.class);
     private final Feed feed = context.mock(Feed.class);
@@ -48,7 +48,7 @@ public class DelegatingUserTest {
         context.checking(new Expectations() {{
             oneOf(idSource).nextId();
             will(returnValue(messageId));
-            oneOf(messageListener).publish(messageId, user, "Beep beep.", NOW);
+            oneOf(messageListener).publish(messageId, user, "Beep beep.", Now);
         }});
 
         user.publish("Beep beep.");
