@@ -32,12 +32,11 @@ public class AggregatedProfileFeed implements Feed {
         Map<Profile, Iterator<Message>> timelines = new HashMap<>(followees.size());
         for (Profile profile : followees) {
             timelines.put(profile, profile.iterator());
-            nextMessages.put(profile, null);
         }
 
         while (feedMessages.size() < MaximumFeedLength) {
             for (Profile profile : followees) {
-                if (nextMessages.get(profile) == null) {
+                if (!nextMessages.containsKey(profile)) {
                     Iterator<Message> timeline = timelines.get(profile);
                     if (timeline.hasNext()) {
                          nextMessages.put(profile, timeline.next());
@@ -49,9 +48,7 @@ public class AggregatedProfileFeed implements Feed {
             for (Map.Entry<Profile, Message> nextMessage : nextMessages.entrySet()) {
                 Profile profile = nextMessage.getKey();
                 Message message = nextMessage.getValue();
-                if (message != null) {
-                    potentialNextMessages.put(message, profile);
-                }
+                potentialNextMessages.put(message, profile);
             }
             if (potentialNextMessages.isEmpty()) {
                 break;
@@ -59,7 +56,7 @@ public class AggregatedProfileFeed implements Feed {
 
             Map.Entry<Message, Profile> nextMessage = potentialNextMessages.firstEntry();
             feedMessages.add(nextMessage.getKey());
-            nextMessages.put(nextMessage.getValue(), null);
+            nextMessages.remove(nextMessage.getValue());
         }
 
         int count = 0;
