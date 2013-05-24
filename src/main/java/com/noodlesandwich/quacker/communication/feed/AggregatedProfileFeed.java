@@ -1,7 +1,7 @@
 package com.noodlesandwich.quacker.communication.feed;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -45,7 +45,7 @@ public class AggregatedProfileFeed implements Feed {
                 }
             }
 
-            NavigableMap<Message, Profile> potentialNextMessages = new TreeMap<>(new ReverseComparator<Message>());
+            NavigableMap<Message, Profile> potentialNextMessages = new TreeMap<>(Collections.reverseOrder());
             for (Map.Entry<Profile, Message> nextMessage : nextMessages.entrySet()) {
                 Profile profile = nextMessage.getKey();
                 Message message = nextMessage.getValue();
@@ -69,13 +69,6 @@ public class AggregatedProfileFeed implements Feed {
             }
             renderer.render(message);
             count++;
-        }
-    }
-
-    private static class ReverseComparator<T extends Comparable<T>> implements Comparator<T> {
-        @Override
-        public int compare(T a, T b) {
-            return b.compareTo(a);
         }
     }
 }
