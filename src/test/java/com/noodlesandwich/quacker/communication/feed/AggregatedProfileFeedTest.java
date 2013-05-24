@@ -1,4 +1,4 @@
-package com.noodlesandwich.quacker.communication;
+package com.noodlesandwich.quacker.communication.feed;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -7,10 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import com.noodlesandwich.quacker.id.Id;
-import com.noodlesandwich.quacker.communication.feed.AggregatedProfileFeed;
-import com.noodlesandwich.quacker.communication.feed.Feed;
 import com.noodlesandwich.quacker.communication.messages.Message;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.users.Profile;
 import com.noodlesandwich.quacker.users.User;

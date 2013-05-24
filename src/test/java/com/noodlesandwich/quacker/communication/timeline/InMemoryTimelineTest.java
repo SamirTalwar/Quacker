@@ -1,11 +1,10 @@
-package com.noodlesandwich.quacker.communication;
+package com.noodlesandwich.quacker.communication.timeline;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Iterator;
 import com.noodlesandwich.quacker.communication.messages.Message;
-import com.noodlesandwich.quacker.communication.timeline.InMemoryTimeline;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.testing.Captured;
 import com.noodlesandwich.quacker.ui.MessageRenderer;

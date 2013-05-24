@@ -1,13 +1,10 @@
-package com.noodlesandwich.quacker.communication;
+package com.noodlesandwich.quacker.communication.messages;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Random;
 import com.noodlesandwich.quacker.id.Id;
-import com.noodlesandwich.quacker.communication.messages.EmptyMessageException;
-import com.noodlesandwich.quacker.communication.messages.Message;
-import com.noodlesandwich.quacker.communication.messages.MessageTooLongException;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
 import com.noodlesandwich.quacker.users.User;
 import org.jmock.Expectations;
