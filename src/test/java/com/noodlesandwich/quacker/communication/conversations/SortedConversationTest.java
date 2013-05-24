@@ -28,6 +28,7 @@ public class SortedConversationTest {
         }
     };
 
+    @SuppressWarnings("unchecked")
     @Test public void
     renders_the_messages() {
         Message one = new Message(new Id(1), me, "One", Now.plusSeconds(1));
@@ -40,6 +41,7 @@ public class SortedConversationTest {
         assertThat(conversationMessages, contains(one, two, three));
     }
 
+    @SuppressWarnings("unchecked")
     @Test public void
     sorts_the_messages() {
         Message one = new Message(new Id(1), me, "One", Now.plusSeconds(1));

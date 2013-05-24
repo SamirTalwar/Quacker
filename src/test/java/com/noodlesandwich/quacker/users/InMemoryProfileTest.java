@@ -33,6 +33,7 @@ public class InMemoryProfileTest {
         context.assertIsSatisfied();
     }
 
+    @SuppressWarnings("unchecked")
     @Test public void
     is_iterable() {
         User user = context.mock(User.class);
