@@ -13,6 +13,7 @@ import org.jmock.Mockery;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 
 public class CommandLineInterfaceTest {
@@ -59,6 +60,17 @@ public class CommandLineInterfaceTest {
         }});
 
         cli.next();
+    }
+
+    @Test public void
+    quits_on_demand() throws IOException {
+        final Client client = context.mock(Client.class);
+        loginAs("Neha", client);
+
+        read("> ");
+        writeLine("q");
+
+        assertThat(cli.next(), is(false));
     }
 
     private void loginAs(final String username, final Client client) throws IOException {

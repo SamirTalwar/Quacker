@@ -40,10 +40,11 @@ public class CommandLineInterface {
     }
 
     public void run() throws IOException {
-        next();
+        while (next())
+            ;
     }
 
-    public void next() throws IOException {
+    public boolean next() throws IOException {
         switch (state) {
             case LoginPrompt:
                 write("Login: ");
@@ -58,10 +59,18 @@ public class CommandLineInterface {
                 break;
             case LoggedIn:
                 String command = read();
-                String message = command.substring(2);
-                client.publish(message);
+                switch (command.charAt(0)) {
+                    case 'p':
+                        String message = command.substring(2);
+                        client.publish(message);
+                        break;
+                    case 'q':
+                        return false;
+                }
                 break;
         }
+
+        return true;
     }
 
     private void prompt() throws IOException {
