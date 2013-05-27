@@ -115,6 +115,45 @@ public class CommandLineInterfaceTest {
     }
 
     @Test public void
+    prompts_a_lot() throws IOException {
+        final Client client = context.mock(Client.class);
+        loginAs("Preity", client);
+
+        final User preity = context.mock(User.class);
+        context.checking(new Expectations() {{
+            allowing(preity).getUsername(); will(returnValue("Preity"));
+
+            oneOf(client).publish("Looking good, yaar.");
+            oneOf(client).publish("Totally.");
+
+            oneOf(client).openTimelineOf(with("Preity"), with(any(TimelineRenderer.class))); will(renderMessages(ImmutableList.of(
+                    new Message(new Id(15), preity, "I made a Quacker account!", Now.plus(13, MINUTES)),
+                    new Message(new Id(17), preity, "Looking good, yaar.", Now.plus(19, MINUTES)),
+                    new Message(new Id(18), preity, "Totally.", Now.plus(21, MINUTES))
+            )));
+        }});
+
+        read("> ");
+        writeLine("p Looking good, yaar.");
+
+        cli.next();
+        read("> ");
+        writeLine("p Totally.");
+
+        cli.next();
+        read("> ");
+        writeLine("t Preity");
+
+        cli.next();
+        readLine("18 Preity: Totally.");
+        readLine("17 Preity: Looking good, yaar.");
+        readLine("15 Preity: I made a Quacker account!");
+        read("> ");
+
+        context.assertIsSatisfied();
+    }
+
+    @Test public void
     quits_on_demand() throws IOException {
         final Client client = context.mock(Client.class);
         loginAs("Zaheera", client);

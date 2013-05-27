@@ -78,6 +78,7 @@ public class CommandLineInterface {
                     case 'q':
                         return false;
                 }
+                prompt();
                 break;
         }
 
