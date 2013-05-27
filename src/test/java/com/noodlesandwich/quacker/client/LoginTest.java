@@ -12,7 +12,7 @@ public class LoginTest {
     private final Mockery context = new Mockery();
     private final Server server = context.mock(Server.class);
     private final ClientFactory clientFactory = context.mock(ClientFactory.class);
-    private final Login login = new Login(server, clientFactory);
+    private final Login login = new ServerLogin(server, clientFactory);
 
     @Test public void
     authenticates_with_the_server() {
