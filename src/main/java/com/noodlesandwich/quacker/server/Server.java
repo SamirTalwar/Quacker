@@ -10,4 +10,5 @@ public interface Server {
     User authenticatedUserNamed(String username);
     Profile profileFor(String username);
     Conversation conversationAround(Id messageId);
+    void quit();
 }
