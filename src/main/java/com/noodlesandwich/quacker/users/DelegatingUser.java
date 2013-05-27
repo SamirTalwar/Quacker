@@ -1,7 +1,7 @@
 package com.noodlesandwich.quacker.users;
 
 import java.time.Clock;
-import java.util.List;
+import java.util.Set;
 import com.noodlesandwich.quacker.communication.feed.Feed;
 import com.noodlesandwich.quacker.communication.messages.MessageListener;
 import com.noodlesandwich.quacker.communication.timeline.Timeline;
@@ -16,9 +16,9 @@ public class DelegatingUser implements User {
     private final String username;
     private final Timeline timeline;
     private final Feed feed;
-    private final List<MessageListener> messageListeners;
+    private final Set<MessageListener> messageListeners;
 
-    public DelegatingUser(Clock clock, IdentifierSource idSource, String username, Timeline timeline, Feed feed, List<MessageListener> messageListeners) {
+    public DelegatingUser(Clock clock, IdentifierSource idSource, String username, Timeline timeline, Feed feed, Set<MessageListener> messageListeners) {
         this.clock = clock;
         this.idSource = idSource;
         this.username = username;

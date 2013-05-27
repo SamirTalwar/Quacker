@@ -1,10 +1,8 @@
 package com.noodlesandwich.quacker.users;
 
 import java.time.Clock;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Singleton;
@@ -19,7 +17,7 @@ import com.noodlesandwich.quacker.id.IdentifierSource;
 public class InMemoryUsers implements Users, Profiles {
     private final Clock clock;
     private final IdentifierSource idSource;
-    private final Collection<MessageListener> messageListeners;
+    private final Set<MessageListener> messageListeners;
 
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Profile> profiles = new HashMap<>();
@@ -40,7 +38,7 @@ public class InMemoryUsers implements Users, Profiles {
         InMemoryTimeline timeline = new InMemoryTimeline();
         InMemoryProfile profile = new InMemoryProfile(timeline);
         Feed feed = new AggregatedProfileFeed(profile);
-        List<MessageListener> messageListenersWithTimeline = new ArrayList<>(messageListeners);
+        Set<MessageListener> messageListenersWithTimeline = new HashSet<>(messageListeners);
         messageListenersWithTimeline.add(timeline);
         DelegatingUser user = new DelegatingUser(clock, idSource, username, timeline, feed, messageListenersWithTimeline);
 

@@ -4,7 +4,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.noodlesandwich.quacker.communication.feed.Feed;
 import com.noodlesandwich.quacker.communication.messages.MessageListener;
 import com.noodlesandwich.quacker.communication.timeline.Timeline;
@@ -25,7 +25,7 @@ public class DelegatingUserTest {
     private final Timeline timeline = context.mock(Timeline.class);
     private final Feed feed = context.mock(Feed.class);
     private final MessageListener messageListener = context.mock(MessageListener.class);
-    private final User user = new DelegatingUser(clock, idSource, "Isha", timeline, feed, ImmutableList.of(messageListener));
+    private final User user = new DelegatingUser(clock, idSource, "Isha", timeline, feed, ImmutableSet.of(messageListener));
 
     private final TimelineRenderer timelineRenderer = context.mock(TimelineRenderer.class);
     private final FeedRenderer feedRenderer = context.mock(FeedRenderer.class);
