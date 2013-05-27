@@ -31,11 +31,13 @@ public class ApplicationServer implements Server, Remote {
         System.err.println("Server ready");
 
         try {
-            Runtime.getRuntime().addShutdownHook(new Thread() {
+            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
                 public void run() {
-                    server.quit();
+                    synchronized (server) {
+                        server.notify();
+                    }
                 }
-            });
+            }));
             synchronized (server) {
                 server.wait();
             }
@@ -70,12 +72,5 @@ public class ApplicationServer implements Server, Remote {
     @Override
     public Conversation conversationAround(Id messageId) {
         return conversations.conversationAround(messageId);
-    }
-
-    @Override
-    public void quit() {
-        synchronized (this) {
-            notify();
-        }
     }
 }
