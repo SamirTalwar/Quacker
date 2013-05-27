@@ -1,6 +1,5 @@
 package com.noodlesandwich.quacker.server;
 
-import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -16,7 +15,7 @@ import com.noodlesandwich.quacker.users.User;
 import com.noodlesandwich.quacker.users.Users;
 
 @Singleton
-public class ApplicationServer implements Server, Remote {
+public class ApplicationServer implements Server {
     private final Users users;
     private final Profiles profiles;
     private final Conversations conversations;
@@ -24,9 +23,8 @@ public class ApplicationServer implements Server, Remote {
     public static void main(String[] args) throws Exception {
         final Server server = Quacker.server();
 
-        Remote stub = UnicastRemoteObject.exportObject((Remote) server, 0);
         Registry registry = LocateRegistry.getRegistry();
-        registry.bind("Server", stub);
+        registry.bind("Server", UnicastRemoteObject.exportObject(server, 0));
 
         System.err.println("Server ready");
 

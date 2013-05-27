@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mvn compile exec:java -Dexec.mainClass=com.noodlesandwich.quacker.server.ApplicationServer -Djava.rmi.server.codebase=file:target/classes
+mvn compile exec:java -Dexec.mainClass=com.noodlesandwich.quacker.server.ApplicationServer -Djava.rmi.server.codebase=file:target/classes/
