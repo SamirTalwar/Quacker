@@ -1,15 +1,20 @@
 package com.noodlesandwich.quacker.server;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
 import com.noodlesandwich.quacker.communication.conversations.Conversation;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.users.Profile;
 import com.noodlesandwich.quacker.users.User;
 
-public interface Server extends Remote {
-    void registerUserNamed(String username) throws RemoteException;
-    User authenticatedUserNamed(String username) throws RemoteException;
-    Profile profileFor(String username) throws RemoteException;
-    Conversation conversationAround(Id messageId) throws RemoteException;
+public interface Server extends RemoteServer {
+    @Override
+    void registerUserNamed(String username);
+
+    @Override
+    User authenticatedUserNamed(String username);
+
+    @Override
+    Profile profileFor(String username);
+
+    @Override
+    Conversation conversationAround(Id messageId);
 }
