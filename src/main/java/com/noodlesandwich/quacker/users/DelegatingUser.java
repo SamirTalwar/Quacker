@@ -1,6 +1,7 @@
 package com.noodlesandwich.quacker.users;
 
 import java.time.Clock;
+import java.util.List;
 import com.noodlesandwich.quacker.communication.feed.Feed;
 import com.noodlesandwich.quacker.communication.messages.MessageListener;
 import com.noodlesandwich.quacker.communication.timeline.Timeline;
@@ -15,15 +16,15 @@ public class DelegatingUser implements User {
     private final String username;
     private final Timeline timeline;
     private final Feed feed;
-    private final MessageListener messageListener;
+    private final List<MessageListener> messageListeners;
 
-    public DelegatingUser(Clock clock, IdentifierSource idSource, String username, Timeline timeline, Feed feed, MessageListener messageListener) {
+    public DelegatingUser(Clock clock, IdentifierSource idSource, String username, Timeline timeline, Feed feed, List<MessageListener> messageListeners) {
         this.clock = clock;
         this.idSource = idSource;
         this.username = username;
         this.timeline = timeline;
         this.feed = feed;
-        this.messageListener = messageListener;
+        this.messageListeners = messageListeners;
     }
 
     @Override
@@ -34,7 +35,9 @@ public class DelegatingUser implements User {
     @Override
     public void publish(String message) {
         Id messageId = idSource.nextId();
-        messageListener.publish(messageId, this, message, clock.instant());
+        for (MessageListener messageListener : messageListeners) {
+            messageListener.publish(messageId, this, message, clock.instant());
+        }
     }
 
     @Override

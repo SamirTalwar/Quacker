@@ -1,13 +1,16 @@
 package com.noodlesandwich.quacker.users;
 
 import java.time.Clock;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Singleton;
 import com.google.inject.Inject;
 import com.noodlesandwich.quacker.communication.feed.AggregatedProfileFeed;
 import com.noodlesandwich.quacker.communication.feed.Feed;
-import com.noodlesandwich.quacker.communication.messages.CompositeMessageListener;
 import com.noodlesandwich.quacker.communication.messages.MessageListener;
 import com.noodlesandwich.quacker.communication.timeline.InMemoryTimeline;
 import com.noodlesandwich.quacker.id.IdentifierSource;
@@ -16,16 +19,16 @@ import com.noodlesandwich.quacker.id.IdentifierSource;
 public class InMemoryUsers implements Users, Profiles {
     private final Clock clock;
     private final IdentifierSource idSource;
-    private final MessageListener messageListener;
+    private final Collection<MessageListener> messageListeners;
 
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Profile> profiles = new HashMap<>();
 
     @Inject
-    public InMemoryUsers(Clock clock, IdentifierSource idSource, MessageListener messageListener) {
+    public InMemoryUsers(Clock clock, IdentifierSource idSource, Set<MessageListener> messageListeners) {
         this.clock = clock;
         this.idSource = idSource;
-        this.messageListener = messageListener;
+        this.messageListeners = messageListeners;
     }
 
     @Override
@@ -37,8 +40,9 @@ public class InMemoryUsers implements Users, Profiles {
         InMemoryTimeline timeline = new InMemoryTimeline();
         InMemoryProfile profile = new InMemoryProfile(timeline);
         Feed feed = new AggregatedProfileFeed(profile);
-        MessageListener messageListenerWithTimeline = new CompositeMessageListener(timeline, messageListener);
-        DelegatingUser user = new DelegatingUser(clock, idSource, username, timeline, feed, messageListenerWithTimeline);
+        List<MessageListener> messageListenersWithTimeline = new ArrayList<>(messageListeners);
+        messageListenersWithTimeline.add(timeline);
+        DelegatingUser user = new DelegatingUser(clock, idSource, username, timeline, feed, messageListenersWithTimeline);
 
         users.put(username, user);
         profiles.put(username, profile);

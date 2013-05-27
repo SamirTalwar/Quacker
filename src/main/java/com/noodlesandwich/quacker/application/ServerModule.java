@@ -3,6 +3,7 @@ package com.noodlesandwich.quacker.application;
 import java.time.Clock;
 import com.google.inject.Binder;
 import com.google.inject.Module;
+import com.google.inject.multibindings.Multibinder;
 import com.noodlesandwich.quacker.communication.conversations.ConversationGraph;
 import com.noodlesandwich.quacker.communication.conversations.Conversations;
 import com.noodlesandwich.quacker.communication.messages.MessageListener;
@@ -24,6 +25,7 @@ public class ServerModule implements Module {
         binder.bind(Users.class).to(InMemoryUsers.class);
         binder.bind(Profiles.class).to(InMemoryUsers.class);
         binder.bind(Conversations.class).to(ConversationGraph.class);
-        binder.bind(MessageListener.class).to(ConversationGraph.class);
+        Multibinder<MessageListener> messageListeners = Multibinder.newSetBinder(binder, MessageListener.class);
+        messageListeners.addBinding().to(ConversationGraph.class);
     }
 }

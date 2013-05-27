@@ -4,6 +4,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import com.google.common.collect.ImmutableSet;
 import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.communication.messages.MessageListener;
 import com.noodlesandwich.quacker.id.Id;
@@ -30,33 +31,33 @@ public class InMemoryUsersTest {
 
     @Test public void
     hands_over_a_previously_created_user() {
-        InMemoryUsers users = new InMemoryUsers(clock, idSource, NullMessageListener);
+        InMemoryUsers users = new InMemoryUsers(clock, idSource, ImmutableSet.of(NullMessageListener));
         users.register("Govinda");
         assertThat(users.userNamed("Govinda"), is(notNullValue()));
     }
 
     @Test public void
     hands_over_a_read_only_profile() {
-        InMemoryUsers users = new InMemoryUsers(clock, idSource, NullMessageListener);
+        InMemoryUsers users = new InMemoryUsers(clock, idSource, ImmutableSet.of(NullMessageListener));
         users.register("Madhuri");
         assertThat(users.profileFor("Madhuri"), is(notNullValue()));
     }
 
     @Test(expected=NonExistentUserException.class) public void
     explodes_if_an_unknown_user_is_requested() {
-        InMemoryUsers users = new InMemoryUsers(clock, idSource, NullMessageListener);
+        InMemoryUsers users = new InMemoryUsers(clock, idSource, ImmutableSet.of(NullMessageListener));
         users.userNamed("Hrithik");
     }
 
     @Test(expected=NonExistentUserException.class) public void
     explodes_if_an_unknown_profile_is_requested() {
-        InMemoryUsers users = new InMemoryUsers(clock, idSource, NullMessageListener);
+        InMemoryUsers users = new InMemoryUsers(clock, idSource, ImmutableSet.of(NullMessageListener));
         users.profileFor("Om");
     }
 
     @Test(expected=UserAlreadyExistsException.class) public void
     goes_boom_if_someone_tries_to_register_with_a_name_that_is_already_taken() {
-        InMemoryUsers users = new InMemoryUsers(clock, idSource, NullMessageListener);
+        InMemoryUsers users = new InMemoryUsers(clock, idSource, ImmutableSet.of(NullMessageListener));
         users.register("Yash");
         users.register("Yash");
     }
@@ -64,7 +65,7 @@ public class InMemoryUsersTest {
     @Test public void
     triggers_the_given_listener_when_publishing_to_a_listener() {
         final MessageListener listener = context.mock(MessageListener.class);
-        InMemoryUsers users = new InMemoryUsers(clock, idSource, listener);
+        InMemoryUsers users = new InMemoryUsers(clock, idSource, ImmutableSet.of(listener));
         users.register("Mumtaz");
 
         final User mumtaz = users.userNamed("Mumtaz");
