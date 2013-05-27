@@ -8,12 +8,9 @@ import javax.inject.Inject;
 import com.noodlesandwich.quacker.application.Quacker;
 import com.noodlesandwich.quacker.client.Client;
 import com.noodlesandwich.quacker.id.Id;
-import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.server.Server;
-import com.noodlesandwich.quacker.ui.ConversationRenderer;
-import com.noodlesandwich.quacker.ui.FeedRenderer;
+import com.noodlesandwich.quacker.testing.MessageListRenderer;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
-import com.noodlesandwich.quacker.ui.TimelineRenderer;
 import com.noodlesandwich.quacker.users.User;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -127,16 +124,4 @@ public class TimelineSteps {
         return String.valueOf(characters);
     }
 
-    private class MessageListRenderer implements ConversationRenderer, FeedRenderer, TimelineRenderer {
-        private final MessageRenderer messageRenderer;
-
-        public MessageListRenderer(MessageRenderer messageRenderer) {
-            this.messageRenderer = messageRenderer;
-        }
-
-        @Override
-        public void render(Message message) {
-            message.renderTo(messageRenderer);
-        }
-    }
 }
