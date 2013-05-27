@@ -13,7 +13,7 @@ import org.jmock.Mockery;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 
 public class CommandLineInterfaceTest {
     private static final String LineSeparator = System.getProperty("line.separator");
@@ -21,13 +21,13 @@ public class CommandLineInterfaceTest {
     private final Mockery context = new Mockery();
     private final Login login = context.mock(Login.class);
     private final PipedOutputStream inputWriter;
-    private final ByteArrayOutputStream outputReader;
+    private final ConsumableByteArrayOutputStream outputReader;
     private final CommandLineInterface cli;
 
     public CommandLineInterfaceTest() throws IOException {
         PipedInputStream input = new PipedInputStream();
         inputWriter = new PipedOutputStream(input);
-        outputReader = new ByteArrayOutputStream();
+        outputReader = new ConsumableByteArrayOutputStream();
         cli = new CommandLineInterface(login, new InputStreamReader(input), new OutputStreamWriter(outputReader));
     }
 
@@ -43,12 +43,16 @@ public class CommandLineInterfaceTest {
         writeLine("Lokesh");
 
         cli.next();
-        read("Logged in successfully.");
+        readLine("Logged in successfully.");
     }
 
     private void read(String string) {
-        assertThat(outputReader.toString(), is(string));
-        outputReader.reset();
+        assertThat(outputReader.toString(), startsWith(string));
+        outputReader.consume(string.length());
+    }
+
+    private void readLine(String string) {
+        read(string + "\n");
     }
 
     private void writeLine(String string) {
@@ -57,6 +61,15 @@ public class CommandLineInterfaceTest {
             inputWriter.write(LineSeparator.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static class ConsumableByteArrayOutputStream extends ByteArrayOutputStream {
+        public void consume(int bytes) {
+            count -= bytes;
+            byte[] newBuf = new byte[buf.length];
+            System.arraycopy(buf, bytes, newBuf, 0, count);
+            buf = newBuf;
         }
     }
 }

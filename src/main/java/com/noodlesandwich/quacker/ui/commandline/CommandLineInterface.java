@@ -67,5 +67,6 @@ public class CommandLineInterface {
     private void writeLine(String string) throws IOException {
         write(string);
         out.newLine();
+        out.flush();
     }
 }
