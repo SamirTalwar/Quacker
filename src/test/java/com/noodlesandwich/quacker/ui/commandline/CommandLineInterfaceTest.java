@@ -29,6 +29,7 @@ import org.junit.Test;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 
 public class CommandLineInterfaceTest {
@@ -180,10 +181,11 @@ public class CommandLineInterfaceTest {
     private void read(String string) {
         assertThat(outputReader.toString(), startsWith(string));
         outputReader.consume(string.length());
+        assertThat("Did you mean to use `readLine` instead of `read`?", outputReader.toString(), not(startsWith(LineSeparator)));
     }
 
     private void readLine(String string) {
-        read(string + "\n");
+        read(string + LineSeparator);
     }
 
     private void writeLine(String string) {
