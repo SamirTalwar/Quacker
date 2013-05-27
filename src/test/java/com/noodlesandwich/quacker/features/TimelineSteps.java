@@ -9,7 +9,7 @@ import com.noodlesandwich.quacker.application.Quacker;
 import com.noodlesandwich.quacker.client.Client;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.server.Server;
-import com.noodlesandwich.quacker.testing.MessageListRenderer;
+import com.noodlesandwich.quacker.ui.MessageListRenderer;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
 import com.noodlesandwich.quacker.users.User;
 import cucumber.api.java.en.Given;

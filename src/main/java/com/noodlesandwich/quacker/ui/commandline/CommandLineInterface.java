@@ -9,10 +9,15 @@ import java.io.Reader;
 import java.io.Writer;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.time.Instant;
 import com.noodlesandwich.quacker.application.Quacker;
 import com.noodlesandwich.quacker.client.Client;
 import com.noodlesandwich.quacker.client.Login;
+import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.server.Server;
+import com.noodlesandwich.quacker.ui.MessageListRenderer;
+import com.noodlesandwich.quacker.ui.MessageRenderer;
+import com.noodlesandwich.quacker.users.User;
 
 public class CommandLineInterface {
     public static void main(String[] args) throws Exception {
@@ -31,12 +36,14 @@ public class CommandLineInterface {
     private final BufferedWriter out;
 
     private State state;
+    private MessageRenderer messageRenderer;
 
     public CommandLineInterface(Login login, Reader in, Writer out) {
         this.login = login;
         this.in = new BufferedReader(in);
         this.out = new BufferedWriter(out);
         state = State.LoginPrompt;
+        messageRenderer = new CommandLineMessageRenderer();
     }
 
     public void run() throws IOException {
@@ -64,6 +71,10 @@ public class CommandLineInterface {
                         String message = command.substring(2);
                         client.publish(message);
                         break;
+                    case 't':
+                        String usernameToLookup = command.substring(2);
+                        client.openTimelineOf(usernameToLookup, new MessageListRenderer(messageRenderer));
+                        break;
                     case 'q':
                         return false;
                 }
@@ -90,5 +101,15 @@ public class CommandLineInterface {
         write(string);
         out.newLine();
         out.flush();
+    }
+
+    public class CommandLineMessageRenderer implements MessageRenderer {
+        @Override public void render(Id id, User author, String text, Instant timestamp) {
+            try {
+                writeLine(id + " " + author.getUsername() + ": " + text);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

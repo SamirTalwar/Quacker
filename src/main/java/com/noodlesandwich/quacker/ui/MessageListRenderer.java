@@ -1,10 +1,6 @@
-package com.noodlesandwich.quacker.testing;
+package com.noodlesandwich.quacker.ui;
 
 import com.noodlesandwich.quacker.communication.messages.Message;
-import com.noodlesandwich.quacker.ui.ConversationRenderer;
-import com.noodlesandwich.quacker.ui.FeedRenderer;
-import com.noodlesandwich.quacker.ui.MessageRenderer;
-import com.noodlesandwich.quacker.ui.TimelineRenderer;
 
 public class MessageListRenderer implements ConversationRenderer, FeedRenderer, TimelineRenderer {
     private final MessageRenderer messageRenderer;
