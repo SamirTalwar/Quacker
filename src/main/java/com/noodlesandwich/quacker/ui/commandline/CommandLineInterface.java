@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import com.noodlesandwich.quacker.application.Quacker;
+import com.noodlesandwich.quacker.client.Client;
 import com.noodlesandwich.quacker.client.Login;
 import com.noodlesandwich.quacker.server.Server;
 
@@ -24,6 +25,8 @@ public class CommandLineInterface {
     }
 
     private final Login login;
+    private Client client;
+
     private final BufferedReader in;
     private final BufferedWriter out;
 
@@ -48,11 +51,21 @@ public class CommandLineInterface {
                 break;
             case LoginAction:
                 String username = read();
-                login.loginAs(username);
+                client = login.loginAs(username);
                 writeLine("Logged in successfully.");
-                state = null;
+                state = State.LoggedIn;
+                prompt();
+                break;
+            case LoggedIn:
+                String command = read();
+                String message = command.substring(2);
+                client.publish(message);
                 break;
         }
+    }
+
+    private void prompt() throws IOException {
+        write("> ");
     }
 
     private String read() throws IOException {

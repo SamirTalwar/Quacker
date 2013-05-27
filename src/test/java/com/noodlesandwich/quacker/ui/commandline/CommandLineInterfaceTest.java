@@ -46,6 +46,34 @@ public class CommandLineInterfaceTest {
         readLine("Logged in successfully.");
     }
 
+    @Test public void
+    publishes_a_message() throws IOException {
+        final Client client = context.mock(Client.class);
+        loginAs("Mahesh", client);
+
+        read("> ");
+        writeLine("p Hey, what's up?");
+
+        context.checking(new Expectations() {{
+            oneOf(client).publish("Hey, what's up?");
+        }});
+
+        cli.next();
+    }
+
+    private void loginAs(final String username, final Client client) throws IOException {
+        context.checking(new Expectations() {{
+            oneOf(login).loginAs(username); will(returnValue(client));
+        }});
+
+        cli.next();
+        read("Login: ");
+        writeLine(username);
+
+        cli.next();
+        readLine("Logged in successfully.");
+    }
+
     private void read(String string) {
         assertThat(outputReader.toString(), startsWith(string));
         outputReader.consume(string.length());
