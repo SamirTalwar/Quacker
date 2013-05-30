@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import com.google.common.collect.ImmutableList;
 import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
@@ -220,6 +221,37 @@ public class AggregatedProfileFeedTest {
             oneOf(renderer).render(profileAMessages.get(5)); inSequence(messages);
             oneOf(renderer).render(profileCMessages.get(6)); inSequence(messages);
             oneOf(renderer).render(profileBMessages.get(6)); inSequence(messages);
+        }});
+
+        feed.renderTo(renderer);
+
+        context.assertIsSatisfied();
+    }
+
+    @Test public void
+    users_can_block_messages_containing_certain_strings() {
+        Profile profile = context.mock(Profile.class);
+        User user = context.mock(User.class);
+
+        feed.follow(profile);
+        feed.block("donuts");
+
+        final Message messageA = new Message(new Id(201), user, "I could do with some food.", Now.plus(1, MINUTES));
+        final Message messageB = new Message(new Id(202), user, "How about some donuts?", Now.plus(2, MINUTES));
+        final Message messageC = new Message(new Id(203), user, "Mmmm... they are delicious.", Now.plus(3, MINUTES));
+        final Message messageD = new Message(new Id(204), user, "It's settled then. Donuts it is.", Now.plus(4, MINUTES));
+
+        final List<Message> profileMessages = ImmutableList.of(messageA, messageB, messageC, messageD);
+
+        context.checking(new Expectations() {{
+            allowing(user).getUsername(); will(returnValue("Him"));
+
+            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<Message>()));
+            allowing(profile).iterator(); will(new RenderMessages(profileMessages));
+
+            Sequence messages = context.sequence("messages");
+            oneOf(renderer).render(messageA); inSequence(messages);
+            oneOf(renderer).render(messageC); inSequence(messages);
         }});
 
         feed.renderTo(renderer);

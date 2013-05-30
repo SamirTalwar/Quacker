@@ -1,6 +1,7 @@
 package com.noodlesandwich.quacker.communication.messages;
 
 import java.time.Instant;
+import java.util.Set;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
 import com.noodlesandwich.quacker.users.User;
@@ -23,6 +24,15 @@ public class Message implements Comparable<Message> {
         this.author = author;
         this.text = text;
         this.timestamp = timestamp;
+    }
+
+    public boolean isBlockedByAnyOf(Set<String> blockedStrings) {
+        for (String blockedString : blockedStrings) {
+            if (text.toUpperCase().contains(blockedString.toUpperCase())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void renderTo(MessageRenderer renderer) {

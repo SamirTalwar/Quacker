@@ -8,5 +8,7 @@ public interface Feed {
 
     void follow(Profile profile);
 
+    void block(String string);
+
     void renderTo(FeedRenderer renderer);
 }

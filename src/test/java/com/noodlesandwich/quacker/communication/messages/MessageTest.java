@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Random;
+import com.google.common.collect.ImmutableSet;
 import com.noodlesandwich.quacker.id.Id;
 import com.noodlesandwich.quacker.ui.MessageRenderer;
 import com.noodlesandwich.quacker.users.User;
@@ -18,6 +19,8 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class MessageTest {
     private static final Instant Now = Instant.from(ZonedDateTime.of(2013, 5, 11, 17, 25, 8, 0, ZoneId.of("Europe/London")));
@@ -48,6 +51,34 @@ public class MessageTest {
     cannot_be_more_than_140_characters() {
         User user = context.mock(User.class);
         new Message(new Id(99), user, stringOfLength(141), Now);
+    }
+
+    @Test public void
+    can_be_blocked() {
+        User user = context.mock(User.class);
+        Message message = new Message(new Id(52), user, "I love sausages.", Now);
+        assertTrue(message.isBlockedByAnyOf(ImmutableSet.of("bacon", "sausages", "eggs")));
+    }
+
+    @Test public void
+    can_be_blocked_by_any_case() {
+        User user = context.mock(User.class);
+        Message message = new Message(new Id(64), user, "How about them eggs?", Now);
+        assertTrue(message.isBlockedByAnyOf(ImmutableSet.of("SpAm", "SpaM", "spam", "eGGs")));
+    }
+
+    @Test public void
+    is_blocked_even_if_the_word_is_inside_another_word() {
+        User user = context.mock(User.class);
+        Message message = new Message(new Id(76), user, "Have you seen Spamalot?", Now);
+        assertTrue(message.isBlockedByAnyOf(ImmutableSet.of("spam", "ham")));
+    }
+
+    @Test public void
+    is_not_blocked_by_unrelated_words() {
+        User user = context.mock(User.class);
+        Message message = new Message(new Id(88), user, "What's up, doc?", Now);
+        assertFalse(message.isBlockedByAnyOf(ImmutableSet.of("Bugs", "Daffy")));
     }
 
     @Test public void
