@@ -31,19 +31,14 @@ public class AggregatedProfileFeed implements Feed {
         Map<Profile, Message> nextMessages = new HashMap<>(followees.size());
         Map<Profile, Iterator<Message>> timelines = new HashMap<>(followees.size());
         for (Profile profile : followees) {
-            timelines.put(profile, profile.iterator());
+            Iterator<Message> iterator = profile.iterator();
+            timelines.put(profile, iterator);
+            if (iterator.hasNext()) {
+                nextMessages.put(profile, timelines.get(profile).next());
+            }
         }
 
         while (feedMessages.size() < MaximumFeedLength) {
-            for (Profile profile : followees) {
-                if (!nextMessages.containsKey(profile)) {
-                    Iterator<Message> timeline = timelines.get(profile);
-                    if (timeline.hasNext()) {
-                         nextMessages.put(profile, timeline.next());
-                    }
-                }
-            }
-
             NavigableMap<Message, Profile> potentialNextMessages = new TreeMap<>(Collections.reverseOrder());
             for (Map.Entry<Profile, Message> nextMessage : nextMessages.entrySet()) {
                 Profile profile = nextMessage.getKey();
@@ -56,7 +51,14 @@ public class AggregatedProfileFeed implements Feed {
 
             Map.Entry<Message, Profile> nextMessage = potentialNextMessages.firstEntry();
             feedMessages.add(nextMessage.getKey());
-            nextMessages.remove(nextMessage.getValue());
+
+            Profile profile = nextMessage.getValue();
+            Iterator<Message> timeline = timelines.get(profile);
+            if (timeline.hasNext()) {
+                nextMessages.put(profile, timeline.next());
+            } else {
+                nextMessages.remove(profile);
+            }
         }
 
         int count = 0;
