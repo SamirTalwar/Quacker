@@ -27,7 +27,7 @@ public class CommandLineInterface {
     private final Login login;
     private Client client;
 
-    private State state = State.LoginPrompt;
+    private State state = State.NotLoggedIn;
     private MessageRenderer messageRenderer = new CommandLineMessageRenderer();
 
     public CommandLineInterface(CommandLine commandLine, Login login) {
@@ -43,16 +43,14 @@ public class CommandLineInterface {
 
     private State next() throws IOException {
         switch (state) {
-            case LoginPrompt:
+            case NotLoggedIn:
                 commandLine.write("Login: ");
-                return State.LoginAction;
-            case LoginAction:
                 String username = commandLine.read();
                 client = login.loginAs(username);
                 commandLine.writeLine("Logged in successfully.");
-                prompt();
                 return State.LoggedIn;
             case LoggedIn:
+                prompt();
                 String command = commandLine.read();
                 switch (command.charAt(0)) {
                     case 'p':
@@ -66,7 +64,6 @@ public class CommandLineInterface {
                     case 'q':
                         return State.Done;
                 }
-                prompt();
                 return state;
             default:
                 throw new AssertionError("This should never happen.");
