@@ -2,6 +2,7 @@ package com.noodlesandwich.quacker.communication.feed;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,6 +16,8 @@ import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.users.Profile;
 
 public class AggregatedProfileFeed implements Feed {
+    public static final Comparator<Message> MessageComparator = Collections.reverseOrder();
+
     private final List<Profile> followees = new ArrayList<>();
     private final Set<String> blockedStrings = new HashSet<>();
 
@@ -50,7 +53,7 @@ public class AggregatedProfileFeed implements Feed {
         }
 
         while (feedMessages.size() < MaximumFeedLength) {
-            NavigableMap<Message, Profile> potentialNextMessages = new TreeMap<>(Collections.reverseOrder());
+            NavigableMap<Message, Profile> potentialNextMessages = new TreeMap<>(MessageComparator);
             for (Map.Entry<Profile, Message> nextMessage : nextMessages.entrySet()) {
                 Profile profile = nextMessage.getKey();
                 Message message = nextMessage.getValue();
