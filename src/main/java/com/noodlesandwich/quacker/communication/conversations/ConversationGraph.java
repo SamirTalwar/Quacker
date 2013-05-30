@@ -59,53 +59,49 @@ public class ConversationGraph implements Conversations, MessageListener {
         }
 
         Message originalMessage = messages.get(messageId);
-        Message rootMessage = rootMessageOf(originalMessage);
-        NavigableSet<Message> conversation = repliesTo(rootMessage, originalMessage);
+        NavigableSet<Message> before = messagesBefore(originalMessage);
+        NavigableSet<Message> after = messagesAfter(originalMessage);
 
         Collection<Message> snippet = new ArrayList<>(BeforeLimit + 1 + AfterLimit);
         snippet.add(originalMessage);
 
-        Iterator<Message> before = conversation.headSet(originalMessage, false).descendingIterator();
-        for (int i = 0; before.hasNext() && i < BeforeLimit; ++i) {
-            snippet.add(before.next());
+        Iterator<Message> beforeIterator = before.descendingIterator();
+        for (int i = 0; beforeIterator.hasNext() && i < BeforeLimit; ++i) {
+            snippet.add(beforeIterator.next());
         }
 
-        Iterator<Message> after = conversation.tailSet(originalMessage, false).iterator();
-        for (int i = 0; after.hasNext() && i < AfterLimit; ++i) {
-            snippet.add(after.next());
+        Iterator<Message> afterIterator = after.iterator();
+        for (int i = 0; afterIterator.hasNext() && i < AfterLimit; ++i) {
+            snippet.add(afterIterator.next());
         }
 
         return new SortedConversation(snippet);
     }
 
-    private Message rootMessageOf(Message message) {
-        Message rootMessage = message;
+    private NavigableSet<Message> messagesBefore(Message message) {
+        NavigableSet<Message> conversation = new TreeSet<>();
+        Message nextMessage = repliesInverse.get(message);
+
         int count = 0;
-        while (repliesInverse.containsKey(rootMessage) && count < BeforeLimit) {
-            rootMessage = repliesInverse.get(rootMessage);
+        while (nextMessage != null && count < BeforeLimit) {
+            conversation.add(nextMessage);
+            nextMessage = repliesInverse.get(nextMessage);
             count++;
         }
-        return rootMessage;
+        return conversation;
     }
 
-    private NavigableSet<Message> repliesTo(Message message, Message originalMessage) {
+    private NavigableSet<Message> messagesAfter(Message message) {
         NavigableSet<Message> conversation = new TreeSet<>();
         Queue<Message> nextMessages = new PriorityQueue<>();
-        nextMessages.add(message);
+        nextMessages.addAll(replies.get(message));
 
-        boolean counting = false;
         int count = 0;
-        while (!nextMessages.isEmpty() && count < AfterLimit) {
+        while (!nextMessages.isEmpty() && count <= AfterLimit) {
             Message nextMessage = nextMessages.remove();
             conversation.add(nextMessage);
             nextMessages.addAll(replies.get(nextMessage));
-
-            if (counting) {
-                count++;
-            }
-            if (nextMessage == originalMessage) {
-                counting = true;
-            }
+            count++;
         }
         return conversation;
     }

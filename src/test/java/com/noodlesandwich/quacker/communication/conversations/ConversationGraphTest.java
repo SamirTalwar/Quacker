@@ -144,7 +144,6 @@ public class ConversationGraphTest {
             Sequence messages = context.sequence("messages");
             oneOf(messageRenderer).render(new Id(101), mallika, "Hey, @Nazir, wanna dance?", Now.plus(5, MINUTES)); inSequence(messages);
             oneOf(messageRenderer).render(new Id(102), nazir, "@Mallika You know I don't dance.", Now.plus(6, MINUTES)); inSequence(messages);
-            oneOf(messageRenderer).render(new Id(103), mallika, "@Nazir I've never seen you try.", Now.plus(8, MINUTES)); inSequence(messages);
             oneOf(messageRenderer).render(new Id(104), mallika, "@Nazir I bet you have some incredible twirls.", Now.plus(9, MINUTES)); inSequence(messages);
             oneOf(messageRenderer).render(new Id(105), nazir, "@Mallika *blushes*", Now.plus(10, MINUTES)); inSequence(messages);
         }});
@@ -173,15 +172,15 @@ public class ConversationGraphTest {
 
         context.checking(new Expectations() {{
             Sequence messages = context.sequence("messages");
+            oneOf(messageRenderer).render(new Id(85), farooq, "@Geeta", Now.plusSeconds(85)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(87), geeta, "@Farooq B", Now.plusSeconds(87)); inSequence(messages);
+            oneOf(messageRenderer).render(new Id(88), farooq, "@Geeta", Now.plusSeconds(88)); inSequence(messages);
             oneOf(messageRenderer).render(new Id(90), geeta, "@Farooq B", Now.plusSeconds(90)); inSequence(messages);
             oneOf(messageRenderer).render(new Id(91), farooq, "@Geeta", Now.plusSeconds(91)); inSequence(messages);
-            oneOf(messageRenderer).render(new Id(92), geeta, "@Farooq A", Now.plusSeconds(92)); inSequence(messages);
             oneOf(messageRenderer).render(new Id(93), geeta, "@Farooq B", Now.plusSeconds(93)); inSequence(messages);
             oneOf(messageRenderer).render(new Id(94), farooq, "@Geeta", Now.plusSeconds(94)); inSequence(messages);
-            oneOf(messageRenderer).render(new Id(95), geeta, "@Farooq A", Now.plusSeconds(95)); inSequence(messages);
             oneOf(messageRenderer).render(new Id(96), geeta, "@Farooq B", Now.plusSeconds(96)); inSequence(messages);
             oneOf(messageRenderer).render(new Id(97), farooq, "@Geeta", Now.plusSeconds(97)); inSequence(messages);
-            oneOf(messageRenderer).render(new Id(98), geeta, "@Farooq A", Now.plusSeconds(98)); inSequence(messages);
             oneOf(messageRenderer).render(new Id(99), geeta, "@Farooq B", Now.plusSeconds(99)); inSequence(messages);
             oneOf(messageRenderer).render(new Id(100), farooq, "@Geeta", Now.plusSeconds(100)); inSequence(messages);
             oneOf(messageRenderer).render(new Id(101), geeta, "@Farooq A", Now.plusSeconds(101)); inSequence(messages);
