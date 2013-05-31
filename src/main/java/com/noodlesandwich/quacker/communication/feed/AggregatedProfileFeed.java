@@ -45,7 +45,7 @@ public class AggregatedProfileFeed implements Feed {
             Iterator<Message> timeline = profile.iterator();
             timelines.put(profile, timeline);
             while (timeline.hasNext() && !nextMessages.containsKey(profile)) {
-                Message nextMessage = timelines.get(profile).next();
+                Message nextMessage = timeline.next();
                 if (!nextMessage.isBlockedByAnyOf(blockedStrings)) {
                     nextMessages.put(profile, nextMessage);
                 }
