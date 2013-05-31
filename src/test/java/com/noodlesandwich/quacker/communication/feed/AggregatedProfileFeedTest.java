@@ -21,6 +21,7 @@ import org.jmock.api.Action;
 import org.jmock.api.Invocation;
 import org.junit.Test;
 
+import static com.noodlesandwich.quacker.communication.feed.AggregatedProfileFeedTest.RenderMessages.renderNoMessages;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class AggregatedProfileFeedTest {
@@ -35,7 +36,7 @@ public class AggregatedProfileFeedTest {
     @Test public void
     an_empty_feed_has_no_output() {
         context.checking(new Expectations() {{
-            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<Message>()));
+            allowing(myProfile).iterator(); will(renderNoMessages());
             never(renderer);
         }});
 
@@ -51,7 +52,7 @@ public class AggregatedProfileFeedTest {
         final Message two = new Message(new Id(10), user, "It's as easy as 1 2 3!", Now.plusSeconds(2));
         final Message three = new Message(new Id(12), user, "As simple as Do Ray Me!", Now.plusSeconds(3));
 
-        final Iterable<Message> messages = listOf(three, two, one);
+        final Iterable<Message> messages = ImmutableList.of(three, two, one);
 
         context.checking(new Expectations() {{
             allowing(myProfile).iterator(); will(new RenderMessages(messages));
@@ -77,10 +78,10 @@ public class AggregatedProfileFeedTest {
         final Message two = new Message(new Id(2), user, "Two.", Now.plusSeconds(2));
         final Message three = new Message(new Id(3), user, "Three.", Now.plusSeconds(3));
 
-        final Iterable<Message> messages = listOf(three, two, one);
+        final Iterable<Message> messages = ImmutableList.of(three, two, one);
 
         context.checking(new Expectations() {{
-            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<Message>()));
+            allowing(myProfile).iterator(); will(renderNoMessages());
             allowing(profile).iterator(); will(new RenderMessages(messages));
 
             Sequence messages = context.sequence("messages");
@@ -109,11 +110,11 @@ public class AggregatedProfileFeedTest {
         final Message bugs2 = new Message(new Id(52), bugsUser, "You keep out of this--he doesn't have to shoot you now!", Now.plus(3, MINUTES));
         final Message daffy2 = new Message(new Id(53), daffyUser, "Well, I say that he does have to shoot me now! So shoot me now!", Now.plus(4, MINUTES));
 
-        final Iterable<Message> bugsMessages = listOf(bugs2, bugs1);
-        final Iterable<Message> daffyMessages = listOf(daffy2, daffy1);
+        final Iterable<Message> bugsMessages = ImmutableList.of(bugs2, bugs1);
+        final Iterable<Message> daffyMessages = ImmutableList.of(daffy2, daffy1);
 
         context.checking(new Expectations() {{
-            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<Message>()));
+            allowing(myProfile).iterator(); will(renderNoMessages());
             allowing(bugs).iterator(); will(new RenderMessages(bugsMessages));
             allowing(daffy).iterator(); will(new RenderMessages(daffyMessages));
 
@@ -147,9 +148,9 @@ public class AggregatedProfileFeedTest {
         final Message me1 = new Message(new Id(120), myUser, "Put down the Scooby Snacks and no one gets hurt.", Now.plus(16, MINUTES));
         final Message shaggy2 = new Message(new Id(125), shaggyUser, "I already ate the Scooby Snack. Sorry, Fred.", Now.plus(32, MINUTES));
 
-        final Iterable<Message> scoobyMessages = listOf(scooby3, scooby2, scooby1);
-        final Iterable<Message> shaggyMessages = listOf(shaggy2, shaggy1);
-        final Iterable<Message> myMessages = listOf(me1);
+        final Iterable<Message> scoobyMessages = ImmutableList.of(scooby3, scooby2, scooby1);
+        final Iterable<Message> shaggyMessages = ImmutableList.of(shaggy2, shaggy1);
+        final Iterable<Message> myMessages = ImmutableList.of(me1);
 
         context.checking(new Expectations() {{
             allowing(myProfile).iterator(); will(new RenderMessages(myMessages));
@@ -195,7 +196,7 @@ public class AggregatedProfileFeedTest {
         }
 
         context.checking(new Expectations() {{
-            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<Message>()));
+            allowing(myProfile).iterator(); will(renderNoMessages());
             allowing(profileA).iterator(); will(new RenderMessages(profileAMessages).stoppingAfter(7));
             allowing(profileB).iterator(); will(new RenderMessages(profileBMessages).stoppingAfter(8));
             allowing(profileC).iterator(); will(new RenderMessages(profileCMessages).stoppingAfter(8));
@@ -246,7 +247,7 @@ public class AggregatedProfileFeedTest {
         context.checking(new Expectations() {{
             allowing(user).getUsername(); will(returnValue("Him"));
 
-            allowing(myProfile).iterator(); will(new RenderMessages(new ArrayList<Message>()));
+            allowing(myProfile).iterator(); will(renderNoMessages());
             allowing(profile).iterator(); will(new RenderMessages(profileMessages));
 
             Sequence messages = context.sequence("messages");
@@ -259,12 +260,16 @@ public class AggregatedProfileFeedTest {
         context.assertIsSatisfied();
     }
 
-    private static class RenderMessages implements Action {
+    public static class RenderMessages implements Action {
         private final Iterable<Message> messages;
         private int expectToStopAfter = Integer.MAX_VALUE;
 
         public RenderMessages(Iterable<Message> messages) {
             this.messages = messages;
+        }
+
+        public static RenderMessages renderNoMessages() {
+            return new RenderMessages(ImmutableList.<Message>of());
         }
 
         public RenderMessages stoppingAfter(int expectation) {
@@ -304,12 +309,5 @@ public class AggregatedProfileFeedTest {
             description.appendText("render the messages")
                        .appendValueList("", ", ", "", messages);
         }
-    }
-
-    @SafeVarargs
-    private final <T> Iterable<T> listOf(T... items) {
-        List<T> list = new ArrayList<>(items.length);
-        Collections.addAll(list, items);
-        return list;
     }
 }
