@@ -45,9 +45,9 @@ public class AggregatedProfileFeed implements Feed {
             Iterator<Message> timeline = profile.iterator();
             timelines.put(profile, timeline);
             while (timeline.hasNext() && !nextMessages.containsKey(profile)) {
-                Message nextMessage = timeline.next();
-                if (!nextMessage.isBlockedByAnyOf(blockedStrings)) {
-                    nextMessages.put(profile, nextMessage);
+                Message next = timeline.next();
+                if (!next.isBlockedByAnyOf(blockedStrings)) {
+                    nextMessages.put(profile, next);
                 }
             }
         }
@@ -70,9 +70,9 @@ public class AggregatedProfileFeed implements Feed {
             Iterator<Message> timeline = timelines.get(profile);
             nextMessages.remove(profile);
             while (timeline.hasNext() && !nextMessages.containsKey(profile)) {
-                Message nextTimelineMessage = timeline.next();
-                if (!nextTimelineMessage.isBlockedByAnyOf(blockedStrings)) {
-                    nextMessages.put(profile, nextTimelineMessage);
+                Message next = timeline.next();
+                if (!next.isBlockedByAnyOf(blockedStrings)) {
+                    nextMessages.put(profile, next);
                 }
             }
         }
