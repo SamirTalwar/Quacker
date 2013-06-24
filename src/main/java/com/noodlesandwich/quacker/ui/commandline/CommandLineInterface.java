@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.time.Instant;
+import java.util.Map;
+import java.util.function.Supplier;
+import com.google.common.collect.ImmutableMap;
 import com.noodlesandwich.quacker.application.Quacker;
 import com.noodlesandwich.quacker.client.Client;
 import com.noodlesandwich.quacker.client.Login;
@@ -14,6 +17,12 @@ import com.noodlesandwich.quacker.ui.MessageRenderer;
 import com.noodlesandwich.quacker.users.User;
 
 public class CommandLineInterface {
+    private final Map<Character, CommandHandler> handlers = ImmutableMap.of(
+            'p', new PublishHandler(),
+            't', new TimelineHandler(),
+            'q', new QuitHandler()
+    );
+
     public static void main(String[] args) throws Exception {
         String host = (args.length < 1) ? null : args[0];
         Registry registry = LocateRegistry.getRegistry(host);
@@ -51,20 +60,8 @@ public class CommandLineInterface {
                 return State.LoggedIn;
             case LoggedIn:
                 prompt();
-                String command = commandLine.read();
-                switch (command.charAt(0)) {
-                    case 'p':
-                        String message = command.substring(2);
-                        client.publish(message);
-                        break;
-                    case 't':
-                        String usernameToLookup = command.substring(2);
-                        client.openTimelineOf(usernameToLookup, new MessageListRenderer(messageRenderer));
-                        break;
-                    case 'q':
-                        return State.Done;
-                }
-                return state;
+                final String command = commandLine.read();
+                return handlers.get(command.charAt(0)).execute(() -> command.substring(2));
             default:
                 throw new AssertionError("This should never happen.");
         }
@@ -74,6 +71,10 @@ public class CommandLineInterface {
         commandLine.write("> ");
     }
 
+    public static interface CommandHandler {
+        State execute(Supplier<String> arguments);
+    }
+
     public class CommandLineMessageRenderer implements MessageRenderer {
         @Override public void render(Id id, User author, String text, Instant timestamp) {
             try {
@@ -81,6 +82,26 @@ public class CommandLineInterface {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    private class PublishHandler implements CommandHandler {
+        @Override public State execute(Supplier<String> message) {
+            client.publish(message.get());
+            return state;
+        }
+    }
+
+    private class TimelineHandler implements CommandHandler {
+        @Override public State execute(Supplier<String> usernameToLookup) {
+            client.openTimelineOf(usernameToLookup.get(), new MessageListRenderer(messageRenderer));
+            return state;
+        }
+    }
+
+    private static class QuitHandler implements CommandHandler {
+        @Override public State execute(Supplier<String> arguments) {
+            return State.Done;
         }
     }
 }
