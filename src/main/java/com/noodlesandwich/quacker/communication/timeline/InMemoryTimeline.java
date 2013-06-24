@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import com.blogspot.nurkiewicz.lazyseq.LazySeq;
 import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.communication.feed.Feed;
 import com.noodlesandwich.quacker.communication.messages.MessageListener;
@@ -22,14 +23,9 @@ public class InMemoryTimeline implements Timeline, MessageListener {
 
     @Override
     public void renderTo(TimelineRenderer renderer) {
-        int count = 0;
-        for (Message message : messages) {
-            if (count == Feed.MaximumFeedLength) {
-                break;
-            }
-            renderer.render(message);
-            count++;
-        }
+        LazySeq.of(messages)
+               .limit(Feed.MaximumFeedLength)
+               .forEach(renderer::render);
     }
 
     @Override
