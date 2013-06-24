@@ -3,14 +3,10 @@ package com.noodlesandwich.quacker.communication.feed;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Set;
-import java.util.TreeMap;
+import com.blogspot.nurkiewicz.lazyseq.LazySeq;
 import com.noodlesandwich.quacker.communication.messages.Message;
 import com.noodlesandwich.quacker.ui.FeedRenderer;
 import com.noodlesandwich.quacker.users.Profile;
@@ -37,53 +33,30 @@ public class AggregatedProfileFeed implements Feed {
 
     @Override
     public void renderTo(FeedRenderer renderer) {
-        List<Message> feedMessages = new ArrayList<>(MaximumFeedLength);
+        LazySeq<LazySeq<Message>> timelines = LazySeq.of(followees)
+                .map(LazySeq::of)
+                .map(timeline -> timeline.filter(message -> !message.isBlockedByAnyOf(blockedStrings)));
 
-        Map<Profile, Message> nextMessages = new HashMap<>(followees.size());
-        Map<Profile, Iterator<Message>> timelines = new HashMap<>(followees.size());
-        for (Profile profile : followees) {
-            Iterator<Message> timeline = profile.iterator();
-            timelines.put(profile, timeline);
-            while (timeline.hasNext() && !nextMessages.containsKey(profile)) {
-                Message next = timeline.next();
-                if (!next.isBlockedByAnyOf(blockedStrings)) {
-                    nextMessages.put(profile, next);
-                }
-            }
+        mergeSorted(timelines).limit(MaximumFeedLength).forEach(renderer::render);
+    }
+
+    private LazySeq<Message> mergeSorted(LazySeq<LazySeq<Message>> timelines) {
+        return timelines.reduce(LazySeq.empty(), this::mergeSorted);
+    }
+
+    private LazySeq<Message> mergeSorted(LazySeq<Message> a, LazySeq<Message> b) {
+        if (a.isEmpty()) {
+            return b;
         }
 
-        while (feedMessages.size() < MaximumFeedLength) {
-            NavigableMap<Message, Profile> potentialNextMessages = new TreeMap<>(MessageComparator);
-            for (Map.Entry<Profile, Message> nextMessage : nextMessages.entrySet()) {
-                Profile profile = nextMessage.getKey();
-                Message message = nextMessage.getValue();
-                potentialNextMessages.put(message, profile);
-            }
-            if (potentialNextMessages.isEmpty()) {
-                break;
-            }
-
-            Map.Entry<Message, Profile> nextMessage = potentialNextMessages.firstEntry();
-            feedMessages.add(nextMessage.getKey());
-
-            Profile profile = nextMessage.getValue();
-            Iterator<Message> timeline = timelines.get(profile);
-            nextMessages.remove(profile);
-            while (timeline.hasNext() && !nextMessages.containsKey(profile)) {
-                Message next = timeline.next();
-                if (!next.isBlockedByAnyOf(blockedStrings)) {
-                    nextMessages.put(profile, next);
-                }
-            }
+        if (b.isEmpty()) {
+            return a;
         }
 
-        int count = 0;
-        for (Message message : feedMessages) {
-            if (count == MaximumFeedLength) {
-                break;
-            }
-            renderer.render(message);
-            count++;
+        if (MessageComparator.compare(a.head(), b.head()) <= 0) {
+            return LazySeq.cons(a.head(), () -> mergeSorted(a.tail(), b));
+        } else {
+            return LazySeq.cons(b.head(), () -> mergeSorted(a, b.tail()));
         }
     }
 }
